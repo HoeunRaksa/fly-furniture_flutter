@@ -10,7 +10,7 @@ class SplashBody extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Discover your \n Dream style here",
+            "Discover your Dream\nlife-style here",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.blueGrey[800],

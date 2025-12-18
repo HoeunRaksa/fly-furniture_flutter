@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fly/features/splash/ui/splash_screen.dart';
-
-void main() {
-  runApp(const MyApp());
-}
+import 'package:fly/core/routing/app_router.dart';
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      routerConfig: AppRouter.router,
     );
   }
 }

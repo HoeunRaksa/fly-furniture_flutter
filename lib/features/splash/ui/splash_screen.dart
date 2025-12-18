@@ -16,31 +16,25 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Simulate a delay (e.g., check login or load resources)
     Timer(const Duration(seconds: 3), () {
-      // Navigate to Login or Home
       Navigator.pushReplacementNamed(context, '/login');
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondaryBackground,
       appBar: SplashHeader(),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SplashBody(),
-              SizedBox(height: 40,),
-              SplashBottom()
-            ],
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [SplashBody(), SizedBox(height: 60), SplashBottom()],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
