@@ -2,62 +2,82 @@ import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:fly/core/widgets/e_button.dart';
 import 'package:fly/core/widgets/input_field.dart';
-
+import 'package:fly/features/auth/provider/auth_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../../config/app_color.dart';
+import '../../../../core/widgets/check_box.dart';
 
 class LoginInput extends StatefulWidget {
   const LoginInput({super.key});
-
   @override
   State<LoginInput> createState() => _LoginInput();
 }
 
 class _LoginInput extends State<LoginInput> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: AppColors.white, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.gray700.withOpacity(0.2), // shadow color
-            spreadRadius: 2, // how wide the shadow spreads
-            blurRadius: 8, // softening
-            offset: const Offset(0, 4), // x, y offset
-          ),
-        ],
-      ),
+      padding: EdgeInsets.only(top: 20, right: 1, left: 1),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       alignment: Alignment.topLeft,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Sign In",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                spaceX(5),
-                Text(
-                  "Forget password",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                spaceX(20),
-              ],
+          Text("Email", style: Theme.of(context).textTheme.bodySmall),
+          spaceX(9),
+          InputField(label: "username", controller: emailController),
+          spaceX(20),
+          Text("Password", style: Theme.of(context).textTheme.bodySmall),
+          spaceX(9),
+          InputField(label: "password", controller: passwordController),
+          spaceX(15),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CheckBoxed(
+                value: isChecked,
+                valueChanged: (bool? newValue) {
+                  setState(() {
+                    isChecked = newValue ?? false;
+                  });
+                },
+                label: "Remember For 30 Days",
+              ),
+              Text(
+                "Forget password",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+          spaceX(20),
+          Center(
+            child: EButton(
+              name: "Login",
+              onPressed: () async {
+                final authProvider = context.read<AuthProvider>();
+
+                try {
+                  await authProvider.login(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString().replaceAll('Exception: ', '')),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
             ),
           ),
-          InputField(label: "username"),
-          spaceX(20),
-          InputField(label: "password"),
-          spaceX(40),
-          EButton(name: "Login", onPressed: () {}),
           spaceX(20),
           Center(
             child: ConstrainedBox(
@@ -65,10 +85,7 @@ class _LoginInput extends State<LoginInput> {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Divider(
-                      color: Colors.grey, // or AppColors.gray700
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey, thickness: 1),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -78,105 +95,34 @@ class _LoginInput extends State<LoginInput> {
                     ),
                   ),
                   const Expanded(
-                    child: Divider(
-                      color: Colors.grey, // or AppColors.gray700
-                      thickness: 1,
-                    ),
+                    child: Divider(color: Colors.grey, thickness: 1),
                   ),
                 ],
               ),
             ),
           ),
           spaceX(20),
-          GestureDetector(
-            onTap: () {
-              print("Google Sign-In clicked");
-            },
+          Center(
             child: Container(
+              height: 40,
+              width: 230,
               decoration: BoxDecoration(
-                color: AppColors.gray700.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.gray700.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.gray700.withAlpha(100),
+                ),
               ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Small white container for image
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Image.asset(
-                        "${AppConfig.imageUrl}/google.png",
-                        height: 25,
-                      ),
-                    ),
-                  ),
-                  // Centered text
-                  Text(
-                    "Sign In with Google",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge!.copyWith(color: AppColors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          spaceX(20),
-          GestureDetector(
-            onTap: () {
-              print("Facebook Sign-In clicked");
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.secondaryBlue,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.gray700.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade800,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Image.asset(
-                        "${AppConfig.imageUrl}/facebook.png",
-                        height: 25,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "Sign In with Facebook",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge!.copyWith(color: AppColors.white),
-                  ),
-                ],
+              child: TextButton(
+                onPressed: () {
+                  context.push(
+                    '/register',
+                  );
+                },
+                child: Text(
+                  "Create Account",
+                  style: TextStyle(color: AppColors.gray700),
+                ),
               ),
             ),
           ),

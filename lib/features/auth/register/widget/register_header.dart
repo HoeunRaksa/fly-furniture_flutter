@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fly/config/app_config.dart';
+import 'package:fly/config/app_color.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
-  const LoginHeader({super.key});
+class RegisterHeader extends StatelessWidget implements PreferredSizeWidget {
+  const RegisterHeader({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,25 +18,30 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
             width: 40,
             padding: EdgeInsets.zero,
             decoration: BoxDecoration(shape: BoxShape.circle,
-              color: Colors.white
+                color: Colors.white
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.pop();
+              },
               icon: Icon(Icons.arrow_back, size: 20, color: Colors.black),
             ),
           ),
-          SizedBox(height: 40,),
+          SizedBox(height: 30,),
           Text(
-            "Welcome back",
+            "Create Account",
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              fontSize: 40
+                fontSize: 40
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 7,),
           Text(
-            " Welcome Back! Please Enter Your Details",
-            style: Theme.of(context).textTheme.bodySmall,
+            "Let's start our journey together",
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontSize: 17,
+                color: AppColors.gray700.withAlpha(225)
+            ),
             textAlign: TextAlign.center,
           ),
         ],

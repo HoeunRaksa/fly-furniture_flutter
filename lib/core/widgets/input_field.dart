@@ -24,20 +24,20 @@ class InputField extends StatelessWidget {
           fontSize: 15,
         ),
         filled: true,
-        fillColor: Colors.grey.shade200,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(width: 1, color: Colors.white),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(width: 1, color: Colors.white),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
             width: 1,
-            color: Colors.orange[700]!.withOpacity(0.6),
+            color: AppColors.secondaryGreen
           ),
         ),
       ),

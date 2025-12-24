@@ -7,8 +7,8 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.blueGrey[50],
     colorScheme: const ColorScheme.light(
-      primary: AppColors.red500,
-      secondary: AppColors.red400,
+      primary: AppColors.secondaryGreen,
+      secondary: AppColors.secondaryGreen,
       background: AppColors.white,
     ),
     appBarTheme: const AppBarTheme(
@@ -39,7 +39,7 @@ class AppTheme {
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
-        color: AppColors.red400,
+        color: AppColors.secondaryGreen,
       ),
     ),
   );
@@ -49,8 +49,8 @@ class AppTheme {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.gray800,
     colorScheme: const ColorScheme.dark(
-      primary: AppColors.red400,
-      secondary: AppColors.red400,
+      primary: AppColors.secondaryGreen,
+      secondary: AppColors.secondaryGreen,
       background: AppColors.gray800,
     ),
     appBarTheme: const AppBarTheme(
@@ -72,7 +72,7 @@ class AppTheme {
       ),
       bodyLarge: TextStyle(
         fontSize: 16,
-        color: AppColors.red400,
+        color: AppColors.secondaryGreen,
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
