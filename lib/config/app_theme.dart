@@ -5,7 +5,7 @@ class AppTheme {
   static final ThemeData light = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.blueGrey[50],
+    scaffoldBackgroundColor: Colors.grey[50],
     colorScheme: const ColorScheme.light(
       primary: AppColors.secondaryGreen,
       secondary: AppColors.secondaryGreen,
@@ -30,8 +30,8 @@ class AppTheme {
       ),
       headlineSmall: TextStyle(
         fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: AppColors.gray700,
+        fontWeight: FontWeight.w400,
+        color: AppColors.gray800,
       ),
       bodyLarge: TextStyle(
         fontSize: 15,
@@ -40,6 +40,10 @@ class AppTheme {
       bodyMedium: TextStyle(
         fontSize: 14,
         color: AppColors.secondaryGreen,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 13,
+        color: AppColors.gray500,
       ),
     ),
   );
@@ -77,6 +81,10 @@ class AppTheme {
       bodyMedium: TextStyle(
         fontSize: 14,
         color: AppColors.gray700,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 13,
+        color: AppColors.white,
       ),
     ),
   );

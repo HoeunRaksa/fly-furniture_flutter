@@ -5,26 +5,11 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
   const LoginHeader({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 50),
-      height: 230,
+    return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-            height: 40,
-            width: 40,
-            padding: EdgeInsets.zero,
-            decoration: BoxDecoration(shape: BoxShape.circle,
-              color: Colors.white
-            ),
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.arrow_back, size: 20, color: Colors.black),
-            ),
-          ),
-          SizedBox(height: 40,),
           Text(
             "Welcome back",
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -44,5 +29,5 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(220);
+  Size get preferredSize => const Size.fromHeight(110);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../../config/app_color.dart';
 
@@ -37,7 +38,6 @@ class _OtpBodyState extends State<OtpBody> {
   void resendOtp() {
     print("Resend OTP clicked");
     startResendTimer();
-    // Call API here
   }
 
   @override
@@ -55,7 +55,7 @@ class _OtpBodyState extends State<OtpBody> {
               keyboardType: TextInputType.number,
               autoFocus: true,
               onChanged: (value) {},
-              onCompleted: (value) => print("Call API here"),
+              onCompleted: (value) => context.push("/home"),
               pinTheme: PinTheme(
                 shape: PinCodeFieldShape.box,
                 borderRadius: BorderRadius.circular(16),
@@ -75,8 +75,6 @@ class _OtpBodyState extends State<OtpBody> {
               backgroundColor: Colors.transparent,
             ),
             const SizedBox(height: 25),
-
-            // Resend OTP link
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

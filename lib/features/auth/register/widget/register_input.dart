@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
-import 'package:fly/core/widgets/e_button.dart';
+import 'package:fly/core/widgets/elevated_button.dart';
 import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:go_router/go_router.dart';

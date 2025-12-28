@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
-import 'package:fly/core/widgets/e_button.dart';
+import 'package:fly/core/widgets/elevated_button.dart';
 import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +21,7 @@ class _LoginInput extends State<LoginInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20, right: 1, left: 1),
+      padding: EdgeInsets.only(top: 70, right: 1, left: 1),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       alignment: Alignment.topLeft,
       child: Column(

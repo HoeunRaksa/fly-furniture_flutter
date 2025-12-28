@@ -8,7 +8,7 @@ class OtpVerification extends StatelessWidget{
      @override
      Widget build(BuildContext context) {
        return Scaffold(
-         backgroundColor: Colors.white, // iOS-style clean background
+         backgroundColor: Theme.of(context).scaffoldBackgroundColor, // iOS-style clean background
          body: Column(
            children: const [
              OtpHeader(),
