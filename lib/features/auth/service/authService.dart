@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:fly/config/app_config.dart';
-import '../model/user_auth.dart';
+import '../../../model/user_auth.dart';
+
 
 class AuthService {
   /// Register a user

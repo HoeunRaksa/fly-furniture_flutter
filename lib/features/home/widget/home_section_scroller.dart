@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';

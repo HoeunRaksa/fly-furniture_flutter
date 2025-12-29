@@ -5,11 +5,11 @@ import '../../config/app_color.dart';
 class ProductCard extends StatelessWidget {
   final double width;
   final double height;
-  final String image;
   final double? imageX;
   final String? name;
   final String? description;
   final double? price;
+  final ImageProvider image;
   final bool setIcon;
   final Function(String)? onAdded;
   const ProductCard({
@@ -44,8 +44,8 @@ class ProductCard extends StatelessWidget {
             children: [
             SizedBox(
               height: 135,
-              child: Image.asset(
-                "${AppConfig.imageUrl}/$image",
+              child: Image(
+                image: image,
                 width: imageX,
                 fit: BoxFit.contain,
               ),

@@ -9,7 +9,7 @@ import '../../features/auth/provider/auth_provider.dart';
 
 class AppRouter {
   static GoRouter router(AuthProvider authProvider) => GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.home,
     routes: [
       GoRoute(
         path: AppRoutes.login,
