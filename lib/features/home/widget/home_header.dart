@@ -35,7 +35,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                 CircleAvatar(
                   radius: 35,
                   backgroundImage: user?.profileImage != null
-                      ? NetworkImage(user!.profileImage!)
+                      ? NetworkImage(AppConfig.getImageUrl(user!.profileImage!))
                       : AssetImage("${AppConfig.imageUrl}/character.png")
                   as ImageProvider,
                 ),
