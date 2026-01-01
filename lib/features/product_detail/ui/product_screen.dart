@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fly/features/product_detail/widget/detail_footer.dart';
 import '../widget/detail_body.dart';
 import '../widget/detail_header.dart';
+import '../../../model/product.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  final Product product; // pass the product
+
+  const ProductScreen({super.key, required this.product});
 
   @override
   State<ProductScreen> createState() => _ProductScreen();
@@ -12,8 +15,13 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreen extends State<ProductScreen> {
   int count = 1;
-  double price = 800;
-  double amount = 800;
+  late double amount;
+
+  @override
+  void initState() {
+    super.initState();
+    amount = widget.product.price; // initialize amount
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,7 @@ class _ProductScreen extends State<ProductScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(bottom: footerHeight),
-          child: DetailBody(price: price),
+          child: DetailBody(product: widget.product),
         ),
       ),
       bottomNavigationBar: SizedBox(
@@ -34,11 +42,11 @@ class _ProductScreen extends State<ProductScreen> {
           amount: amount,
           onAdded: () => setState(() {
             count++;
-            amount = price * count;
+            amount = widget.product.price * count;
           }),
           onRemoved: () => setState(() {
             if (count > 0) count--;
-            amount = price * count;
+            amount = widget.product.price * count;
           }),
         ),
       ),

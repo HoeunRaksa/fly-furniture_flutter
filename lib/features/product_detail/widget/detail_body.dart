@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fly/features/product_detail/widget/viewer.dart';
 import '../../../config/app_config.dart';
+import '../../../model/product.dart';
 class DetailBody extends StatelessWidget {
-  final double price;
-  const DetailBody({super.key, this.price=0});
+  final Product product;
+  const DetailBody({super.key, required this.product});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +40,7 @@ class DetailBody extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   width: 130,
                   child: Text(
-                   "\$${price.toStringAsFixed(2)}",
+                   "\$${product.price.toStringAsFixed(2)}",
                     style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                       fontWeight: FontWeight.w400,
                       color: Colors.orange.shade700
@@ -57,8 +58,7 @@ class DetailBody extends StatelessWidget {
               children: [
                 Text("Description", style: Theme.of(context).textTheme.headlineMedium),
                 SizedBox(height: 15,),
-                Text("The Swedish Designer Monica Forstar’s Style Is Characterised "
-                    "By her Enternal love For New Materials and Beautiful Pure Shapes.", style: Theme.of(context).textTheme.bodyMedium,)
+                Text(product.description, style: Theme.of(context).textTheme.bodyMedium,)
               ],
             )
           ),

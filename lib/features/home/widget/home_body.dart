@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/widgets/product_card.dart';
 import '../../../core/widgets/small_card.dart';
 import '../../../model/product.dart';
@@ -83,19 +84,26 @@ class HomeBody extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
-            itemBuilder: (context, index){
+            itemBuilder: (context, index) {
               final product = products[index];
               final imageProvider = product.images.isNotEmpty
                   ? NetworkImage(AppConfig.getImageUrl(product.images[0].imageUrl)) as ImageProvider
                   : AssetImage('assets/images/placeholder.png') as ImageProvider;
 
-             return ProductCard(
-               image: imageProvider,
-              name: product.name,
-              description: product.description,
-              price: product.price,
-              setIcon: true,
-            );},
+              return InkWell(
+                onTap: () {
+                  // Navigate to ProductScreen with the product ID
+                  context.go('/detail/${product.id}');
+                },
+                child: ProductCard(
+                  image: imageProvider,
+                  name: product.name,
+                  description: product.description,
+                  price: product.price,
+                  setIcon: true,
+                ),
+              );
+            },
             separatorBuilder: (context, index) => const SizedBox(width: 10),
           ),
         ),
@@ -124,11 +132,17 @@ class HomeBody extends StatelessWidget {
           height: 100,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: 20,
-            itemBuilder: (context, index) => SmallCard(
-              name: "Iphone",
-              description: "This is a good one",
-            ),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return InkWell(
+                onTap: () {
+                  // Navigate to ProductScreen with the product ID
+                  context.go('/detail/${product.id}');
+                },
+                child: SmallCard(product: product),
+              );
+            },
             separatorBuilder: (context, index) => const SizedBox(width: 10),
           ),
         ),
