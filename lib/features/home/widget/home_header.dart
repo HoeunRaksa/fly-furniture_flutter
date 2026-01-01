@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
-import 'package:fly/providers/user_provider.dart';
+import 'package:fly/features/auth/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import '../../../core/widgets/input_field.dart';

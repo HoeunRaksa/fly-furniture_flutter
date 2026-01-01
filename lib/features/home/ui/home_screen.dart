@@ -3,16 +3,16 @@ import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/product_provider.dart';
-import '../../../providers/user_provider.dart';
+import '../../auth/provider/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late final ScrollController _scrollController;
   late final AnimationController _animationController;
   int selectedIndex = -1;
@@ -21,12 +21,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-
     _scrollController = ScrollController();
     _animationController = AnimationController(vsync: this);
 
-    // Fetch products and user only once
-    fetchInitialData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final productProvider = context.read<ProductProvider>();
+      final userProvider = context.read<UserProvider>();
+
+      try {
+        await Future.wait([
+          productProvider.fetchProducts(),
+          userProvider.fetchUser(),
+        ]);
+      } catch (e) {
+        debugPrint('Error fetching data: $e');
+      }
+    });
   }
 
   Future<void> fetchInitialData() async {
@@ -42,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       debugPrint('Error fetching data: $e');
     }
   }
-
 
   @override
   void dispose() {
@@ -76,12 +85,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : HomeBody(
-        selectedIndex: selectedIndex,
-        searchQuery: searchQuery,
-        onCategorySelected: _onCategorySelected,
-        products: products,
-        scrollController: _scrollController,
-      ),
+              selectedIndex: selectedIndex,
+              searchQuery: searchQuery,
+              onCategorySelected: _onCategorySelected,
+              products: products,
+              scrollController: _scrollController,
+            ),
     );
   }
 }
