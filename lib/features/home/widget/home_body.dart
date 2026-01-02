@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:go_router/go_router.dart';
@@ -97,10 +98,11 @@ class HomeBody extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final product = products[index];
                   final imageProvider = product.images.isNotEmpty
-                      ? NetworkImage(
+                      ? CachedNetworkImageProvider(
                     AppConfig.getImageUrl(product.images[0].imageUrl),
                   )
                       : const AssetImage('assets/images/placeholder.png');
+
 
                   return InkWell(
                     onTap: () {

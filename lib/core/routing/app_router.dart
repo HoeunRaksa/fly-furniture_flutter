@@ -1,6 +1,4 @@
-import 'package:fly/config/app_config.dart';
 import 'package:fly/core/routing/app_routes.dart';
-
 import 'package:fly/features/home/widget/home_bottomBar.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
