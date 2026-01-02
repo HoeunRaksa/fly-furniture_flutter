@@ -7,6 +7,7 @@ import '../../auth/provider/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -39,20 +40,6 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  Future<void> fetchInitialData() async {
-    final productProvider = context.read<ProductProvider>();
-    final userProvider = context.read<UserProvider>();
-
-    try {
-      await Future.wait([
-        productProvider.fetchProducts(),
-        userProvider.fetchUser(),
-      ]);
-    } catch (e) {
-      debugPrint('Error fetching data: $e');
-    }
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -82,15 +69,25 @@ class _HomeScreenState extends State<HomeScreen>
 
     return Scaffold(
       appBar: HomeHeader(onSearchChanged: _onSearchChanged),
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : HomeBody(
+      body: SafeArea(
+        child: loading
+            ? const Center(child: CircularProgressIndicator())
+            : Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 1200, // ⭐ perfect home max width
+            ),
+            child: HomeBody(
               selectedIndex: selectedIndex,
               searchQuery: searchQuery,
               onCategorySelected: _onCategorySelected,
               products: products,
               scrollController: _scrollController,
             ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -11,9 +11,7 @@ class HomeBottomBar extends StatefulWidget {
 }
 
 class _HomeBottomBar extends State<HomeBottomBar> {
-  int _currentIndex = 0;
-
-  // Returns the screen for each tab
+  final int _currentIndex = 0;
   Widget _getScreen(int index) {
     switch (index) {
       case 0:
@@ -31,23 +29,14 @@ class _HomeBottomBar extends State<HomeBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: List.generate(4, (index) => _getScreen(index)),
-      ),
-      bottomNavigationBar: CupertinoTabBar(
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
         height: 60,
         backgroundColor: Colors.white,
         border: null,
         currentIndex: _currentIndex,
         activeColor: Colors.orangeAccent,
         inactiveColor: Colors.grey,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home),
@@ -67,6 +56,11 @@ class _HomeBottomBar extends State<HomeBottomBar> {
           ),
         ],
       ),
+      tabBuilder: (context, index) {
+        return CupertinoTabView(
+          builder: (_) => _getScreen(index),
+        );
+      },
     );
   }
 }

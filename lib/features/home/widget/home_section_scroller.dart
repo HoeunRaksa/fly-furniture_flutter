@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
 
 class HomeSectionScroller extends StatefulWidget {
@@ -11,103 +10,96 @@ class HomeSectionScroller extends StatefulWidget {
 }
 
 class _HomeHeaderAutoScroller extends State<HomeSectionScroller> {
-  final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController(viewportFraction: 0.99);
   Timer? _timer;
-  double scrollPosition = 0.0;
-  bool scrollForward = true;
-  final double itemWidth = 390;
+  final int _totalPages = 3;
 
   @override
   void initState() {
     super.initState();
-
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!_scrollController.hasClients) return;
-
-      final maxExtent = _scrollController.position.maxScrollExtent;
-
-      if (scrollForward) {
-        scrollPosition += itemWidth;
-        if (scrollPosition >= maxExtent) {
-          scrollPosition = maxExtent;
-          scrollForward = false;
-        }
-      } else {
-        scrollPosition -= itemWidth;
-        if (scrollPosition <= 0) {
-          scrollPosition = 0;
-          scrollForward = true;
-        }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(1000);
       }
+    });
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!_pageController.hasClients) return;
 
-      _scrollController.animateTo(
-        scrollPosition,
+      _pageController.nextPage(
         duration: const Duration(milliseconds: 1000),
         curve: Curves.easeInOut,
       );
     });
   }
-
   @override
   void dispose() {
     _timer?.cancel();
-    _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      height: 160,
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: ListView.separated(
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        itemCount: 3,
-        itemBuilder: (context, index) => Container(
-          padding: EdgeInsets.zero,
-          child: Stack(
-            children: [
-              Container(
-                width: 380,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    "${AppConfig.imageUrl}/firstHeader.png",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 25,
-                top: 20,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth > 600;
+    final cardHeight = isLargeScreen ? 220.0 : 160.0;
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: SizedBox(
+          height: cardHeight,
+          child: PageView.builder(
+            controller: _pageController,
+            itemBuilder: (context, index) {
+              final actualIndex = index % _totalPages;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Stack(
                   children: [
-                    Text(
-                      "Discount 80%",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineLarge!.copyWith(color: Colors.white),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          "${AppConfig.imageUrl}/firstHeader.png",
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
                     ),
-                    Text(
-                      "The best thing you have never seen before",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.white),
+                    Positioned(
+                      left: 25,
+                      top: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Discount 80%",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(color: Colors.white),
+                          ),
+                          Text(
+                            "The best thing you have never seen before",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
         ),
-        separatorBuilder: (context, index) => SizedBox(width: 10),
       ),
     );
   }
