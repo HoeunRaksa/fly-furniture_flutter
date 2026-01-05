@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fly/config/app_config.dart';
 
 class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
   const LoginHeader({super.key});
@@ -8,7 +7,6 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
             "Welcome back",
@@ -29,5 +27,5 @@ class LoginHeader extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(110);
+  Size get preferredSize => const Size.fromHeight(150);
 }

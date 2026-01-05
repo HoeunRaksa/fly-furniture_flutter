@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/widgets/button_header.dart';
+import '../ui/button_header.dart';
 
 class DetailHeader extends StatelessWidget implements PreferredSizeWidget{
       const DetailHeader({super.key});

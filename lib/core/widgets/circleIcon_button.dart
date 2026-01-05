@@ -6,29 +6,37 @@ import '../../config/app_color.dart';
 class CircleIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
-  final bool isAdded;
+  final Color backgroundColor;
+  final Color iconColor;
+  final double iconSize;
+  final double sizeX;
+  final double sizedY;
   const CircleIconButton({
     super.key,
     required this.icon,
     required this.onTap,
-    this.isAdded = false
+    this.iconSize = 20,
+    this.sizedY = 30,
+    this.sizeX =30,
+    this.backgroundColor = Colors.white,
+    this.iconColor = AppColors.gray500
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isAdded? AppColors.secondaryGreen : Colors.grey.shade400,
+      color: backgroundColor,
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onTap,
         child: SizedBox(
-          height: 30,
-          width: 30,
+          height: sizedY,
+          width: sizeX,
           child: Icon(
             icon,
-            size: 20,
-            color: isAdded? Colors.white : AppColors.gray500,
+            size: iconSize,
+            color: iconColor
           ),
         ),
       ),

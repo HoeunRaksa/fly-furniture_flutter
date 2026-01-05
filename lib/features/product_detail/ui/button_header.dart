@@ -11,7 +11,7 @@ class ButtonHeader extends StatefulWidget {
 }
 
 class _ButtonHeaderState extends State<ButtonHeader> {
-  bool isFavorite = false; // Track favorite state
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {

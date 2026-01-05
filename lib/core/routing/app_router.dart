@@ -1,15 +1,17 @@
 import 'package:fly/core/routing/app_routes.dart';
-import 'package:fly/features/auth/login/ui/login_screen.dart';
-import 'package:fly/features/auth/otpVerify/ui/otp_screen.dart';
-import 'package:fly/features/auth/register/ui/register_screen.dart';
-import 'package:fly/features/home/ui/home_screen.dart';
-import 'package:fly/features/product_detail/ui/product_screen.dart';
+import 'package:fly/features/home/widget/home_bottomBar.dart';
+import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/login/screen/login_screen.dart';
+import '../../features/auth/otpVerify/screen/otp_screen.dart';
 import '../../features/auth/provider/auth_provider.dart';
+import '../../features/auth/register/screen/register_screen.dart';
+import '../../features/product_detail/screen/product_screen.dart';
+import '../../providers/product_provider.dart';
 
 class AppRouter {
-  static GoRouter router(AuthProvider authProvider) => GoRouter(
-    initialLocation: AppRoutes.home,
+  static GoRouter router(AuthProvider authProvider, ProductProvider productProvider) => GoRouter(
+    initialLocation: AppRoutes.login,
     routes: [
       GoRoute(
         path: AppRoutes.login,
@@ -25,19 +27,30 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomeBottomBar(),
       ),
       GoRoute(
-        path: AppRoutes.detail,
-        builder: (context, state) => const ProductScreen(),
+        path: '${AppRoutes.detail}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+
+          // Use ProductProvider to find the product by ID
+          final product = productProvider.products.firstWhere(
+                (p) => p.id.toString() == id,
+            orElse: () => throw Exception("Product not found"),
+          );
+
+          return ProductScreen(product: product);
+        },
       ),
+      GoRoute(path: AppRoutes.profile,builder: (context, state) => const ProfileScreen(isSetHeader: true,) )
     ],
-    // redirect: (context, state) {
-    //   final loggedIn = authProvider.isLoggedIn;
-    //   final currentPath = state.uri.path;
-    //   if (loggedIn && currentPath == AppRoutes.login) return AppRoutes.home;
-    //   if (!loggedIn && currentPath == AppRoutes.home) return AppRoutes.login;
-    //   return null;
-    // },
+    redirect: (context, state) {
+      final loggedIn = authProvider.isLoggedIn;
+      final currentPath = state.uri.path;
+      if (loggedIn && currentPath == AppRoutes.login) return AppRoutes.home;
+      if (!loggedIn && currentPath == AppRoutes.home) return AppRoutes.login;
+      return null;
+    },
   );
 }

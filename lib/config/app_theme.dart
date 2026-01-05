@@ -5,7 +5,7 @@ class AppTheme {
   static final ThemeData light = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.grey[50],
+    scaffoldBackgroundColor: Colors.grey[100],
     colorScheme: const ColorScheme.light(
       primary: AppColors.secondaryGreen,
       secondary: AppColors.secondaryGreen,

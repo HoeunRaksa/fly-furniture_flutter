@@ -39,9 +39,10 @@ class DetailFooter extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   CircleIconButton(
-                    isAdded: true,
                     icon: Icons.add,
                     onTap: onAdded!,
+                    iconColor: Colors.white,
+                    backgroundColor: AppColors.secondaryGreen,
                   ),
                 ],
               ),
