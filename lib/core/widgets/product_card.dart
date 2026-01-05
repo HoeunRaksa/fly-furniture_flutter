@@ -53,7 +53,6 @@ class ProductCard extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // Text section wrapped in Flexible to avoid overflow
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

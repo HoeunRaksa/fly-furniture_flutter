@@ -29,10 +29,8 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.verifyEmail,
           builder: (context, state) {
-            // First try to get email from extra
             final email = (state.extra as Map?)?['email'] as String?;
 
-            // Fallback to authProvider if extra is null
             final authProvider = context.read<AuthProvider>();
             final finalEmail = email ?? authProvider.user?.email;
 
@@ -70,12 +68,10 @@ class AppRouter {
         final otpPending = authProvider.otpPending;
         final currentPath = state.uri.path;
 
-        // If OTP is pending and user is NOT on verifyEmail, redirect to OTP screen
         if (otpPending && currentPath != AppRoutes.verifyEmail) {
           return AppRoutes.verifyEmail;
         }
 
-        // Protected routes
         final protectedRoutes = [
           AppRoutes.home,
           AppRoutes.profile,
@@ -84,12 +80,10 @@ class AppRouter {
         final isTryingProtectedRoute =
         protectedRoutes.any((route) => currentPath.startsWith(route));
 
-        // Not logged in, trying to access protected route → login
         if (!loggedIn && isTryingProtectedRoute) {
           return AppRoutes.login;
         }
 
-        // Logged in, on login page → home
         if (loggedIn && currentPath == AppRoutes.login) {
           return AppRoutes.home;
         }
