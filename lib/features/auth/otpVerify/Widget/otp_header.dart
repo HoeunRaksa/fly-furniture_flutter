@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/app_color.dart';
 
 class OtpHeader extends StatelessWidget implements PreferredSizeWidget {
-  const OtpHeader({super.key});
+  final String email;
+
+  const OtpHeader({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class OtpHeader extends StatelessWidget implements PreferredSizeWidget {
             child: Column(
               children: [
                 Text(
-                  "Enter the 4-digit code sent to",
+                  "Enter the 6-digit code sent to",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 18,
                     color: AppColors.gray800,
@@ -55,8 +57,12 @@ class OtpHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 const SizedBox(height: 7),
                 Text(
-                  "example.username@gmail.com",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 17),
+                  email,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 17,
+                    color: AppColors.secondaryBlue,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],

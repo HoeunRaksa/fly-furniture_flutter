@@ -5,7 +5,7 @@ class User {
   final String? profileImage;
   final String role;
   final bool isVerified;
-  String? token; // Make it nullable, and set later from API root
+  String? token; // Mutable to set from API root level
 
   User({
     required this.id,
@@ -19,20 +19,38 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'].toString(),
-      name: json['name'],
-      email: json['email'],
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
       profileImage: json['profile_image'],
-      role: json['role'],
+      role: json['role'] ?? 'user',
       isVerified: json['email_verified_at'] != null,
-      token: json['token'], // This will be null if not included here
+      token: json['token'],
     );
   }
 
-  // Helper to merge the root token into the user
+  // Handle API response where token is at root level and user is nested
   static User fromApiResponse(Map<String, dynamic> json) {
-    final user = User.fromJson(json['user']);
-    user.token = json['token']; // Set token from root
-    return user;
+    // Check if the structure has both 'token' at root and 'user' nested
+    if (json.containsKey('token') && json.containsKey('user')) {
+      final user = User.fromJson(json['user']);
+      user.token = json['token']; // Set token from root level
+      return user;
+    }
+
+    // Otherwise, parse directly (for login response, etc.)
+    return User.fromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'profile_image': profileImage,
+      'role': role,
+      'is_verified': isVerified,
+      'token': token,
+    };
   }
 }

@@ -8,27 +8,22 @@ import 'providers/product_provider.dart';
 import 'features/auth/provider/user_provider.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    // Do NOT use Consumer3 here directly at root
-    return Builder(
-      builder: (context) {
-        final authProvider = context.watch<AuthProvider>();
-        final productProvider = context.watch<ProductProvider>();
-        final userProvider = context.watch<UserProvider>();
+@override
+Widget build(BuildContext context) {
+final authProvider = context.read<AuthProvider>();
+final productProvider = context.read<ProductProvider>();
 
-        final router = AppRouter.router(authProvider, productProvider);
+final router = AppRouter.router(authProvider, productProvider);
 
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: router,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: ThemeMode.system,
-        );
-      },
-    );
-  }
+return MaterialApp.router(
+debugShowCheckedModeBanner: false,
+routerConfig: router,
+theme: AppTheme.light,
+darkTheme: AppTheme.dark,
+themeMode: ThemeMode.system,
+);
 }
+}
+
