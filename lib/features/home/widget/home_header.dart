@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:fly/features/auth/provider/user_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../config/app_color.dart';
 import '../../../core/widgets/input_field.dart';
 
 class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -25,9 +25,10 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: preferredSize,
       child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: CupertinoColors.systemBackground,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -38,168 +39,147 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
         child: SafeArea(
           bottom: false,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                child: Column(
-                  children: [
-                    // Top Row - Profile, Welcome, Notifications
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            children: [
+              // Top Row: Avatar, Welcome, Notifications
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Profile Avatar
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => context.push("/profile"),
+                    child: Stack(
                       children: [
-                        // Profile Avatar with Badge
-                        InkWell(
-                          onTap: () {
-                            context.push("/profile");
-                            debugPrint("Navigate to profile");
-                          },
-                          borderRadius: BorderRadius.circular(50),
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.orange.shade700,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: Colors.grey.shade200,
-                                  backgroundImage: user?.profileImage != null
-                                      ? CachedNetworkImageProvider(
-                                    AppConfig.getImageUrl(user!.profileImage!),
-                                  )
-                                      : AssetImage("${AppConfig.imageUrl}/character.png")
-                                  as ImageProvider,
-                                ),
-                              ),
-                              // Online indicator
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  width: 14,
-                                  height: 14,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade500,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: CupertinoColors.activeOrange,
+                              width: 2,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 28,
+                            backgroundColor: CupertinoColors.systemGrey5,
+                            backgroundImage: user?.profileImage != null
+                                ? CachedNetworkImageProvider(
+                              AppConfig.getImageUrl(user!.profileImage!),
+                            )
+                                : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
                           ),
                         ),
-
-                        const SizedBox(width: 12),
-
-                        // Welcome Text
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "Welcome back 👋",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 12,
-                                ),
+                        // Online Indicator
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 14,
+                            height: 14,
+                            decoration: BoxDecoration(
+                              color: CupertinoColors.activeGreen,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: CupertinoColors.systemBackground,
+                                width: 2,
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                capitalizeFirst(userName),
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-
-                        // Notifications Button with Badge
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-                                  // Navigate to notifications
-                                  print('Open notifications');
-                                },
-                                icon: Icon(
-                                  Icons.notifications_outlined,
-                                  color: Colors.grey.shade700,
-                                ),
-                                tooltip: 'Notifications',
-                              ),
-                            ),
-                            // Notification badge
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.shade600,
-                                  shape: BoxShape.circle,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 16,
-                                  minHeight: 16,
-                                ),
-                                child: Text(
-                                  '3',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
+                  ),
 
-                    const SizedBox(height: 16),
+                  const SizedBox(width: 12),
 
-                    // Search Bar
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey.shade100,
-                        border: Border.all(
-                          color: Colors.grey.shade200,
-                          width: 1,
+                  // Welcome Text
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Welcome back 👋",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: CupertinoColors.systemGrey,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          capitalizeFirst(userName),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: CupertinoColors.label,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Notifications Button
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CupertinoButton(
+                        padding: const EdgeInsets.all(8),
+                        color: CupertinoColors.systemGrey6,
+                        borderRadius: BorderRadius.circular(12),
+                        onPressed: () {
+                          debugPrint('Open notifications');
+                        },
+                        child: Icon(
+                          CupertinoIcons.bell,
+                          color: CupertinoColors.systemGrey,
                         ),
                       ),
-                      child: InputField(
-                        label: "Search products...",
-                        onChanged: onSearchChanged,
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: CupertinoColors.systemRed,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                          child: const Text(
+                            '3',
+                            style: TextStyle(
+                              color: CupertinoColors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Search Bar
+              Container(
+                decoration: BoxDecoration(
+                  color: CupertinoColors.systemGrey6,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: CupertinoColors.systemGrey4,
+                    width: 1,
+                  ),
+                ),
+                child: InputField(
+                  label: "Search products...",
+                  onChanged: onSearchChanged,
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

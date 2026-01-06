@@ -44,10 +44,10 @@ class _ProductCardState extends State<ProductCard> {
               height: widget.height,
               width: widget.width,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.65),
+                color: Colors.white.withOpacity(0.7),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withOpacity(0.9),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -80,7 +80,7 @@ class _ProductCardState extends State<ProductCard> {
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
-                                .copyWith(fontSize: 23),
+                                .copyWith(fontSize: 20),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

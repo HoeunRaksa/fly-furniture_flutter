@@ -68,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen>
     final loading = productProvider.loading;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: HomeHeader(onSearchChanged: _onSearchChanged),
       body: SafeArea(
         child: loading
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: 1200, // ⭐ perfect home max width
+              maxWidth: 1200, // perfect home max width
             ),
             child: HomeBody(
               selectedIndex: selectedIndex,
