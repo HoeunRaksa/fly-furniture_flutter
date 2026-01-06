@@ -27,8 +27,9 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
         decoration: BoxDecoration(
-          color: CupertinoColors.systemBackground,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white, width: 1),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -55,12 +56,12 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: CupertinoColors.activeOrange,
+                              color: Colors.white,
                               width: 2,
                             ),
                           ),
                           child: CircleAvatar(
-                            radius: 28,
+                            radius: 30,
                             backgroundColor: CupertinoColors.systemGrey5,
                             backgroundImage: user?.profileImage != null
                                 ? CachedNetworkImageProvider(
@@ -71,8 +72,8 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                         ),
                         // Online Indicator
                         Positioned(
-                          bottom: 0,
-                          right: 0,
+                          bottom: 2,
+                          right: 2,
                           child: Container(
                             width: 14,
                             height: 14,

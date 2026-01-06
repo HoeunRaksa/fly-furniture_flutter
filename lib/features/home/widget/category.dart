@@ -49,26 +49,9 @@ class Category extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         color: isSelected ? AppColors.secondaryGreen : Colors.white,
         border: Border.all(
-          color: isSelected
-              ? AppColors.secondaryGreen
-              : Colors.grey.shade200,
-          width: 1.5,
+          color: isSelected ? Colors.white : Colors.grey.shade200,
+          width: 1,
         ),
-        boxShadow: isSelected
-            ? [
-          BoxShadow(
-            color: AppColors.secondaryGreen.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ]
-            : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Material(
         color: Colors.transparent,

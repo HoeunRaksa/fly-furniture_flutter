@@ -115,6 +115,10 @@ class ProfileBody extends StatelessWidget {
       height: 60,
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 1,),
+        borderRadius: BorderRadius.all(Radius.circular(30))
+      ),
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         color: CupertinoColors.systemGrey6,
