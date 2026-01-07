@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/core/widgets/elevated_button.dart';
 import 'package:go_router/go_router.dart';
-import '../../../config/app_color.dart';
+import 'package:provider/provider.dart';
 import '../../../config/app_config.dart';
-import '../../../model/user_auth.dart';
-
+import '../../auth/provider/auth_provider.dart';
+import '../../auth/provider/user_provider.dart';
 class ProfileBody extends StatelessWidget {
-  final VoidCallback logout;
-  final User user;
-
-  const ProfileBody({super.key, required this.user, required this.logout});
+  const ProfileBody({super.key});
 
   void _showLogoutDialog(BuildContext context) {
     showCupertinoDialog(
@@ -25,10 +22,23 @@ class ProfileBody extends StatelessWidget {
           ),
           CupertinoDialogAction(
             child: const Text("Yes", style: TextStyle(color: CupertinoColors.destructiveRed)),
-            onPressed: () {
+            onPressed: () async {
               context.pop();
-              logout();
-              context.pushReplacement("/home");
+
+              // Get providers
+              final authProvider = context.read<AuthProvider>();
+              final userProvider = context.read<UserProvider>();
+
+              // 1. Logout from AuthProvider
+              await authProvider.logout();
+
+              // 2. Clear UserProvider
+              userProvider.clear();
+
+              // 3. Navigate to home
+              if (context.mounted) {
+                context.go("/home");
+              }
             },
           ),
         ],
@@ -38,6 +48,17 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Get user from UserProvider (has full profile data)
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
+
+    // ✅ Show loading if no user
+    if (user == null) {
+      return const Center(
+        child: Text('Please log in'),
+      );
+    }
+
     String capitalizeFirst(String? text) {
       if (text == null || text.isEmpty) return '';
       return text[0].toUpperCase() + text.substring(1);
@@ -59,6 +80,20 @@ class ProfileBody extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             child: Column(
               children: [
+                // ✅ Debug info (remove in production)
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Current: ${user.email}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+
                 // Profile Image
                 SizedBox(
                   height: 140,
@@ -75,7 +110,7 @@ class ProfileBody extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  "This is the extra information or bio",
+                  user.email ?? '', // ✅ Show email
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: CupertinoColors.systemGrey,
                   ),
@@ -94,7 +129,10 @@ class ProfileBody extends StatelessWidget {
                     item(context, CupertinoIcons.headphones, "Support Center",
                         onPress: () {}),
                     const SizedBox(height: 20),
-                    EButton(name: "Logout",  onPressed: () => _showLogoutDialog(context), ),
+                    EleButton(
+                      name: "Logout",
+                      onPressed: () => _showLogoutDialog(context),
+                    ),
                   ],
                 ),
               ],
@@ -116,8 +154,8 @@ class ProfileBody extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 1,),
-        borderRadius: BorderRadius.all(Radius.circular(30))
+          border: Border.all(color: Colors.white, width: 1,),
+          borderRadius: BorderRadius.all(Radius.circular(30))
       ),
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

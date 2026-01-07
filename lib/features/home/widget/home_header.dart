@@ -25,18 +25,16 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: preferredSize,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              CupertinoTheme.of(context).scaffoldBackgroundColor,
+              CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0.95),
+            ],
+          ),
         ),
         child: SafeArea(
           bottom: false,
@@ -49,28 +47,43 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                   // Profile Avatar
                   CupertinoButton(
                     padding: EdgeInsets.zero,
+                    minSize: 0,
                     onPressed: () => context.push("/profile"),
                     child: Stack(
                       children: [
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                CupertinoColors.systemBlue.withOpacity(0.1),
+                                CupertinoColors.systemPurple.withOpacity(0.1),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: CupertinoColors.systemBlue.withOpacity(0.15),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3),
+                            child: CircleAvatar(
+                              radius: 26,
+                              backgroundColor: CupertinoColors.systemGrey6.resolveFrom(context),
+                              backgroundImage: user?.profileImage != null
+                                  ? CachedNetworkImageProvider(
+                                AppConfig.getImageUrl(user!.profileImage!),
+                              )
+                                  : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
                             ),
                           ),
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: CupertinoColors.systemGrey5,
-                            backgroundImage: user?.profileImage != null
-                                ? CachedNetworkImageProvider(
-                              AppConfig.getImageUrl(user!.profileImage!),
-                            )
-                                : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
-                          ),
                         ),
-                        // Online Indicator
+                        // Online Indicator with glow
                         Positioned(
                           bottom: 2,
                           right: 2,
@@ -81,9 +94,16 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               color: CupertinoColors.activeGreen,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: CupertinoColors.systemBackground,
-                                width: 2,
+                                color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+                                width: 2.5,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: CupertinoColors.activeGreen.withOpacity(0.5),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -91,7 +111,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
 
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 18),
 
                   // Welcome Text
                   Expanded(
@@ -102,17 +122,22 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                         Text(
                           "Welcome back 👋",
                           style: TextStyle(
-                            fontSize: 12,
-                            color: CupertinoColors.systemGrey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                            letterSpacing: 0.1,
+                            height: 1.2,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 3),
                         Text(
                           capitalizeFirst(userName),
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: CupertinoColors.label,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: CupertinoColors.label.resolveFrom(context),
+                            letterSpacing: -0.5,
+                            height: 1.1,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -121,38 +146,73 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
 
-                  // Notifications Button
+                  // Notifications Button with glass effect
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      CupertinoButton(
-                        padding: const EdgeInsets.all(8),
-                        color: CupertinoColors.systemGrey6,
-                        borderRadius: BorderRadius.circular(12),
-                        onPressed: () {
-                          debugPrint('Open notifications');
-                        },
-                        child: Icon(
-                          CupertinoIcons.bell,
-                          color: CupertinoColors.systemGrey,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.6),
+                              CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.4),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.3),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: CupertinoButton(
+                          padding: const EdgeInsets.all(11),
+                          minSize: 0,
+                          borderRadius: BorderRadius.circular(16),
+                          onPressed: () {
+                            debugPrint('Open notifications');
+                          },
+                          child: Icon(
+                            CupertinoIcons.bell_fill,
+                            size: 21,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
                         ),
                       ),
                       Positioned(
                         top: 4,
                         right: 4,
                         child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: CupertinoColors.systemRed,
-                            shape: BoxShape.circle,
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                CupertinoColors.systemRed,
+                                Color(0xFFFF3B30),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: CupertinoColors.systemRed.withOpacity(0.4),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                          constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                           child: const Text(
                             '3',
                             style: TextStyle(
                               color: CupertinoColors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              height: 1,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -163,17 +223,29 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
-              // Search Bar
+              // Search Bar with glass morphism
               Container(
                 decoration: BoxDecoration(
-                  color: CupertinoColors.systemGrey6,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: CupertinoColors.systemGrey4,
-                    width: 1,
+                  gradient: LinearGradient(
+                    colors: [
+                      CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.5),
+                      CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.3),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.2),
+                    width: 0.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: CupertinoColors.black.withOpacity(0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: InputField(
                   label: "Search products...",

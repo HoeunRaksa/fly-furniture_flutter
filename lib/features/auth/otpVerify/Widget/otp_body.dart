@@ -187,7 +187,7 @@ class _OtpBodyState extends State<OtpBody> {
               Text(
                 "Didn't receive code? ",
                 style: TextStyle(
-                  color: AppColors.gray700,
+                  color: AppColors.mediumGrey,
                   fontSize: 14,
                 ),
               ),
@@ -218,7 +218,7 @@ class _OtpBodyState extends State<OtpBody> {
             Text(
               "Verifying...",
               style: TextStyle(
-                color: AppColors.gray700,
+                color: AppColors.mediumGrey,
                 fontSize: 14,
               ),
             ),

@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../config/app_color.dart';
-import '../../config/app_config.dart';
 import '../../model/product.dart';
 
 class SmallCard extends StatelessWidget {

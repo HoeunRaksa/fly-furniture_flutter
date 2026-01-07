@@ -8,25 +8,33 @@ class AuthProvider extends ChangeNotifier {
 
   User? _user;
   String? _token;
-  bool _otpPending = false; // ✅ Track OTP pending state
-
+  bool _otpPending = false;
   bool _isResendEnabled = true;
   int _resendSeconds = 60;
 
   User? get user => _user;
   String? get token => _token;
-  bool get isLoggedIn => _token != null;
+  bool get isLoggedIn => _token != null && _user != null;
   bool get otpPending => _otpPending;
   bool get isResendEnabled => _isResendEnabled;
   int get resendSeconds => _resendSeconds;
 
   // ---------------- LOGIN ----------------
   Future<void> login(String email, String password) async {
+    // IMPORTANT: Clear everything first
+    _user = null;
+    _token = null;
+    _otpPending = false;
+    notifyListeners(); // Force UI update
+
     final result = await _authService.login(email, password);
+
     _user = result;
     _token = result.token;
-    _otpPending = false; // ✅ Clear OTP pending after login
+
     notifyListeners();
+    debugPrint('✅ Login successful: ${result.email}');
+    debugPrint('✅ Current user in provider: ${_user?.email}');
   }
 
   // ---------------- REGISTER ----------------
@@ -34,11 +42,11 @@ class AuthProvider extends ChangeNotifier {
     try {
       final result = await _authService.register(name, email, password);
 
-      // OTP not verified yet
+      // OTP not verified yet - don't save token
       _token = null;
-      _otpPending = true; // ⚠️ OTP is pending
+      _otpPending = true;
 
-      // Store user info for OTP screen
+      // Store temporary user info for OTP screen
       _user = User(
         id: result?.id ?? '',
         name: result?.name ?? name,
@@ -49,10 +57,9 @@ class AuthProvider extends ChangeNotifier {
       );
 
       notifyListeners();
-      debugPrint("Register success, OTP pending for: $email");
-
+      debugPrint("✅ Register success, OTP pending for: $email");
     } catch (e) {
-      debugPrint("Register failed: $e");
+      debugPrint("❌ Register failed: $e");
       rethrow;
     }
   }
@@ -60,10 +67,13 @@ class AuthProvider extends ChangeNotifier {
   // ---------------- VERIFY OTP ----------------
   Future<void> verifyOtp(String email, String otp) async {
     final result = await _authService.verifyOtp(email, otp);
+
     _user = result;
     _token = result.token;
-    _otpPending = false; // ✅ OTP verified
+    _otpPending = false;
+
     notifyListeners();
+    debugPrint('✅ OTP verified: ${result.email}');
   }
 
   // ---------------- RESEND OTP ----------------
@@ -94,10 +104,46 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // ---------------- LOGOUT ----------------
-  void logout() {
+  Future<void> logout() async {
+    debugPrint('🚪 Logging out: ${_user?.email}');
+
+    final currentToken = _token;
+    final currentEmail = _user?.email;
+
+    // CRITICAL: Clear memory state COMPLETELY
     _user = null;
     _token = null;
     _otpPending = false;
+    _isResendEnabled = true;
+    _resendSeconds = 60;
+
+    // Force immediate UI update
     notifyListeners();
+
+    debugPrint('✅ User cleared from AuthProvider');
+    debugPrint('   Previous: $currentEmail');
+    debugPrint('   Current: ${_user?.email} (should be null)');
+    debugPrint('   Token cleared: ${_token == null}');
+
+    // Call backend logout
+    if (currentToken != null) {
+      try {
+        await _authService.logout(currentToken);
+        debugPrint('✅ Backend logout successful');
+      } catch (e) {
+        debugPrint('⚠️ Backend logout failed: $e');
+      }
+    }
+
+    debugPrint('✅ Logout complete');
+  }
+
+  // ---------------- DEBUG HELPER ----------------
+  void printCurrentState() {
+    debugPrint('========== AUTH STATE ==========');
+    debugPrint('User: ${_user?.email}');
+    debugPrint('Token: ${_token?.substring(0, 20)}...');
+    debugPrint('Logged in: $isLoggedIn');
+    debugPrint('================================');
   }
 }

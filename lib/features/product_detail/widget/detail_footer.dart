@@ -55,7 +55,7 @@ class DetailFooter extends StatelessWidget {
           SizedBox(height: 20,),
           Container(
             padding: EdgeInsets.zero,
-            child: EButton(name: "AddToCard", onPressed: () {}),
+            child: EleButton(name: "AddToCard", onPressed: () {}),
           ),
         ],
       ),

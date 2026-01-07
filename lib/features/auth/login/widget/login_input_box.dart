@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fly/config/app_config.dart';
 import 'package:fly/core/widgets/elevated_button.dart';
 import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
@@ -19,7 +18,7 @@ class _LoginInput extends State<LoginInput> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isChecked = false;
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -79,17 +78,27 @@ class _LoginInput extends State<LoginInput> {
                     spaceX(20),
 
                     Center(
-                      child: EButton(
+                      child: EleButton(
                         name: "Login",
+                        isLoading: isLoading,
                         onPressed: () async {
+                        if(isLoading) return;
+                          setState(() => isLoading = true
+                          );
                           final authProvider = context.read<AuthProvider>();
+                          final messenger = ScaffoldMessenger.of(context);
+
                           try {
                             await authProvider.login(
                               emailController.text.trim(),
                               passwordController.text.trim(),
                             );
+
+                            if (!mounted) return; // ✅ prevent context usage after async
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            if (!mounted) return; // ✅ safe guard
+
+                            messenger.showSnackBar(
                               SnackBar(
                                 content: Text(
                                   e.toString().replaceAll('Exception: ', ''),
@@ -128,7 +137,7 @@ class _LoginInput extends State<LoginInput> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             width: 1,
-                            color: AppColors.gray700.withAlpha(100),
+                            color: AppColors.mediumGrey.withAlpha(100),
                           ),
                         ),
                         child: TextButton(
@@ -137,7 +146,7 @@ class _LoginInput extends State<LoginInput> {
                           },
                           child: Text(
                             "Create Account",
-                            style: TextStyle(color: AppColors.gray700),
+                            style: TextStyle(color: AppColors.mediumGrey),
                           ),
                         ),
                       ),

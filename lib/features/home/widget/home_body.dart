@@ -38,46 +38,75 @@ class HomeBody extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1200),
           child: ListView(
             controller: scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
 
-              // Header
+              // Header with gradient text effect
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "Special Offers",
-                  style: Theme.of(context).textTheme.headlineSmall,
+                child: ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: [
+                      CupertinoColors.label.resolveFrom(context),
+                      CupertinoColors.label.resolveFrom(context).withOpacity(0.8),
+                    ],
+                  ).createShader(bounds),
+                  child: Text(
+                    "Special Offers",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                      height: 1.2,
+                      color: CupertinoColors.label.resolveFrom(context),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               const HomeSectionScroller(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
-              // Categories Horizontal List
-              SizedBox(
-                height: 50,
+              // Categories Horizontal List with glass effect
+              Container(
+                height: 52,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: [
+                      CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.3),
+                      CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.2),
+                    ],
+                  ),
+                ),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   itemCount: 10,
                   itemBuilder: (context, index) => Category(
                     index: index,
                     selectedIndex: selectedIndex,
                     onTap: () => onCategorySelected(index),
                   ),
-                  separatorBuilder: (_, __) => const SizedBox(width: 7),
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 24),
 
               // Most Interested Section
               _sectionHeader(context, "Most Interested", onView: () {}),
+              const SizedBox(height: 12),
 
-              SizedBox(
+              Container(
                 height: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
@@ -87,29 +116,46 @@ class HomeBody extends StatelessWidget {
                     )
                         : const AssetImage('assets/images/placeholder.png');
 
-                    return CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => context.push('/detail/${product.id}'),
-                      child: ProductCard(
-                        image: imageProvider as ImageProvider,
-                        product: product,
-                        setIcon: true,
-                        onAdded: () {},
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: CupertinoColors.systemBlue.withOpacity(0.08),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => context.push('/detail/${product.id}'),
+                        child: ProductCard(
+                          image: imageProvider as ImageProvider,
+                          product: product,
+                          setIcon: true,
+                          onAdded: () {},
+                        ),
                       ),
                     );
                   },
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
 
               // Popular Section
               _sectionHeader(context, "Popular", onView: () {}),
+              const SizedBox(height: 12),
 
-              SizedBox(
+              Container(
                 height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
@@ -119,18 +165,31 @@ class HomeBody extends StatelessWidget {
                     )
                         : const AssetImage('assets/images/placeholder.png');
 
-                    return CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => context.push('/detail/${product.id}'),
-                      child: SmallCard(
-                        product: product,
-                        image: imageProvider as ImageProvider,
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: CupertinoColors.systemPurple.withOpacity(0.06),
+                            blurRadius: 12,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => context.push('/detail/${product.id}'),
+                        child: SmallCard(
+                          product: product,
+                          image: imageProvider as ImageProvider,
+                        ),
                       ),
                     );
                   },
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -142,15 +201,62 @@ class HomeBody extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: Theme.of(context).textTheme.headlineSmall),
-        CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: onView,
+        ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+            colors: [
+              CupertinoColors.label.resolveFrom(context),
+              CupertinoColors.label.resolveFrom(context).withOpacity(0.85),
+            ],
+          ).createShader(bounds),
           child: Text(
-            "View",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: CupertinoColors.activeOrange,
-              fontSize: 15,
+            title,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+              height: 1.2,
+              color: CupertinoColors.label.resolveFrom(context),
+            ),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.5),
+                CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.3),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.2),
+              width: 0.5,
+            ),
+          ),
+          child: CupertinoButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            minSize: 0,
+            borderRadius: BorderRadius.circular(12),
+            onPressed: onView,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "View All",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.1,
+                    color: CupertinoColors.activeBlue.resolveFrom(context),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 14,
+                  color: CupertinoColors.activeBlue.resolveFrom(context),
+                ),
+              ],
             ),
           ),
         ),

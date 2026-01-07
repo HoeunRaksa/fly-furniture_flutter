@@ -19,7 +19,7 @@ class CircleIconButton extends StatelessWidget {
     this.sizedY = 30,
     this.sizeX =30,
     this.backgroundColor = Colors.white,
-    this.iconColor = AppColors.gray500
+    this.iconColor = AppColors.lowGrey
   });
 
   @override

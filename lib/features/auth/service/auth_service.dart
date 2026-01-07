@@ -125,4 +125,19 @@ class AuthService {
       rethrow;
     }
   }
+
+  Future<void> logout(String token) async {
+    try {
+      await http.post(
+        Uri.parse("${AppConfig.baseUrl}/logout"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+    } catch (e) {
+      debugPrint('Logout request failed: $e');
+      // Don't throw - local logout should still work
+    }
+  }
 }

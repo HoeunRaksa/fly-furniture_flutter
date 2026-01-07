@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:fly/features/auth/provider/user_provider.dart';
 import 'package:fly/features/profile/widget/profile_body.dart';
 import 'package:fly/features/profile/widget/profile_header.dart';
@@ -30,8 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final authProvider = context.watch<AuthProvider>();
     final user = userProvider.user;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: widget.isSetHeader ? const ProfileHeader(isSet: true) : null,
@@ -46,12 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (user == null) {
                 return const Center(child: Text("Fail to load user!"));
               } else {
-                return ProfileBody(
-                  user: user,
-                  logout: () {
-                    authProvider.logout();
-                  },
-                );
+                // ✅ ProfileBody now gets user from Provider directly
+                return const ProfileBody();
               }
             },
           ),

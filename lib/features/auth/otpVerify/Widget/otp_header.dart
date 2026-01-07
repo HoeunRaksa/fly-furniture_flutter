@@ -51,7 +51,7 @@ class OtpHeader extends StatelessWidget implements PreferredSizeWidget {
                   "Enter the 6-digit code sent to",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 18,
-                    color: AppColors.gray800,
+                    color: AppColors.strongGrey,
                   ),
                   textAlign: TextAlign.center,
                 ),
