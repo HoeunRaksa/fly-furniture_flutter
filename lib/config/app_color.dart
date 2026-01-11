@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Greys
-  static const lowGrey = Color(0xFF6B7280);
-  static const mediumGrey = Color(0xFF374151);
-  static const strongGrey = Color(0xFF1F2937);
-  static const secondaryGreen = Color(0xFF0E8C7A);
-  static const secondaryBlue = Color(0xFF1E88E5);
-  static const white = Color(0xFFFFFFFF);
+  // Furniture-inspired Greys (Softer, more natural tones)
+  static const lowGrey = Color(0xFF9CA3AF); // Light ash grey
+  static const mediumGrey = Color(0xFF4B5563); // Medium charcoal
+  static const strongGrey = Color(0xFF1F2937); // Deep espresso
 
-  // iOS 26 Gradient Colors
-  static const greenLight = Color(0xFF10A68D);
-  static const greenDark = Color(0xFF0B7565);
+  // Furniture Wood Tones
+  static const secondaryGreen = Color(0xFF8B7355); // Walnut brown
+  static const secondaryBlue = Color(0xFF5D4E37); // Oak brown
+  static const white = Color(0xFFFAF9F6); // Off-white/Linen
 
-  static const blueLight = Color(0xFF42A5F5);
-  static const blueDark = Color(0xFF1976D2);
+  // Furniture Gradient Colors (Wood & Fabric tones)
+  static const greenLight = Color(0xFFA68A64); // Light maple
+  static const greenDark = Color(0xFF6B5744); // Dark walnut
 
-  // Glass Morphism Support
-  static const glassFillLight = Color(0x0DFFFFFF);
-  static const glassFillDark = Color(0x1A000000);
+  static const blueLight = Color(0xFF8B7D6B); // Light oak
+  static const blueDark = Color(0xFF4A4238); // Dark mahogany
 
-  // Shadow Colors
-  static const shadowBlue = Color(0x1A1E88E5);
-  static const shadowGreen = Color(0x1A0E8C7A);
-  static const shadowBlack = Color(0x0F000000);
+  // Glass Morphism Support (Softer for furniture UI)
+  static const glassFillLight = Color(0x0DFAF9F6);
+  static const glassFillDark = Color(0x1A1F2937);
+
+  // Shadow Colors (Natural furniture shadows)
+  static const shadowBlue = Color(0x1A5D4E37);
+  static const shadowGreen = Color(0x1A8B7355);
+  static const shadowBlack = Color(0x12000000);
 
   // Gradient Helpers
   static LinearGradient greenGradient = const LinearGradient(
@@ -41,18 +43,12 @@ class AppColors {
   static LinearGradient glassGradientLight = const LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xF2FFFFFF),
-      Color(0xE6FFFFFF),
-    ],
+    colors: [Color(0xF2FAF9F6), Color(0xE6F5F3F0)],
   );
 
   static LinearGradient glassGradientDark = const LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0x80374151),
-      Color(0x66374151),
-    ],
+    colors: [Color(0x804B5563), Color(0x66374151)],
   );
 }

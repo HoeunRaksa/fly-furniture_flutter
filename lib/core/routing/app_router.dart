@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/core/routing/app_routes.dart';
+import 'package:fly/features/favorite/screen/favorite_screen.dart';
 import 'package:fly/features/home/widget/home_bottomBar.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -60,6 +61,10 @@ class AppRouter {
           path: AppRoutes.profile,
           builder: (context, state) =>
           const ProfileScreen(isSetHeader: true),
+        ),  GoRoute(
+          path: AppRoutes.favorite,
+          builder: (context, state) =>
+          const FavoriteScreen(),
         ),
       ],
       redirect: (context, state) {

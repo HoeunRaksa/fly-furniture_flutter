@@ -46,9 +46,7 @@ class _ProductCardState extends State<ProductCard> {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.7),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.9),
-                ),
+                border: Border.all(color: Colors.white.withOpacity(0.9)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.08),
@@ -77,10 +75,9 @@ class _ProductCardState extends State<ProductCard> {
                             widget.product.name.length > 16
                                 ? '${widget.product.name.substring(0, 16)}...'
                                 : widget.product.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .copyWith(fontSize: 20),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall!.copyWith(fontSize: 20),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -93,10 +90,9 @@ class _ProductCardState extends State<ProductCard> {
                               widget.product.description.length > 60
                                   ? '${widget.product.description.substring(0, 60)}...'
                                   : widget.product.description,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(fontSize: 13),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall!.copyWith(fontSize: 13),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -106,13 +102,11 @@ class _ProductCardState extends State<ProductCard> {
                           const SizedBox(height: 10),
                           Text(
                             "\$${widget.product.price.toStringAsFixed(2)}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
+                            style: Theme.of(context).textTheme.bodySmall!
                                 .copyWith(
-                              color: AppColors.secondaryGreen,
-                              fontSize: 20,
-                            ),
+                                  color: AppColors.secondaryGreen,
+                                  fontSize: 20,
+                                ),
                           ),
                         ],
                         const SizedBox(height: 10),
@@ -142,10 +136,10 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     child: Text(
                       "-${widget.product.discount}%",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: Colors.white, fontSize: 15),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   ClipRRect(
@@ -167,8 +161,9 @@ class _ProductCardState extends State<ProductCard> {
                           icon: isFavorite
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          iconColor:
-                          isFavorite ? Colors.pink : Colors.grey.shade500,
+                          iconColor: isFavorite
+                              ? Colors.pink
+                              : Colors.grey.shade500,
                           iconSize: 30,
                           onTap: () {
                             setState(() {
