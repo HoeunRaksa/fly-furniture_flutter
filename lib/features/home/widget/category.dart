@@ -116,55 +116,55 @@ class _CategoryState extends State<Category>
                     borderRadius: BorderRadius.circular(18),
                     gradient: isSelected
                         ? LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.secondaryGreen.withOpacity(0.9),
-                              AppColors.greenDark.withOpacity(0.8),
-                            ],
-                          )
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        AppColors.secondaryGreen.withValues(alpha: 0.9),
+                        AppColors.greenDark.withValues(alpha: 0.8),
+                      ],
+                    )
                         : LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: isDark
-                                ? [
-                                    Colors.white.withOpacity(
-                                      _isHovered ? 0.15 : 0.1,
-                                    ),
-                                    Colors.white.withOpacity(
-                                      _isHovered ? 0.1 : 0.05,
-                                    ),
-                                  ]
-                                : [
-                                    Colors.white.withOpacity(
-                                      _isHovered ? 0.95 : 0.85,
-                                    ),
-                                    Colors.white.withOpacity(
-                                      _isHovered ? 0.9 : 0.75,
-                                    ),
-                                  ],
-                          ),
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: isDark
+                          ? [
+                        Colors.white.withValues(
+                          alpha: _isHovered ? 0.15 : 0.1,
+                        ),
+                        Colors.white.withValues(
+                          alpha: _isHovered ? 0.1 : 0.05,
+                        ),
+                      ]
+                          : [
+                        Colors.white.withValues(
+                          alpha: _isHovered ? 0.95 : 0.85,
+                        ),
+                        Colors.white.withValues(
+                          alpha: _isHovered ? 0.9 : 0.75,
+                        ),
+                      ],
+                    ),
                     border: Border.all(
                       color: isSelected
-                          ? Colors.white.withOpacity(0.4)
+                          ? Colors.white.withValues(alpha: 0.4)
                           : isDark
-                          ? Colors.white.withOpacity(_isHovered ? 0.2 : 0.1)
-                          : Colors.white.withOpacity(_isHovered ? 0.6 : 0.4),
+                          ? Colors.white.withValues(alpha: _isHovered ? 0.2 : 0.1)
+                          : Colors.white.withValues(alpha: _isHovered ? 0.6 : 0.4),
                       width: isSelected ? 2 : 1.5,
                     ),
                     boxShadow: [
                       if (isSelected) ...[
                         BoxShadow(
-                          color: AppColors.secondaryGreen.withOpacity(
-                            0.4 * _glowAnimation.value,
+                          color: AppColors.secondaryGreen.withValues(
+                            alpha: 0.4 * _glowAnimation.value,
                           ),
                           blurRadius: 20,
                           spreadRadius: 2,
                           offset: const Offset(0, 4),
                         ),
                         BoxShadow(
-                          color: AppColors.greenLight.withOpacity(
-                            0.3 * _glowAnimation.value,
+                          color: AppColors.greenLight.withValues(
+                            alpha: 0.3 * _glowAnimation.value,
                           ),
                           blurRadius: 30,
                           spreadRadius: 1,
@@ -173,10 +173,10 @@ class _CategoryState extends State<Category>
                       ] else ...[
                         BoxShadow(
                           color: isDark
-                              ? Colors.black.withOpacity(0.3)
-                              : Colors.black.withOpacity(
-                                  _isHovered ? 0.08 : 0.04,
-                                ),
+                              ? Colors.black.withValues(alpha: 0.3)
+                              : Colors.black.withValues(
+                            alpha: _isHovered ? 0.08 : 0.04,
+                          ),
                           blurRadius: _isHovered ? 12 : 8,
                           offset: Offset(0, _isHovered ? 6 : 3),
                         ),
@@ -189,15 +189,15 @@ class _CategoryState extends State<Category>
                       onTap: widget.onTap,
                       borderRadius: BorderRadius.circular(18),
                       splashColor: isSelected
-                          ? Colors.white.withOpacity(0.15)
-                          : AppColors.secondaryGreen.withOpacity(0.1),
+                          ? Colors.white.withValues(alpha: 0.15)
+                          : AppColors.secondaryGreen.withValues(alpha: 0.1),
                       highlightColor: isSelected
-                          ? Colors.white.withOpacity(0.1)
-                          : AppColors.secondaryGreen.withOpacity(0.05),
+                          ? Colors.white.withValues(alpha: 0.1)
+                          : AppColors.secondaryGreen.withValues(alpha: 0.05),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
+                          horizontal: 16,
+                          vertical: 10,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -211,17 +211,17 @@ class _CategoryState extends State<Category>
                                 duration: const Duration(milliseconds: 300),
                                 decoration: isSelected
                                     ? BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.white.withOpacity(
-                                              0.5,
-                                            ),
-                                            blurRadius: 12,
-                                            spreadRadius: 2,
-                                          ),
-                                        ],
-                                      )
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      blurRadius: 12,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                )
                                     : null,
                                 child: TweenAnimationBuilder<double>(
                                   duration: const Duration(milliseconds: 400),
@@ -235,29 +235,29 @@ class _CategoryState extends State<Category>
                                       angle: value * 0.1,
                                       child: Icon(
                                         displayIcon,
-                                        size: 22,
+                                        size: 20,
                                         color: isSelected
                                             ? Colors.white
                                             : isDark
                                             ? CupertinoColors.secondaryLabel
-                                                  .resolveFrom(context)
+                                            .resolveFrom(context)
                                             : CupertinoColors.secondaryLabel
-                                                  .resolveFrom(context),
+                                            .resolveFrom(context),
                                       ),
                                     );
                                   },
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 8),
                             AnimatedDefaultTextStyle(
                               duration: const Duration(milliseconds: 300),
                               style: TextStyle(
                                 color: isSelected
                                     ? Colors.white
                                     : CupertinoColors.label.resolveFrom(
-                                        context,
-                                      ),
+                                  context,
+                                ),
                                 fontWeight: isSelected
                                     ? FontWeight.w600
                                     : FontWeight.w500,
@@ -266,13 +266,13 @@ class _CategoryState extends State<Category>
                                 height: 1.2,
                                 shadows: isSelected
                                     ? [
-                                        Shadow(
-                                          color: AppColors.secondaryGreen
-                                              .withOpacity(0.5),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ]
+                                  Shadow(
+                                    color: AppColors.secondaryGreen
+                                        .withValues(alpha: 0.5),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
                                     : [],
                               ),
                               child: Text(displayName),

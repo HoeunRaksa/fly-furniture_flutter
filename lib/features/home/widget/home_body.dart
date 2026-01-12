@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fly/config/app_color.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:fly/providers/product_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +10,7 @@ import '../../../core/widgets/product_card.dart';
 import '../../../core/widgets/small_card.dart';
 import '../../../model/product.dart';
 import 'category.dart';
-import 'home_section_scroller.dart';
+import 'home_section_scroller.dart'; // Import the scroller
 
 class HomeBody extends StatelessWidget {
   final int selectedIndex;
@@ -30,166 +32,98 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = MediaQuery.of(context).platformBrightness;
+    final isDark = brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: () async => await provider.refreshProducts(),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: ListView(
-            controller: scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            physics: const AlwaysScrollableScrollPhysics(),
+      child: ListView(
+        controller: scrollController,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          const SizedBox(height: 4),
+
+          // Special Offers Header
+          _buildGlassHeader(context, "Special Offers", isDark),
+          const SizedBox(height: 10),
+
+          // Banner Section with Auto Scroller
+          const HomeSectionScroller(), // Use the scroller here instead of _buildBanner
+          const SizedBox(height: 12),
+
+          // Categories
+          _buildGlassCategories(context, isDark),
+          const SizedBox(height: 14),
+
+          // Most Interested Section
+          _buildSectionHeader(context, "Featured Products", isDark: isDark),
+          const SizedBox(height: 8),
+          _buildFeaturedSection(context, isDark),
+          const SizedBox(height: 16),
+
+          // Popular Section
+          _buildSectionHeader(context, "All Products", isDark: isDark),
+          const SizedBox(height: 8),
+          _buildAllProductsSection(context, isDark),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGlassHeader(BuildContext context, String title, bool isDark) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isDark
+                  ? const [
+                Color.fromRGBO(255, 255, 255, 0.08),
+                Color.fromRGBO(255, 255, 255, 0.03),
+              ]
+                  : const [
+                Color.fromRGBO(255, 255, 255, 0.7),
+                Color.fromRGBO(255, 255, 255, 0.5),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark
+                  ? const Color.fromRGBO(255, 255, 255, 0.1)
+                  : const Color.fromRGBO(255, 255, 255, 0.4),
+              width: 1.5,
+            ),
+          ),
+          child: Row(
             children: [
-              const SizedBox(height: 8),
-
-              // Header with gradient text effect
-              Align(
-                alignment: Alignment.centerLeft,
-                child: ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      CupertinoColors.label.resolveFrom(context),
-                      CupertinoColors.label.resolveFrom(context).withOpacity(0.8),
-                    ],
-                  ).createShader(bounds),
-                  child: Text(
-                    "Special Offers",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
-                      height: 1.2,
-                      color: CupertinoColors.label.resolveFrom(context),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const HomeSectionScroller(),
-              const SizedBox(height: 20),
-
-              // Categories Horizontal List with glass effect
               Container(
-                height: 52,
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
                   gradient: LinearGradient(
                     colors: [
-                      CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.3),
-                      CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.2),
+                      AppColors.secondaryGreen.withValues(alpha: 0.2),
+                      AppColors.greenLight.withValues(alpha: 0.1),
                     ],
                   ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  itemCount: 10,
-                  itemBuilder: (context, index) => Category(
-                    index: index,
-                    selectedIndex: selectedIndex,
-                    onTap: () => onCategorySelected(index),
-                  ),
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                child: Icon(CupertinoIcons.tag_fill, color: AppColors.secondaryGreen, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 24),
-
-              // Most Interested Section
-              _sectionHeader(context, "Most Interested", onView: () {}),
-              const SizedBox(height: 12),
-
-              Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final imageProvider = product.images.isNotEmpty
-                        ? CachedNetworkImageProvider(
-                      AppConfig.getImageUrl(product.images[0].imageUrl),
-                    )
-                        : const AssetImage('assets/images/placeholder.png');
-
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: CupertinoColors.systemBlue.withOpacity(0.08),
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => context.push('/detail/${product.id}'),
-                        child: ProductCard(
-                          image: imageProvider as ImageProvider,
-                          product: product,
-                          setIcon: true,
-                          onAdded: () {},
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                ),
-              ),
-              const SizedBox(height: 28),
-
-              // Popular Section
-              _sectionHeader(context, "Popular", onView: () {}),
-              const SizedBox(height: 12),
-
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final imageProvider = product.images.isNotEmpty
-                        ? CachedNetworkImageProvider(
-                      AppConfig.getImageUrl(product.images[0].imageUrl),
-                    )
-                        : const AssetImage('assets/images/placeholder.png');
-
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: CupertinoColors.systemPurple.withOpacity(0.06),
-                            blurRadius: 12,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => context.push('/detail/${product.id}'),
-                        child: SmallCard(
-                          product: product,
-                          image: imageProvider as ImageProvider,
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                ),
-              ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -197,66 +131,164 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _sectionHeader(BuildContext context, String title, {required VoidCallback onView}) {
+  Widget _buildGlassCategories(BuildContext context, bool isDark) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          height: 52,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isDark
+                  ? const [
+                Color.fromRGBO(255, 255, 255, 0.1),
+                Color.fromRGBO(255, 255, 255, 0.05),
+              ]
+                  : const [
+                Color.fromRGBO(255, 255, 255, 0.8),
+                Color.fromRGBO(255, 255, 255, 0.6),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark
+                  ? const Color.fromRGBO(255, 255, 255, 0.15)
+                  : const Color.fromRGBO(255, 255, 255, 0.5),
+              width: 1.5,
+            ),
+          ),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            itemCount: 10,
+            itemBuilder: (context, index) => Category(
+              index: index,
+              selectedIndex: selectedIndex,
+              onTap: () => onCategorySelected(index),
+            ),
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeaturedSection(BuildContext context, bool isDark) {
+    if (products.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return SizedBox(
+      height: 400,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final imageProvider = product.images.isNotEmpty
+              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
+              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+
+          return CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => context.push('/detail/${product.id}'),
+            child: ProductCard(
+              image: imageProvider,
+              product: product,
+              setIcon: true,
+              onAdded: () {},
+            ),
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+      ),
+    );
+  }
+
+  Widget _buildAllProductsSection(BuildContext context, bool isDark) {
+    if (products.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return SizedBox(
+      height: 120,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final imageProvider = product.images.isNotEmpty
+              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
+              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+
+          return CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => context.push('/detail/${product.id}'),
+            child: SmallCard(product: product, image: imageProvider),
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Container(
+      height: 200,
+      alignment: Alignment.center,
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(CupertinoIcons.cube_box, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text('No products available'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String title, {required bool isDark}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [
-              CupertinoColors.label.resolveFrom(context),
-              CupertinoColors.label.resolveFrom(context).withOpacity(0.85),
-            ],
-          ).createShader(bounds),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.4,
-              height: 1.2,
-              color: CupertinoColors.label.resolveFrom(context),
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.5),
-                CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.3),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.2),
-              width: 0.5,
-            ),
-          ),
-          child: CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            minSize: 0,
-            borderRadius: BorderRadius.circular(12),
-            onPressed: onView,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "View All",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.1,
-                    color: CupertinoColors.activeBlue.resolveFrom(context),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? const [
+                      Color.fromRGBO(255, 255, 255, 0.08),
+                      Color.fromRGBO(255, 255, 255, 0.03),
+                    ]
+                        : const [
+                      Color.fromRGBO(255, 255, 255, 0.7),
+                      Color.fromRGBO(255, 255, 255, 0.5),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isDark
+                        ? const Color.fromRGBO(255, 255, 255, 0.1)
+                        : const Color.fromRGBO(255, 255, 255, 0.4),
+                    width: 1.5,
                   ),
                 ),
-                const SizedBox(width: 4),
-                Icon(
-                  CupertinoIcons.chevron_right,
-                  size: 14,
-                  color: CupertinoColors.activeBlue.resolveFrom(context),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

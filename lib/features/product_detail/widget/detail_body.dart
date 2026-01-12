@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fly/features/product_detail/widget/viewer.dart';
 import '../../../config/app_config.dart';
 import '../../../model/product.dart';
-import 'detail_header.dart';
+
 
 class DetailBody extends StatelessWidget {
   final Product product;

@@ -1,12 +1,12 @@
 import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fly/core/widgets/elevated_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../config/app_color.dart';
-import '../../../config/app_config.dart';
 import '../../auth/provider/auth_provider.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -58,57 +58,283 @@ class _ProfileBodyState extends State<ProfileBody>
     super.dispose();
   }
 
+  // Image Picker Function
+  Future<void> _pickImage(ImageSource source, AuthProvider authProvider) async {
+    final picker = ImagePicker();
+
+    try {
+      final pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 85, // Reduce file size
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+
+      if (pickedFile == null) return;
+
+      final imageFile = File(pickedFile.path);
+
+      // Show loading dialog
+      if (!mounted) return;
+      showCupertinoDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemBackground.resolveFrom(context),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CupertinoActivityIndicator(radius: 16),
+                  SizedBox(height: 16),
+                  Text('Uploading image...', style: TextStyle(fontSize: 16)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Upload the image
+      await authProvider.updateProfile(profileImage: imageFile);
+
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(
+                  CupertinoIcons.check_mark_circled_solid,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 12),
+                Text('Profile image updated successfully'),
+              ],
+            ),
+            backgroundColor: CupertinoColors.systemGreen,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Image upload error: $e');
+
+      if (mounted) {
+        // Close loading dialog if still open
+        try {
+          Navigator.of(context).pop();
+        } catch (_) {}
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(
+                  CupertinoIcons.xmark_circle_fill,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text('Upload failed: ${e.toString()}')),
+              ],
+            ),
+            backgroundColor: CupertinoColors.destructiveRed,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  // Delete Profile Image Function
+  Future<void> _deleteProfileImage(AuthProvider authProvider) async {
+    if (!mounted) return;
+
+    // Show loading dialog
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CupertinoActivityIndicator(radius: 16),
+                SizedBox(height: 16),
+                Text('Removing image...', style: TextStyle(fontSize: 16)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    try {
+      await authProvider.deleteProfileImage();
+
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(
+                  CupertinoIcons.check_mark_circled_solid,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 12),
+                Text('Profile picture removed'),
+              ],
+            ),
+            backgroundColor: CupertinoColors.systemGreen,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(
+                  CupertinoIcons.xmark_circle_fill,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text('Failed to remove: ${e.toString()}')),
+              ],
+            ),
+            backgroundColor: CupertinoColors.destructiveRed,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  // Logout Function
   void _showLogoutDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: CupertinoAlertDialog(
-          title: const Text("Logout"),
+          title: const Text(
+            "Logout",
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           content: const Text("Are you sure you want to logout?"),
           actions: [
             CupertinoDialogAction(
               child: const Text("Cancel"),
-              onPressed: () => context.pop(),
+              onPressed: () => Navigator.of(context).pop(),
             ),
             CupertinoDialogAction(
-              child: const Text(
-                "Yes",
-                style: TextStyle(color: CupertinoColors.destructiveRed),
-              ),
+              isDestructiveAction: true,
+              child: const Text("Logout"),
               onPressed: () async {
-                context.pop();
+                // Close confirmation dialog first
+                Navigator.of(context).pop();
 
                 final authProvider = context.read<AuthProvider>();
+                final navigator = Navigator.of(context);
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                if (context.mounted) {
-                  showCupertinoDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: const Center(
-                        child: CupertinoActivityIndicator(radius: 20),
+                // Show loading
+                showCupertinoDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.systemBackground.resolveFrom(
+                            context,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CupertinoActivityIndicator(radius: 16),
+                            SizedBox(height: 16),
+                            Text('Logging out...'),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                }
+                  ),
+                );
 
                 try {
                   await authProvider.logout();
 
+                  // Close loading dialog
                   if (context.mounted) {
-                    context.pop();
+                    navigator.pop();
+                  }
+
+                  // Navigate to home - use a slight delay to ensure dialog is closed
+                  await Future.delayed(const Duration(milliseconds: 100));
+
+                  if (context.mounted) {
                     context.go("/home");
                   }
                 } catch (e) {
                   debugPrint('Logout error: $e');
+
+                  // Close loading dialog
                   if (context.mounted) {
-                    context.pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    try {
+                      navigator.pop();
+                    } catch (_) {
+                      // Dialog already closed
+                    }
+
+                    scaffoldMessenger.showSnackBar(
                       SnackBar(
-                        content: Text('Logout failed: $e'),
+                        content: Text('Logout failed: ${e.toString()}'),
                         backgroundColor: CupertinoColors.destructiveRed,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     );
                   }
@@ -170,11 +396,6 @@ class _ProfileBodyState extends State<ProfileBody>
           ),
         ),
       );
-    }
-
-    String capitalizeFirst(String? text) {
-      if (text == null || text.isEmpty) return '';
-      return text[0].toUpperCase() + text.substring(1);
     }
 
     return SingleChildScrollView(
@@ -427,7 +648,7 @@ class _ProfileBodyState extends State<ProfileBody>
           child: Column(
             children: [
               Text(
-                capitalizeFirst(user.name),
+                _capitalizeFirst(user.name),
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 26,
@@ -444,6 +665,7 @@ class _ProfileBodyState extends State<ProfileBody>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
+
               // Role Badge with Glass Effect
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -520,19 +742,27 @@ class _ProfileBodyState extends State<ProfileBody>
       {
         'icon': CupertinoIcons.creditcard,
         'title': 'Payment Method',
-        'onTap': () {},
+        'onTap': () => _showComingSoon(context, 'Payment Method'),
       },
       {
         'icon': CupertinoIcons.shopping_cart,
         'title': 'Order History',
-        'onTap': () {},
+        'onTap': () => _showComingSoon(context, 'Order History'),
       },
-      {'icon': CupertinoIcons.location, 'title': 'Address', 'onTap': () {}},
-      {'icon': CupertinoIcons.settings, 'title': 'Settings', 'onTap': () {}},
+      {
+        'icon': CupertinoIcons.location,
+        'title': 'Address',
+        'onTap': () => _showComingSoon(context, 'Address'),
+      },
+      {
+        'icon': CupertinoIcons.settings,
+        'title': 'Settings',
+        'onTap': () => _showComingSoon(context, 'Settings'),
+      },
       {
         'icon': CupertinoIcons.headphones,
         'title': 'Support Center',
-        'onTap': () {},
+        'onTap': () => _showComingSoon(context, 'Support Center'),
       },
     ];
 
@@ -725,8 +955,8 @@ class _ProfileBodyState extends State<ProfileBody>
           actions: [
             CupertinoActionSheetAction(
               onPressed: () {
-                context.pop();
-                debugPrint('Take photo');
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera, authProvider);
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -742,8 +972,8 @@ class _ProfileBodyState extends State<ProfileBody>
             ),
             CupertinoActionSheetAction(
               onPressed: () {
-                context.pop();
-                debugPrint('Choose from gallery');
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery, authProvider);
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -757,43 +987,9 @@ class _ProfileBodyState extends State<ProfileBody>
             if (authProvider.user?.hasProfileImage == true)
               CupertinoActionSheetAction(
                 isDestructiveAction: true,
-                onPressed: () async {
-                  context.pop();
-
-                  showCupertinoDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: const Center(
-                        child: CupertinoActivityIndicator(radius: 20),
-                      ),
-                    ),
-                  );
-
-                  try {
-                    await authProvider.deleteProfileImage();
-
-                    if (context.mounted) {
-                      context.pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Profile picture removed'),
-                          backgroundColor: CupertinoColors.systemGreen,
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      context.pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Failed to remove picture: $e'),
-                          backgroundColor: CupertinoColors.destructiveRed,
-                        ),
-                      );
-                    }
-                  }
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _deleteProfileImage(authProvider);
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -806,7 +1002,7 @@ class _ProfileBodyState extends State<ProfileBody>
               ),
           ],
           cancelButton: CupertinoActionSheetAction(
-            onPressed: () => context.pop(),
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text(
               'Cancel',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
@@ -817,7 +1013,26 @@ class _ProfileBodyState extends State<ProfileBody>
     );
   }
 
-  String capitalizeFirst(String? text) {
+  void _showComingSoon(BuildContext context, String feature) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: CupertinoAlertDialog(
+          title: Text(feature),
+          content: const Text('This feature is coming soon!'),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _capitalizeFirst(String? text) {
     if (text == null || text.isEmpty) return '';
     return text[0].toUpperCase() + text.substring(1);
   }

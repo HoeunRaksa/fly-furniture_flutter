@@ -1,14 +1,21 @@
 import 'package:fly/model/product_image.dart';
 
 class Product {
-  final int id;
+  final String id;
   final String name;
   final String description;
   final double price;
   final double discount;
   final int stock;
   final double rating;
+  final String? category;
+  final String? brand;
   final List<ProductImage> images;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int reviewCount;
+  final bool isFeatured;
+  final bool isActive;
 
   Product({
     required this.id,
@@ -18,23 +25,37 @@ class Product {
     required this.discount,
     required this.stock,
     required this.rating,
+    this.category,
+    this.brand,
     required this.images,
+    required this.createdAt,
+    required this.updatedAt,
+    this.reviewCount = 0,
+    this.isFeatured = false,
+    this.isActive = true,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     var list = json['images'] as List? ?? [];
     List<ProductImage> imagesList =
-    list.map((i) => ProductImage.fromJson(i)).toList();
+        list.map((i) => ProductImage.fromJson(i)).toList();
 
     return Product(
-      id: json['id'] ?? 0,
+      id: json['id']?.toString() ?? '0',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: _parseDouble(json['price']),
       discount: _parseDouble(json['discount']),
       stock: _parseInt(json['stock']),
       rating: _parseDouble(json['rating']),
+      category: json['category']?.toString(),
+      brand: json['brand']?.toString(),
       images: imagesList,
+      createdAt: _parseDateTime(json['created_at']),
+      updatedAt: _parseDateTime(json['updated_at']),
+      reviewCount: _parseInt(json['review_count']),
+      isFeatured: json['is_featured'] == true || json['is_featured'] == 1,
+      isActive: json['is_active'] == true || json['is_active'] == 1,
     );
   }
 
@@ -55,6 +76,19 @@ class Product {
     return 0;
   }
 
+  static DateTime _parseDateTime(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (_) {
+        return DateTime.now();
+      }
+    }
+    return DateTime.now();
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -64,7 +98,14 @@ class Product {
       'discount': discount,
       'stock': stock,
       'rating': rating,
+      'category': category,
+      'brand': brand,
       'images': images.map((img) => img.toJson()).toList(),
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'review_count': reviewCount,
+      'is_featured': isFeatured,
+      'is_active': isActive,
     };
   }
 
@@ -76,9 +117,129 @@ class Product {
     return price;
   }
 
+  // Helper method to get discount amount in currency
+  double get discountAmount {
+    if (discount > 0) {
+      return price * discount / 100;
+    }
+    return 0.0;
+  }
+
   // Helper method to check if product is in stock
   bool get isInStock => stock > 0;
 
   // Helper method to check if product has discount
   bool get hasDiscount => discount > 0;
+
+  // Helper method to check if product has images
+  bool get hasImages => images.isNotEmpty;
+
+  // Helper method to get main image URL
+  String? get mainImageUrl => images.isNotEmpty ? images.first.imageUrl : null;
+
+  // Helper method to get stock status text
+  String get stockStatus {
+    if (stock <= 0) return 'Out of Stock';
+    if (stock <= 5) return 'Low Stock ($stock left)';
+    return 'In Stock';
+  }
+
+  // Helper method to get stock status color indicator
+  StockStatusColor get stockStatusColor {
+    if (stock <= 0) return StockStatusColor.outOfStock;
+    if (stock <= 5) return StockStatusColor.lowStock;
+    return StockStatusColor.inStock;
+  }
+
+  // Helper method to get rating stars (0-5)
+  int get fullStars => rating.floor();
+  bool get hasHalfStar => (rating - fullStars) >= 0.5;
+  int get emptyStars => 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  // Helper method to format price
+  String get formattedPrice => '\$${price.toStringAsFixed(2)}';
+  String get formattedDiscountedPrice => '\$${discountedPrice.toStringAsFixed(2)}';
+
+  // Helper method to check if product is new (created within last 7 days)
+  bool get isNew {
+    final difference = DateTime.now().difference(createdAt);
+    return difference.inDays <= 7;
+  }
+
+  // Helper method to check if product is on sale
+  bool get isOnSale => hasDiscount && isActive;
+
+  // Helper method to calculate savings percentage
+  String get savingsText {
+    if (hasDiscount) {
+      return 'Save ${discount.toStringAsFixed(0)}%';
+    }
+    return '';
+  }
+
+  // Helper method to get availability text
+  String get availabilityText {
+    if (!isActive) return 'Unavailable';
+    if (!isInStock) return 'Out of Stock';
+    if (stock <= 5) return 'Only $stock left';
+    return 'Available';
+  }
+
+  // Copy with method for creating modified copies
+  Product copyWith({
+    String? id,
+    String? name,
+    String? description,
+    double? price,
+    double? discount,
+    int? stock,
+    double? rating,
+    String? category,
+    String? brand,
+    List<ProductImage>? images,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? reviewCount,
+    bool? isFeatured,
+    bool? isActive,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      discount: discount ?? this.discount,
+      stock: stock ?? this.stock,
+      rating: rating ?? this.rating,
+      category: category ?? this.category,
+      brand: brand ?? this.brand,
+      images: images ?? this.images,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      reviewCount: reviewCount ?? this.reviewCount,
+      isFeatured: isFeatured ?? this.isFeatured,
+      isActive: isActive ?? this.isActive,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Product && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'Product(id: $id, name: $name, price: $price, stock: $stock)';
+  }
+}
+
+// Enum for stock status colors
+enum StockStatusColor {
+  inStock,
+  lowStock,
+  outOfStock,
 }

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../config/app_color.dart';
 import '../../model/product.dart';
@@ -11,127 +10,125 @@ class SmallCard extends StatelessWidget {
 
   const SmallCard({
     super.key,
-    this.width = 370,
-    this.height = 230,
+    this.width = 280, // Reduced from 340
+    this.height = 110, // Reduced from 120
     required this.product,
     required this.image,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-            child: Container(
-              alignment: Alignment.centerLeft,
-              width: width,
-              height: height,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.9),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
-                    blurRadius: 15,
-                    offset: Offset(0, 8),
+    return Container(
+      width: width,
+      height: height,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Image - Fixed size
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image(
+              image: image,
+              width: 90,
+              height: 90,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          const SizedBox(width: 10),
+
+          // Product info - Flexible to prevent overflow
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Product name
+                if (product.name.isNotEmpty)
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                // Description
+                if (product.description.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    product.description,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    margin: EdgeInsets.only(right: 30),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.35),
+
+                // Price and discount
+                if (product.price > 0) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          '\$${product.price.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.secondaryGreen,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      child: Image(image: image,),
-                    ),
-                  ),
-
-                  // Text section
-                  Flexible(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (product.name.isNotEmpty)
-                          Text(
-                            product.name.length > 25
-                                ? '${product.name.substring(0, 25)}...'
-                                : product.name,
-                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 13),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                      if (product.discount > 0) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
                           ),
-                        if (product.description.isNotEmpty)
-                          const SizedBox(height: 5),
-                        if (product.description.isNotEmpty)
-                          Text(
-                            product.description.length > 30
-                                ? '${product.description.substring(0, 30)}...'
-                                : product.description,
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                        if (product.price != 0) const SizedBox(height: 5),
-                        if (product.price != 0)
-                          Text(
-                            "\$${product.price.toStringAsFixed(2)}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .copyWith(
-                              color: AppColors.secondaryGreen,
+                          child: Text(
+                            '-${product.discount.toStringAsFixed(0)}%',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ],
-              ),
+              ],
             ),
           ),
-        ),
-
-        if (product.discount > 0)
-          Positioned(
-            top: 14,
-            right: 20,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.secondaryGreen.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                "-${product.discount}%",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: Colors.white),
-              ),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

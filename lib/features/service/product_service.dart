@@ -26,7 +26,26 @@ class ProductService {
           .timeout(_timeout);
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final responseData = json.decode(response.body);
+        
+        // Handle both wrapped and direct array responses
+        List<dynamic> data;
+        if (responseData is Map<String, dynamic>) {
+          // Wrapped response: {"success": true, "data": [...]}
+          if (responseData.containsKey('data')) {
+            data = responseData['data'] as List<dynamic>;
+          } else if (responseData.containsKey('products')) {
+            data = responseData['products'] as List<dynamic>;
+          } else {
+            throw Exception("Invalid response format: no 'data' or 'products' field");
+          }
+        } else if (responseData is List) {
+          // Direct array response: [...]
+          data = responseData;
+        } else {
+          throw Exception("Invalid response format: expected Map or List");
+        }
+        
         final products = data.map((json) => Product.fromJson(json)).toList();
 
         // Cache the results
@@ -53,7 +72,20 @@ class ProductService {
           .timeout(_timeout);
 
       if (response.statusCode == 200) {
-        return Product.fromJson(json.decode(response.body));
+        final responseData = json.decode(response.body);
+        
+        // Handle wrapped response
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            return Product.fromJson(responseData['data']);
+          } else if (responseData.containsKey('product')) {
+            return Product.fromJson(responseData['product']);
+          }
+          // If no wrapper, assume the whole response is the product
+          return Product.fromJson(responseData);
+        }
+        
+        return Product.fromJson(responseData);
       } else if (response.statusCode == 404) {
         throw Exception("Product not found");
       } else {
@@ -69,9 +101,9 @@ class ProductService {
   }
 
   Future<Product> createProduct(
-      Map<String, dynamic> data,
-      String token,
-      ) async {
+    Map<String, dynamic> data,
+    String token,
+  ) async {
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -104,10 +136,23 @@ class ProductService {
       final streamedResponse = await request.send().timeout(_timeout);
       final response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 || response.statusCode == 200) {
         // Clear cache when new product is created
         _cachedProducts = null;
-        return Product.fromJson(json.decode(response.body));
+        
+        final responseData = json.decode(response.body);
+        
+        // Handle wrapped response
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            return Product.fromJson(responseData['data']);
+          } else if (responseData.containsKey('product')) {
+            return Product.fromJson(responseData['product']);
+          }
+          return Product.fromJson(responseData);
+        }
+        
+        return Product.fromJson(responseData);
       } else {
         throw Exception(
           "Failed to create product (${response.statusCode}): ${response.body}",
@@ -123,10 +168,10 @@ class ProductService {
   }
 
   Future<Product> updateProduct(
-      String id,
-      Map<String, dynamic> data,
-      String token,
-      ) async {
+    String id,
+    Map<String, dynamic> data,
+    String token,
+  ) async {
     try {
       final response = await http
           .put(
@@ -143,7 +188,20 @@ class ProductService {
       if (response.statusCode == 200) {
         // Clear cache when product is updated
         _cachedProducts = null;
-        return Product.fromJson(json.decode(response.body));
+        
+        final responseData = json.decode(response.body);
+        
+        // Handle wrapped response
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            return Product.fromJson(responseData['data']);
+          } else if (responseData.containsKey('product')) {
+            return Product.fromJson(responseData['product']);
+          }
+          return Product.fromJson(responseData);
+        }
+        
+        return Product.fromJson(responseData);
       } else if (response.statusCode == 404) {
         throw Exception("Product not found");
       } else {
@@ -172,7 +230,7 @@ class ProductService {
       )
           .timeout(_timeout);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 204) {
         // Clear cache when product is deleted
         _cachedProducts = null;
       } else if (response.statusCode == 404) {
@@ -191,10 +249,10 @@ class ProductService {
 
   // Upload additional images to existing product
   Future<Product> uploadProductImages(
-      String id,
-      List<String> imagePaths,
-      String token,
-      ) async {
+    String id,
+    List<String> imagePaths,
+    String token,
+  ) async {
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -220,7 +278,20 @@ class ProductService {
       if (response.statusCode == 200) {
         // Clear cache when images are uploaded
         _cachedProducts = null;
-        return Product.fromJson(json.decode(response.body));
+        
+        final responseData = json.decode(response.body);
+        
+        // Handle wrapped response
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            return Product.fromJson(responseData['data']);
+          } else if (responseData.containsKey('product')) {
+            return Product.fromJson(responseData['product']);
+          }
+          return Product.fromJson(responseData);
+        }
+        
+        return Product.fromJson(responseData);
       } else {
         throw Exception(
           "Failed to upload images (${response.statusCode}): ${response.body}",
