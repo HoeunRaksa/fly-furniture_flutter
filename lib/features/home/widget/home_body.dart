@@ -108,13 +108,13 @@ class HomeBody extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.secondaryGreen.withValues(alpha: 0.2),
-                      AppColors.greenLight.withValues(alpha: 0.1),
+                      AppColors.woodWalnut.withValues(alpha: 0.2),
+                      AppColors.woodLight.withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(CupertinoIcons.tag_fill, color: AppColors.secondaryGreen, size: 20),
+                child: Icon(CupertinoIcons.tag_fill, color: AppColors.woodWalnut, size: 20),
               ),
               const SizedBox(width: 12),
               Text(

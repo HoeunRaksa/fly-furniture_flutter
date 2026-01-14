@@ -496,7 +496,7 @@ class _ProfileBodyState extends State<ProfileBody>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.secondaryGreen.withOpacity(0.2),
+                    color: AppColors.woodWalnut.withOpacity(0.2),
                     blurRadius: 30,
                     offset: const Offset(0, 10),
                   ),
@@ -521,8 +521,8 @@ class _ProfileBodyState extends State<ProfileBody>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppColors.secondaryGreen.withOpacity(0.3),
-                                  AppColors.greenLight.withOpacity(0.2),
+                                  AppColors.woodWalnut.withOpacity(0.3),
+                                  AppColors.woodLight.withOpacity(0.2),
                                 ],
                               ),
                             ),
@@ -550,8 +550,8 @@ class _ProfileBodyState extends State<ProfileBody>
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.secondaryGreen.withOpacity(0.2),
-                                AppColors.greenLight.withOpacity(0.1),
+                                AppColors.woodWalnut.withOpacity(0.2),
+                                AppColors.woodLight.withOpacity(0.1),
                               ],
                             ),
                           ),
@@ -581,13 +581,13 @@ class _ProfileBodyState extends State<ProfileBody>
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.secondaryGreen, AppColors.greenDark],
+                      colors: [AppColors.woodWalnut, AppColors.woodDark],
                     ),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.secondaryGreen.withOpacity(0.5),
+                        color: AppColors.woodWalnut.withOpacity(0.5),
                         blurRadius: 15,
                         offset: const Offset(0, 5),
                       ),
@@ -684,15 +684,15 @@ class _ProfileBodyState extends State<ProfileBody>
                                 CupertinoColors.systemPurple.withOpacity(0.2),
                               ]
                             : [
-                                AppColors.secondaryGreen.withOpacity(0.3),
-                                AppColors.greenLight.withOpacity(0.2),
+                                AppColors.woodWalnut.withOpacity(0.3),
+                                AppColors.woodLight.withOpacity(0.2),
                               ],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: user.role == 'admin'
                             ? CupertinoColors.systemPurple.withOpacity(0.5)
-                            : AppColors.secondaryGreen.withOpacity(0.5),
+                            : AppColors.woodWalnut.withOpacity(0.5),
                         width: 1.5,
                       ),
                     ),
@@ -705,7 +705,7 @@ class _ProfileBodyState extends State<ProfileBody>
                               : CupertinoIcons.person_fill,
                           color: user.role == 'admin'
                               ? CupertinoColors.systemPurple
-                              : AppColors.secondaryGreen,
+                              : AppColors.woodWalnut,
                           size: 16,
                         ),
                         const SizedBox(width: 6),
@@ -714,7 +714,7 @@ class _ProfileBodyState extends State<ProfileBody>
                           style: TextStyle(
                             color: user.role == 'admin'
                                 ? CupertinoColors.systemPurple
-                                : AppColors.secondaryGreen,
+                                : AppColors.woodWalnut,
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
                             letterSpacing: 1,
@@ -851,15 +851,15 @@ class _ProfileBodyState extends State<ProfileBody>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.secondaryGreen.withOpacity(0.2),
-                          AppColors.greenLight.withOpacity(0.1),
+                          AppColors.woodWalnut.withOpacity(0.2),
+                          AppColors.woodLight.withOpacity(0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       icon,
-                      color: AppColors.secondaryGreen,
+                      color: AppColors.woodWalnut,
                       size: 22,
                     ),
                   ),

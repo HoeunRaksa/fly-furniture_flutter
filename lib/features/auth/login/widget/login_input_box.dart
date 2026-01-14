@@ -137,7 +137,7 @@ class _LoginInput extends State<LoginInput> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             width: 1,
-                            color: AppColors.mediumGrey.withAlpha(100),
+                            color: AppColors.greyMedium.withAlpha(100),
                           ),
                         ),
                         child: TextButton(
@@ -146,7 +146,7 @@ class _LoginInput extends State<LoginInput> {
                           },
                           child: Text(
                             "Create Account",
-                            style: TextStyle(color: AppColors.mediumGrey),
+                            style: TextStyle(color: AppColors.greyMedium),
                           ),
                         ),
                       ),

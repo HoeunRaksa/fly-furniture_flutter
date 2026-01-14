@@ -119,8 +119,8 @@ class _CategoryState extends State<Category>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        AppColors.secondaryGreen.withValues(alpha: 0.9),
-                        AppColors.greenDark.withValues(alpha: 0.8),
+                        AppColors.woodWalnut.withValues(alpha: 0.9),
+                        AppColors.woodDark.withValues(alpha: 0.8),
                       ],
                     )
                         : LinearGradient(
@@ -155,7 +155,7 @@ class _CategoryState extends State<Category>
                     boxShadow: [
                       if (isSelected) ...[
                         BoxShadow(
-                          color: AppColors.secondaryGreen.withValues(
+                          color: AppColors.woodWalnut.withValues(
                             alpha: 0.4 * _glowAnimation.value,
                           ),
                           blurRadius: 20,
@@ -163,7 +163,7 @@ class _CategoryState extends State<Category>
                           offset: const Offset(0, 4),
                         ),
                         BoxShadow(
-                          color: AppColors.greenLight.withValues(
+                          color: AppColors.woodLight.withValues(
                             alpha: 0.3 * _glowAnimation.value,
                           ),
                           blurRadius: 30,
@@ -190,10 +190,10 @@ class _CategoryState extends State<Category>
                       borderRadius: BorderRadius.circular(18),
                       splashColor: isSelected
                           ? Colors.white.withValues(alpha: 0.15)
-                          : AppColors.secondaryGreen.withValues(alpha: 0.1),
+                          : AppColors.woodWalnut.withValues(alpha: 0.1),
                       highlightColor: isSelected
                           ? Colors.white.withValues(alpha: 0.1)
-                          : AppColors.secondaryGreen.withValues(alpha: 0.05),
+                          : AppColors.woodWalnut.withValues(alpha: 0.05),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -267,7 +267,7 @@ class _CategoryState extends State<Category>
                                 shadows: isSelected
                                     ? [
                                   Shadow(
-                                    color: AppColors.secondaryGreen
+                                    color: AppColors.woodWalnut
                                         .withValues(alpha: 0.5),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),

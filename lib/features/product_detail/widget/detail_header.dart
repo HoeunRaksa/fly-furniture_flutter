@@ -12,21 +12,6 @@ class DetailHeader extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [
-            CupertinoColors.black.withOpacity(0.8),
-            CupertinoColors.black.withOpacity(0.4),
-            CupertinoColors.black.withOpacity(0.0),
-          ]
-              : [
-            CupertinoColors.systemBackground.withOpacity(0.8),
-            CupertinoColors.systemBackground.withOpacity(0.4),
-            CupertinoColors.systemBackground.withOpacity(0.0),
-          ],
-        ),
       ),
       child: Stack(
         children: [

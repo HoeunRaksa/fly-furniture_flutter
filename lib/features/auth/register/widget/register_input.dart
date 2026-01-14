@@ -104,7 +104,7 @@ class _RegisterInput extends State<RegisterInput> {
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.1,
-                  color: AppColors.secondaryGreen,
+                  color: AppColors.woodWalnut,
                 ),
               ),
             ),
@@ -118,18 +118,18 @@ class _RegisterInput extends State<RegisterInput> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.secondaryGreen,
-                  AppColors.secondaryGreen.withValues(alpha: 0.85),
+                  AppColors.woodWalnut,
+                  AppColors.woodWalnut.withValues(alpha: 0.85),
                 ],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.secondaryGreen.withValues(alpha: 0.3),
+                  color: AppColors.woodWalnut.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: AppColors.secondaryGreen.withValues(alpha: 0.15),
+                  color: AppColors.woodWalnut.withValues(alpha: 0.15),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

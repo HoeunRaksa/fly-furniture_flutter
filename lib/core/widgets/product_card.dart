@@ -27,30 +27,21 @@ class ProductCard extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.glassLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image(
               image: image,
               width: imageX,
-              height: 200,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
 
@@ -61,15 +52,16 @@ class ProductCard extends StatelessWidget {
             Text(
               product.name,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: AppColors.woodDark
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 10),
 
           // Description
           if (product.description.isNotEmpty)
@@ -78,25 +70,22 @@ class ProductCard extends StatelessWidget {
               child: Text(
                 product.description,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 15,
                   color: Colors.grey.shade600,
                 ),
-                maxLines: 2,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
             ),
-
           const Spacer(),
-
-          // Price
           if (product.price > 0)
             Text(
               '\$${product.price.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondaryGreen,
+                color: AppColors.woodWalnut,
               ),
             ),
 

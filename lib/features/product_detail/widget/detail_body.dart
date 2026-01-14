@@ -21,7 +21,7 @@ class DetailBody extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 50, bottom: 30),
+          margin: const EdgeInsets.only(bottom: 30),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
