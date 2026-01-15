@@ -16,7 +16,7 @@ class AppRouter {
   static GoRouter router(
       AuthProvider authProvider, ProductProvider productProvider) {
     return GoRouter(
-      initialLocation: AppRoutes.welcome,
+      initialLocation: AppRoutes.home,
       refreshListenable: authProvider,
       routes: [
         GoRoute(

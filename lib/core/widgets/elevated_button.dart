@@ -17,7 +17,7 @@ class EleButton extends StatelessWidget {
     super.key,
     this.name,
     required this.onPressed,
-    this.backgroundColor = AppColors.secondaryGreen,
+    this.backgroundColor = AppColors.woodWalnut,
     this.textColor = Colors.white,
     this.borderRadius = 13,
     this.isCircular = false,

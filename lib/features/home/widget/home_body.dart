@@ -10,7 +10,7 @@ import '../../../core/widgets/product_card.dart';
 import '../../../core/widgets/small_card.dart';
 import '../../../model/product.dart';
 import 'category.dart';
-import 'home_section_scroller.dart'; // Import the scroller
+import 'home_section_scroller.dart';
 
 class HomeBody extends StatelessWidget {
   final int selectedIndex;
@@ -34,18 +34,16 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
-
     return RefreshIndicator(
+      backgroundColor: Colors.white,
       onRefresh: () async => await provider.refreshProducts(),
       child: ListView(
         controller: scrollController,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const SizedBox(height: 4),
-
-          // Special Offers Header
-          _buildGlassHeader(context, "Special Offers", isDark),
+          _buildSectionHeader(context, "Special Offers", isDark: isDark),
           const SizedBox(height: 10),
 
           // Banner Section with Auto Scroller
@@ -72,92 +70,14 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassHeader(BuildContext context, String title, bool isDark) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? const [
-                Color.fromRGBO(255, 255, 255, 0.08),
-                Color.fromRGBO(255, 255, 255, 0.03),
-              ]
-                  : const [
-                Color.fromRGBO(255, 255, 255, 0.7),
-                Color.fromRGBO(255, 255, 255, 0.5),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? const Color.fromRGBO(255, 255, 255, 0.1)
-                  : const Color.fromRGBO(255, 255, 255, 0.4),
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.secondaryGreen.withValues(alpha: 0.2),
-                      AppColors.greenLight.withValues(alpha: 0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(CupertinoIcons.tag_fill, color: AppColors.secondaryGreen, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildGlassCategories(BuildContext context, bool isDark) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
+          padding: EdgeInsets.all(0),
           height: 52,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isDark
-                  ? const [
-                Color.fromRGBO(255, 255, 255, 0.1),
-                Color.fromRGBO(255, 255, 255, 0.05),
-              ]
-                  : const [
-                Color.fromRGBO(255, 255, 255, 0.8),
-                Color.fromRGBO(255, 255, 255, 0.6),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? const Color.fromRGBO(255, 255, 255, 0.15)
-                  : const Color.fromRGBO(255, 255, 255, 0.5),
-              width: 1.5,
-            ),
-          ),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -188,8 +108,11 @@ class HomeBody extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final imageProvider = product.images.isNotEmpty
-              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
-              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+              ? CachedNetworkImageProvider(
+                  AppConfig.getImageUrl(product.images[0].imageUrl),
+                )
+              : const AssetImage('assets/images/placeholder.png')
+                    as ImageProvider;
 
           return CupertinoButton(
             padding: EdgeInsets.zero,
@@ -221,8 +144,11 @@ class HomeBody extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final imageProvider = product.images.isNotEmpty
-              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
-              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+              ? CachedNetworkImageProvider(
+                  AppConfig.getImageUrl(product.images[0].imageUrl),
+                )
+              : const AssetImage('assets/images/placeholder.png')
+                    as ImageProvider;
 
           return CupertinoButton(
             padding: EdgeInsets.zero,
@@ -250,7 +176,11 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, {required bool isDark}) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title, {
+    required bool isDark,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -260,26 +190,9 @@ class HomeBody extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? const [
-                      Color.fromRGBO(255, 255, 255, 0.08),
-                      Color.fromRGBO(255, 255, 255, 0.03),
-                    ]
-                        : const [
-                      Color.fromRGBO(255, 255, 255, 0.7),
-                      Color.fromRGBO(255, 255, 255, 0.5),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: isDark
-                        ? const Color.fromRGBO(255, 255, 255, 0.1)
-                        : const Color.fromRGBO(255, 255, 255, 0.4),
-                    width: 1.5,
-                  ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
                 ),
                 child: Text(
                   title,

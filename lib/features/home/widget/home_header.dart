@@ -6,6 +6,7 @@ import 'package:fly/config/app_config.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../../config/app_color.dart';
 import '../../../core/widgets/input_field.dart';
 
 class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -26,20 +27,14 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: preferredSize,
       child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
-                  CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
-                ],
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(30)),
             ),
+            padding: const EdgeInsets.fromLTRB(24, 1, 24, 20),
             child: SafeArea(
               bottom: false,
               child: Column(
@@ -58,32 +53,21 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                             Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    CupertinoColors.systemBlue.withOpacity(0.1),
-                                    CupertinoColors.systemPurple.withOpacity(0.1),
-                                  ],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: CupertinoColors.systemBlue.withOpacity(0.15),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                                color: AppColors.glassDark,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(3),
                                 child: CircleAvatar(
-                                  radius: 26,
-                                  backgroundColor: CupertinoColors.systemGrey6.resolveFrom(context),
+                                  radius: 28,
+                                  backgroundColor: Colors.blue,
                                   backgroundImage: user?.hasProfileImage == true
                                       ? CachedNetworkImageProvider(
-                                    user!.profileImageUrl!,
-                                  )
-                                      : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
+                                          user!.profileImageUrl!,
+                                        )
+                                      : const AssetImage(
+                                              "${AppConfig.imageUrl}/character.png",
+                                            )
+                                            as ImageProvider,
                                 ),
                               ),
                             ),
@@ -92,18 +76,21 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               bottom: 2,
                               right: 2,
                               child: Container(
-                                width: 14,
-                                height: 14,
+                                width: 13,
+                                height: 13,
                                 decoration: BoxDecoration(
                                   color: CupertinoColors.activeGreen,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+                                    color: CupertinoTheme.of(
+                                      context,
+                                    ).scaffoldBackgroundColor,
                                     width: 2.5,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: CupertinoColors.activeGreen.withOpacity(0.5),
+                                      color: CupertinoColors.activeGreen
+                                          .withOpacity(0.5),
                                       blurRadius: 8,
                                       spreadRadius: 1,
                                     ),
@@ -124,22 +111,24 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "Welcome back 👋",
+                              'Welcome Back',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: CupertinoColors.secondaryLabel.resolveFrom(context),
-                                letterSpacing: 0.1,
-                                height: 1.2,
+                                color: AppColors.woodDeep,
+                                letterSpacing: -0.5,
+                                height: 1.1,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 3),
+                            SizedBox(height: 5),
                             Text(
                               capitalizeFirst(userName),
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: CupertinoColors.label.resolveFrom(context),
+                                color: AppColors.woodDeep,
                                 letterSpacing: -0.5,
                                 height: 1.1,
                               ),
@@ -160,21 +149,17 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                               child: Container(
                                 decoration: BoxDecoration(
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.3),
-                                      CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.3),
-                                    ],
-                                  ),
                                   border: Border.all(
-                                    color: CupertinoColors.white.withOpacity(0.2),
+                                    color: CupertinoColors.white.withOpacity(
+                                      0.2,
+                                    ),
                                     width: 0.5,
                                   ),
                                 ),
                                 child: CupertinoButton(
+                                  color: AppColors.glassDark,
                                   padding: const EdgeInsets.all(11),
                                   minSize: 0,
                                   borderRadius: BorderRadius.circular(16),
@@ -182,49 +167,11 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                     debugPrint('Open notifications');
                                   },
                                   child: Icon(
-                                    CupertinoIcons.bell_fill,
-                                    size: 21,
-                                    color: CupertinoColors.label.resolveFrom(context),
+                                    Icons.mail,
+                                    size: 27,
+                                    color: AppColors.woodDeep,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    CupertinoColors.systemRed,
-                                    Color(0xFFFF3B30),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-                                  width: 2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: CupertinoColors.systemRed.withOpacity(0.1),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-                              child: const Text(
-                                '3',
-                                style: TextStyle(
-                                  color: CupertinoColors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1,
-                                ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
@@ -232,41 +179,11 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 18),
-
-                  // Search Bar with glass morphism
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              CupertinoColors.systemFill.resolveFrom(context).withOpacity(0.4),
-                              CupertinoColors.secondarySystemFill.resolveFrom(context).withOpacity(0.2),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.3),
-                            width: 0.5,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: CupertinoColors.black.withOpacity(0.03),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: InputField(
-                          label: "Search products...",
-                          onChanged: onSearchChanged,
-                        ),
-                      ),
-                    ),
+                  InputField(
+                    label: "Search products...",
+                    prefixIcon: Icon(Icons.search),
+                    onChanged: onSearchChanged,
                   ),
                 ],
               ),
@@ -278,5 +195,5 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(175);
+  Size get preferredSize => const Size.fromHeight(150);
 }

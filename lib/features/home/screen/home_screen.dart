@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:provider/provider.dart';
+import '../../../config/app_color.dart';
 import '../../../providers/product_provider.dart';
 import '../../../model/product.dart';
 import '../../auth/provider/auth_provider.dart';
@@ -15,8 +16,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late final ScrollController _scrollController;
   late final AnimationController _animationController;
   int selectedIndex = -1;
@@ -77,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen>
     final isDark = brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
-      appBar: HomeHeader(onSearchChanged: _onSearchChanged),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -86,18 +86,18 @@ class _HomeScreenState extends State<HomeScreen>
             end: Alignment.bottomCenter,
             colors: isDark
                 ? const [
-              Color.fromRGBO(0, 0, 0, 0.95),
-              Color.fromRGBO(0, 0, 0, 0.98),
-              Color(0xFF000000),
-            ]
+                    Color.fromRGBO(0, 0, 0, 0.95),
+                    Color.fromRGBO(0, 0, 0, 0.98),
+                    Color(0xFF000000),
+                  ]
                 : const [
-              Color.fromRGBO(255, 255, 255, 0.95),
-              Color.fromRGBO(255, 255, 255, 0.98),
-              Color(0xFFFFFFFF),
-            ],
+                    Color.fromRGBO(255, 255, 255, 0.95),
+                    Color.fromRGBO(255, 255, 255, 0.98),
+                    Color(0xFFFFFFFF),
+                  ],
           ),
         ),
-        child: SafeArea(
+        child: SizedBox(
           child: _buildBody(
             loading,
             error,
@@ -112,13 +112,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildBody(
-      bool loading,
-      String? error,
-      List<Product> products,
-      ProductProvider provider,
-      bool isDark,
-      BuildContext context,
-      ) {
+    bool loading,
+    String? error,
+    List<Product> products,
+    ProductProvider provider,
+    bool isDark,
+    BuildContext context,
+  ) {
     // Loading state
     if (loading && products.isEmpty) {
       return Center(
@@ -132,13 +132,13 @@ class _HomeScreenState extends State<HomeScreen>
                 gradient: LinearGradient(
                   colors: isDark
                       ? const [
-                    Color.fromRGBO(255, 255, 255, 0.08),
-                    Color.fromRGBO(255, 255, 255, 0.04),
-                  ]
+                          Color.fromRGBO(255, 255, 255, 0.08),
+                          Color.fromRGBO(255, 255, 255, 0.04),
+                        ]
                       : const [
-                    Color.fromRGBO(255, 255, 255, 0.5),
-                    Color.fromRGBO(255, 255, 255, 0.3),
-                  ],
+                          Color.fromRGBO(255, 255, 255, 0.5),
+                          Color.fromRGBO(255, 255, 255, 0.3),
+                        ],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
@@ -163,10 +163,7 @@ class _HomeScreenState extends State<HomeScreen>
                     color: CupertinoColors.systemBlue,
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    'Loading products...',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  Text('Loading products...', style: TextStyle(fontSize: 16)),
                 ],
               ),
             ),
@@ -247,13 +244,13 @@ class _HomeScreenState extends State<HomeScreen>
                 gradient: LinearGradient(
                   colors: isDark
                       ? const [
-                    Color.fromRGBO(255, 255, 255, 0.08),
-                    Color.fromRGBO(255, 255, 255, 0.04),
-                  ]
+                          Color.fromRGBO(255, 255, 255, 0.08),
+                          Color.fromRGBO(255, 255, 255, 0.04),
+                        ]
                       : const [
-                    Color.fromRGBO(255, 255, 255, 0.5),
-                    Color.fromRGBO(255, 255, 255, 0.3),
-                  ],
+                          Color.fromRGBO(255, 255, 255, 0.5),
+                          Color.fromRGBO(255, 255, 255, 0.3),
+                        ],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
@@ -297,18 +294,42 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     // Success state - show products
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: HomeBody(
-          selectedIndex: selectedIndex,
-          searchQuery: searchQuery,
-          onCategorySelected: _onCategorySelected,
-          products: products,
-          scrollController: _scrollController,
-          provider: provider,
-        ),
+    // Success state - show products
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Column(
+        children: [
+          // ✅ FULL WIDTH HEADER
+          ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                color: Colors.white,
+              ),
+              child: HomeHeader(onSearchChanged: _onSearchChanged),
+            ),
+          ), // ✅ BODY IS CONSTRAINED
+          Expanded(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: HomeBody(
+                    selectedIndex: selectedIndex,
+                    searchQuery: searchQuery,
+                    onCategorySelected: _onCategorySelected,
+                    products: products,
+                    scrollController: _scrollController,
+                    provider: provider,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -91,7 +91,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.white,
+                      color: AppColors.offWhite,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -117,7 +117,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         width: _currentPage == index ? 24 : 8,
                         decoration: BoxDecoration(
                           color: _currentPage == index
-                              ? AppColors.secondaryGreen
+                              ? AppColors.woodWalnut
                               : Colors.white,
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -151,7 +151,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: ElevatedButton(
                       onPressed: () => context.go(AppRoutes.register),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondaryGreen,
+                        backgroundColor: AppColors.woodWalnut,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

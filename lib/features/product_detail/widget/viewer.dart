@@ -30,7 +30,7 @@ class Viewer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.people, color: AppColors.mediumGrey.withAlpha(190)),
+                  Icon(Icons.people, color: AppColors.greyMedium.withAlpha(190)),
                   SizedBox(width: 5),
                   Text(
                     "${view.toString()} seen",
@@ -39,7 +39,7 @@ class Viewer extends StatelessWidget {
                   SizedBox(width: 20),
                   Icon(
                     Icons.favorite_border,
-                    color: AppColors.mediumGrey.withAlpha(190),
+                    color: AppColors.greyMedium.withAlpha(190),
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -55,7 +55,7 @@ class Viewer extends StatelessWidget {
                   onPressed: () => onRatingChanged!(index + 1),
                   icon: Icon(
                     index < rating ? Icons.star : Icons.star_border,
-                    color: Colors.orangeAccent,
+                    color: Colors.orange,
                   ),
                 );
               }),

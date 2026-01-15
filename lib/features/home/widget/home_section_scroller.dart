@@ -10,11 +10,10 @@ class HomeSectionScroller extends StatefulWidget {
 }
 
 class _HomeSectionScrollerState extends State<HomeSectionScroller> {
-  late PageController _pageController;
+  late final PageController _pageController;
   Timer? _timer;
   int _currentPage = 0;
 
-  // Banner data
   final List<Map<String, dynamic>> banners = [
     {
       'title': 'Discount 80%',
@@ -40,20 +39,17 @@ class _HomeSectionScrollerState extends State<HomeSectionScroller> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      viewportFraction: 0.9,
-      initialPage: 0,
+      viewportFraction: 1.0, // ✅ FULL WIDTH
     );
     _startAutoScroll();
   }
 
   void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!mounted || !_pageController.hasClients) return;
-
-      final nextPage = (_currentPage + 1) % banners.length;
-
+      if (!_pageController.hasClients) return;
+      final next = (_currentPage + 1) % banners.length;
       _pageController.animateToPage(
-        nextPage,
+        next,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOutCubicEmphasized,
       );
@@ -69,184 +65,118 @@ class _HomeSectionScrollerState extends State<HomeSectionScroller> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isLargeScreen = screenWidth > 600;
-    final cardHeight = isLargeScreen ? 200.0 : 160.0;
+    final isLargeScreen = MediaQuery.of(context).size.width > 500;
+    final height = isLargeScreen ? 200.0 : 160.0;
 
     return Column(
       children: [
         SizedBox(
-          height: cardHeight,
+          height: height,
           child: PageView.builder(
             controller: _pageController,
             physics: const BouncingScrollPhysics(),
-            onPageChanged: (index) {
-              if (mounted) {
-                setState(() {
-                  _currentPage = index % banners.length;
-                });
-              }
-            },
-            itemCount: banners.length * 1000, // Infinite scroll effect
+            itemCount: banners.length * 1000,
+            onPageChanged: (i) => setState(() => _currentPage = i % banners.length),
             itemBuilder: (context, index) {
               final banner = banners[index % banners.length];
-              final realIndex = index % banners.length;
 
               return AnimatedBuilder(
                 animation: _pageController,
                 builder: (context, child) {
-                  double value = 1.0;
+                  double scale = 1.0;
                   if (_pageController.position.haveDimensions) {
-                    value = _pageController.page! - index;
-                    value = (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
+                    final diff = (_pageController.page ?? 0) - index;
+                    scale = (1 - diff.abs() * 0.04).clamp(0.96, 1.0);
                   }
-
-                  return Transform.scale(
-                    scale: value,
-                    child: Opacity(
-                      opacity: value,
-                      child: child,
-                    ),
-                  );
+                  return Transform.scale(scale: scale, child: child);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: GestureDetector(
-                    onTap: () {
-                      debugPrint('Banner tapped: ${banner['title']}');
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: LinearGradient(
-                          colors: banner['gradient'],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: banner['gradient'][0].withValues(alpha: 0.3),
-                            blurRadius: 15,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
+                child: GestureDetector(
+                  onTap: () => debugPrint('Banner tapped: ${banner['title']}'),
+                  child: Container(
+                    width: double.infinity, // ✅ FULL WIDTH
+                    margin: EdgeInsets.zero, // ✅ NO PADDING
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: banner['gradient'],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Stack(
-                          children: [
-                            // Gradient overlay
-                            Positioned.fill(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black.withValues(alpha: 0.3),
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
+                      boxShadow: [
+                        BoxShadow(
+                          color: banner['gradient'][0].withOpacity(0.25),
+                          blurRadius: 18,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        children: [
+                          // Dark overlay
+                          Positioned.fill(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black.withOpacity(0.35),
+                                    Colors.transparent,
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Content
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  banner['title'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isLargeScreen ? 26 : 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ),
-
-                            // Content
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Title
-                                    Text(
-                                      banner['title'],
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: isLargeScreen ? 26 : 20,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: -0.5,
-                                        height: 1.0,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black.withValues(alpha: 0.4),
-                                            offset: const Offset(0, 2),
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-
-                                    const SizedBox(height: 6),
-
-                                    // Subtitle
-                                    Text(
-                                      banner['subtitle'],
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.9),
-                                        fontSize: isLargeScreen ? 12 : 11,
-                                        height: 1.0,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black.withValues(alpha: 0.3),
-                                            offset: const Offset(0, 1),
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-
-                                    const SizedBox(height: 12),
-
-                                    // CTA Button
-                                    SizedBox(
-                                      height: 32,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          debugPrint('Shop Now: ${banner['title']}');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          foregroundColor: banner['gradient'][0],
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 0,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          elevation: 3,
-                                          minimumSize: Size.zero,
-                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        ),
-                                        child: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "Shop Now",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                            SizedBox(width: 4),
-                                            Icon(Icons.arrow_forward, size: 12),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                const SizedBox(height: 6),
+                                Text(
+                                  banner['subtitle'],
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: isLargeScreen ? 12 : 11,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 32,
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: banner['gradient'][0],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      elevation: 3,
+                                    ),
+                                    child: const Text(
+                                      "Shop Now",
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -256,37 +186,25 @@ class _HomeSectionScrollerState extends State<HomeSectionScroller> {
           ),
         ),
 
-        // Page indicators
         const SizedBox(height: 12),
+
+        // Indicators
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             banners.length,
-                (index) {
-              final isActive = index == _currentPage;
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                height: 8,
-                width: isActive ? 24 : 8,
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? Colors.orange.shade700
-                      : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: isActive
-                      ? [
-                    BoxShadow(
-                      color: Colors.orange.shade700.withValues(alpha: 0.4),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                      : null,
-                ),
-              );
-            },
+                (i) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              height: 8,
+              width: _currentPage == i ? 24 : 8,
+              decoration: BoxDecoration(
+                color: _currentPage == i
+                    ? Colors.orange.shade700
+                    : Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
           ),
         ),
       ],

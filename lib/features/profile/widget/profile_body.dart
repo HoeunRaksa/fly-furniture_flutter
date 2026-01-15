@@ -432,7 +432,7 @@ class _ProfileBodyState extends State<ProfileBody>
                 // User Info with Glass Card
                 FadeTransition(
                   opacity: _fadeAnimation,
-                  child: _buildUserInfoCard(context, user, isDark),
+                  child: Text(user.name. toUpperCase(), style: Theme.of(context).textTheme.headlineSmall,),
                 ),
 
                 const SizedBox(height: 20),
@@ -496,7 +496,7 @@ class _ProfileBodyState extends State<ProfileBody>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.secondaryGreen.withOpacity(0.2),
+                    color: AppColors.woodWalnut.withOpacity(0.2),
                     blurRadius: 30,
                     offset: const Offset(0, 10),
                   ),
@@ -521,8 +521,8 @@ class _ProfileBodyState extends State<ProfileBody>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppColors.secondaryGreen.withOpacity(0.3),
-                                  AppColors.greenLight.withOpacity(0.2),
+                                  AppColors.woodWalnut.withOpacity(0.3),
+                                  AppColors.woodLight.withOpacity(0.2),
                                 ],
                               ),
                             ),
@@ -550,8 +550,8 @@ class _ProfileBodyState extends State<ProfileBody>
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.secondaryGreen.withOpacity(0.2),
-                                AppColors.greenLight.withOpacity(0.1),
+                                AppColors.woodWalnut.withOpacity(0.2),
+                                AppColors.woodLight.withOpacity(0.1),
                               ],
                             ),
                           ),
@@ -581,13 +581,13 @@ class _ProfileBodyState extends State<ProfileBody>
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.secondaryGreen, AppColors.greenDark],
+                      colors: [AppColors.woodWalnut, AppColors.woodDark],
                     ),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.secondaryGreen.withOpacity(0.5),
+                        color: AppColors.woodWalnut.withOpacity(0.5),
                         blurRadius: 15,
                         offset: const Offset(0, 5),
                       ),
@@ -607,130 +607,7 @@ class _ProfileBodyState extends State<ProfileBody>
     );
   }
 
-  Widget _buildUserInfoCard(BuildContext context, dynamic user, bool isDark) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [
-                      Colors.white.withOpacity(0.1),
-                      Colors.white.withOpacity(0.05),
-                    ]
-                  : [
-                      Colors.white.withOpacity(0.9),
-                      Colors.white.withOpacity(0.7),
-                    ],
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.15)
-                  : Colors.white.withOpacity(0.5),
-              width: 1.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isDark
-                    ? Colors.black.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.08),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Text(
-                _capitalizeFirst(user.name),
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 26,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                user.email,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: CupertinoColors.secondaryLabel.resolveFrom(context),
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
 
-              // Role Badge with Glass Effect
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: user.role == 'admin'
-                            ? [
-                                CupertinoColors.systemPurple.withOpacity(0.3),
-                                CupertinoColors.systemPurple.withOpacity(0.2),
-                              ]
-                            : [
-                                AppColors.secondaryGreen.withOpacity(0.3),
-                                AppColors.greenLight.withOpacity(0.2),
-                              ],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: user.role == 'admin'
-                            ? CupertinoColors.systemPurple.withOpacity(0.5)
-                            : AppColors.secondaryGreen.withOpacity(0.5),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          user.role == 'admin'
-                              ? CupertinoIcons.star_fill
-                              : CupertinoIcons.person_fill,
-                          color: user.role == 'admin'
-                              ? CupertinoColors.systemPurple
-                              : AppColors.secondaryGreen,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          user.role.toUpperCase(),
-                          style: TextStyle(
-                            color: user.role == 'admin'
-                                ? CupertinoColors.systemPurple
-                                : AppColors.secondaryGreen,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildMenuItems(BuildContext context, bool isDark) {
     final menuItems = [
@@ -851,15 +728,15 @@ class _ProfileBodyState extends State<ProfileBody>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.secondaryGreen.withOpacity(0.2),
-                          AppColors.greenLight.withOpacity(0.1),
+                          AppColors.woodWalnut.withOpacity(0.2),
+                          AppColors.woodLight.withOpacity(0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       icon,
-                      color: AppColors.secondaryGreen,
+                      color: AppColors.woodWalnut,
                       size: 22,
                     ),
                   ),
