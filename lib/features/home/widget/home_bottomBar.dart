@@ -32,11 +32,11 @@ class _HomeBottomBar extends State<HomeBottomBar> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(30),
           child: Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(41), color:Colors.white, border: Border.all(color: Colors.white, width: 1)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color:Colors.white, border: Border.all(color: Colors.white, width: 1)),
             child:NavigationBar(
               selectedIndex: _currentIndex,
               onDestinationSelected: (index) {

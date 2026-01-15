@@ -53,22 +53,13 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                             Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.offWhite,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: CupertinoColors.systemBlue
-                                        .withOpacity(0.15),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                                color: AppColors.glassDark,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(3),
                                 child: CircleAvatar(
-                                  radius: 23,
-                                  backgroundColor: CupertinoColors.systemGrey6
-                                      .resolveFrom(context),
+                                  radius: 28,
+                                  backgroundColor: Colors.blue,
                                   backgroundImage: user?.hasProfileImage == true
                                       ? CachedNetworkImageProvider(
                                           user!.profileImageUrl!,
@@ -168,6 +159,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                                 child: CupertinoButton(
+                                  color: AppColors.glassDark,
                                   padding: const EdgeInsets.all(11),
                                   minSize: 0,
                                   borderRadius: BorderRadius.circular(16),

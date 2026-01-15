@@ -36,7 +36,19 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: Image(image: image, width: imageX, fit: BoxFit.contain),
+            child: Stack(
+                 children: [
+                   Image(image: image, width: imageX, fit: BoxFit.contain),
+                   Positioned(
+                     top:20,right: 20,
+                       child: Container(
+                         padding: EdgeInsets.all(5),
+                         decoration: BoxDecoration(color: AppColors.woodLight, borderRadius: BorderRadius.all(Radius.circular(10))),
+                         child: Text(
+                           "- \$${product.discount}", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.w800),
+                       ),) ),
+                 ],
+            ),
           ),
           const SizedBox(height: 12),
           Container(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:provider/provider.dart';
+import '../../../config/app_color.dart';
 import '../../../providers/product_provider.dart';
 import '../../../model/product.dart';
 import '../../auth/provider/auth_provider.dart';
