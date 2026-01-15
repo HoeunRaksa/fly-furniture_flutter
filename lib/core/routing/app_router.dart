@@ -21,8 +21,7 @@ class AppRouter {
       routes: [
         GoRoute(
           path: AppRoutes.welcome,
-          builder: (context, state) => const WelcomeScreen(
-          ),
+          builder: (context, state) => WelcomeScreen(),
         ),
         GoRoute(
           path: AppRoutes.login,
