@@ -19,25 +19,36 @@ class InputField extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-      decoration: InputDecoration(
-        hintText: label,
-        prefixIcon: prefixIcon,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        decoration: InputDecoration(
+          hintText: label,
+          prefixIcon: prefixIcon,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 14,
+            horizontal: 20,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(40),
+            borderSide: BorderSide(color: AppColors.shadowWarm, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: AppColors.shadowWarm, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: AppColors.woodLight, width: 1),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.woodLight, width: 1),
-        ),
+        onChanged: onChanged,
       ),
-      onChanged: onChanged,
     );
   }
 }

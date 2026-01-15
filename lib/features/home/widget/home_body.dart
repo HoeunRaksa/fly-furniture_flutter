@@ -43,7 +43,7 @@ class HomeBody extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const SizedBox(height: 4),
-          _buildGlassHeader(context, "Special Offers", isDark),
+          _buildSectionHeader(context, "Special Offers", isDark: isDark),
           const SizedBox(height: 10),
 
           // Banner Section with Auto Scroller
@@ -66,45 +66,6 @@ class HomeBody extends StatelessWidget {
           _buildAllProductsSection(context, isDark),
           const SizedBox(height: 12),
         ],
-      ),
-    );
-  }
-
-  Widget _buildGlassHeader(BuildContext context, String title, bool isDark) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? const Color.fromRGBO(255, 255, 255, 0.1)
-                  : const Color.fromRGBO(255, 255, 255, 0.4),
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(CupertinoIcons.tag_fill, color: AppColors.woodWalnut, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -147,8 +108,11 @@ class HomeBody extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final imageProvider = product.images.isNotEmpty
-              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
-              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+              ? CachedNetworkImageProvider(
+                  AppConfig.getImageUrl(product.images[0].imageUrl),
+                )
+              : const AssetImage('assets/images/placeholder.png')
+                    as ImageProvider;
 
           return CupertinoButton(
             padding: EdgeInsets.zero,
@@ -180,8 +144,11 @@ class HomeBody extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           final imageProvider = product.images.isNotEmpty
-              ? CachedNetworkImageProvider(AppConfig.getImageUrl(product.images[0].imageUrl))
-              : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+              ? CachedNetworkImageProvider(
+                  AppConfig.getImageUrl(product.images[0].imageUrl),
+                )
+              : const AssetImage('assets/images/placeholder.png')
+                    as ImageProvider;
 
           return CupertinoButton(
             padding: EdgeInsets.zero,
@@ -209,7 +176,11 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, {required bool isDark}) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title, {
+    required bool isDark,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -219,7 +190,10 @@ class HomeBody extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(

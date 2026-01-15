@@ -23,14 +23,16 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
       if (text == null || text.isEmpty) return '';
       return text[0].toUpperCase() + text.substring(1);
     }
+
     return PreferredSize(
       preferredSize: preferredSize,
-      child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(30)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
             decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+              borderRadius: BorderRadius.all(Radius.circular(30)),
             ),
             padding: const EdgeInsets.fromLTRB(24, 1, 24, 20),
             child: SafeArea(
@@ -54,7 +56,8 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                 color: AppColors.offWhite,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: CupertinoColors.systemBlue.withOpacity(0.15),
+                                    color: CupertinoColors.systemBlue
+                                        .withOpacity(0.15),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -64,12 +67,16 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                 padding: const EdgeInsets.all(3),
                                 child: CircleAvatar(
                                   radius: 23,
-                                  backgroundColor: CupertinoColors.systemGrey6.resolveFrom(context),
+                                  backgroundColor: CupertinoColors.systemGrey6
+                                      .resolveFrom(context),
                                   backgroundImage: user?.hasProfileImage == true
                                       ? CachedNetworkImageProvider(
-                                    user!.profileImageUrl!,
-                                  )
-                                      : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
+                                          user!.profileImageUrl!,
+                                        )
+                                      : const AssetImage(
+                                              "${AppConfig.imageUrl}/character.png",
+                                            )
+                                            as ImageProvider,
                                 ),
                               ),
                             ),
@@ -84,12 +91,15 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   color: CupertinoColors.activeGreen,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+                                    color: CupertinoTheme.of(
+                                      context,
+                                    ).scaffoldBackgroundColor,
                                     width: 2.5,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: CupertinoColors.activeGreen.withOpacity(0.5),
+                                      color: CupertinoColors.activeGreen
+                                          .withOpacity(0.5),
                                       blurRadius: 8,
                                       spreadRadius: 1,
                                     ),
@@ -121,7 +131,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(height: 5),
                             Text(
                               capitalizeFirst(userName),
                               style: TextStyle(
@@ -151,7 +161,9 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: CupertinoColors.white.withOpacity(0.2),
+                                    color: CupertinoColors.white.withOpacity(
+                                      0.2,
+                                    ),
                                     width: 0.5,
                                   ),
                                 ),
@@ -165,7 +177,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   child: Icon(
                                     Icons.mail,
                                     size: 27,
-                                    color: AppColors.greyLight,
+                                    color: AppColors.woodDeep,
                                   ),
                                 ),
                               ),
@@ -175,35 +187,11 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 18),
-
-                  // Search Bar with glass morphism
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: CupertinoColors.separator.resolveFrom(context).withOpacity(0.3),
-                            width: 0.5,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: CupertinoColors.black.withOpacity(0.03),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: InputField(
-                          label: "Search products...",
-                          onChanged: onSearchChanged,
-                        ),
-                      ),
-                    ),
+                  InputField(
+                    label: "Search products...",
+                    prefixIcon: Icon(Icons.search),
+                    onChanged: onSearchChanged,
                   ),
                 ],
               ),
