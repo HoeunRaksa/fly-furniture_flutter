@@ -143,7 +143,7 @@ class DetailBody extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: CupertinoColors.systemOrange.withOpacity(0.2),
+                      color: CupertinoColors.systemOrange.withOpacity(0.1),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -155,7 +155,7 @@ class DetailBody extends StatelessWidget {
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
-                    color: CupertinoColors.systemOrange,
+                    color: Theme.of(context).primaryColor,
                     height: 1,
                   ),
                 ),

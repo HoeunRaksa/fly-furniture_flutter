@@ -32,9 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // =====================================================
-  // LOGIN (same pattern as Register)
-  // =====================================================
   Future<void> _onLogin() async {
     final messenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);

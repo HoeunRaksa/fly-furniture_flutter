@@ -18,7 +18,7 @@ class _HomeBottomBar extends State<HomeBottomBar> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const FavoriteScreen(),
+    FavoriteScreen(favorites: [],),
     const HomeScreen(),
     const ProfileScreen(),
   ];

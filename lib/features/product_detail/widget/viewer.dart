@@ -55,7 +55,7 @@ class Viewer extends StatelessWidget {
                   onPressed: () => onRatingChanged!(index + 1),
                   icon: Icon(
                     index < rating ? Icons.star : Icons.star_border,
-                    color: Colors.orangeAccent,
+                    color: Colors.orange,
                   ),
                 );
               }),
