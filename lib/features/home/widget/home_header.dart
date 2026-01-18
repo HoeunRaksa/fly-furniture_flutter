@@ -26,13 +26,10 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
 
     return PreferredSize(
       preferredSize: preferredSize,
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
+             color: AppColors.secondary,
+                 borderRadius: BorderRadius.all(Radius.circular(15))
             ),
             padding: const EdgeInsets.fromLTRB(24, 1, 24, 20),
             child: SafeArea(
@@ -53,7 +50,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                             Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.glassDark,
+                                color: AppColors.bodyLine,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(3),
@@ -115,7 +112,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.woodDeep,
+                                color: AppColors.headerLine,
                                 letterSpacing: -0.5,
                                 height: 1.1,
                               ),
@@ -128,7 +125,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.woodDeep,
+                                color: AppColors.headerLine,
                                 letterSpacing: -0.5,
                                 height: 1.1,
                               ),
@@ -159,7 +156,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                                 child: CupertinoButton(
-                                  color: AppColors.glassDark,
+                                  color: Colors.white,
                                   padding: const EdgeInsets.all(11),
                                   minSize: 0,
                                   borderRadius: BorderRadius.circular(16),
@@ -169,7 +166,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                   child: Icon(
                                     Icons.mail,
                                     size: 27,
-                                    color: AppColors.woodDeep,
+                                    color: AppColors.headerLine,
                                   ),
                                 ),
                               ),
@@ -189,9 +186,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   @override

@@ -20,7 +20,7 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(100),
+      borderRadius: BorderRadius.circular(20),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
@@ -29,22 +29,22 @@ class InputField extends StatelessWidget {
           hintText: label,
           prefixIcon: prefixIcon,
           filled: true,
-          fillColor: AppColors.glassDark.withAlpha(10),
+          fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 18,
             horizontal: 20,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(40),
-            borderSide: BorderSide(color: AppColors.shadowWarm, width: 1),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: AppColors.shadowWarm, width: 1),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: AppColors.woodLight, width: 1),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
         ),
         onChanged: onChanged,

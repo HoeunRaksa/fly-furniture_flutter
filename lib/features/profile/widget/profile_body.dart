@@ -496,7 +496,7 @@ class _ProfileBodyState extends State<ProfileBody>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.woodWalnut.withOpacity(0.2),
+                    color: AppColors.bodyLine.withOpacity(0.2),
                     blurRadius: 30,
                     offset: const Offset(0, 10),
                   ),
@@ -521,8 +521,8 @@ class _ProfileBodyState extends State<ProfileBody>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppColors.woodWalnut.withOpacity(0.3),
-                                  AppColors.woodLight.withOpacity(0.2),
+                                  AppColors.bodyLine.withOpacity(0.3),
+                                  AppColors.headerLine.withOpacity(0.2),
                                 ],
                               ),
                             ),
@@ -550,8 +550,8 @@ class _ProfileBodyState extends State<ProfileBody>
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.woodWalnut.withOpacity(0.2),
-                                AppColors.woodLight.withOpacity(0.1),
+                                AppColors.bodyLine.withOpacity(0.2),
+                                AppColors.headerLine.withOpacity(0.1),
                               ],
                             ),
                           ),
@@ -581,13 +581,13 @@ class _ProfileBodyState extends State<ProfileBody>
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.woodWalnut, AppColors.woodDark],
+                      colors: [AppColors.bodyLine, AppColors.headerLine],
                     ),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.woodWalnut.withOpacity(0.5),
+                        color: AppColors.bodyLine.withOpacity(0.5),
                         blurRadius: 15,
                         offset: const Offset(0, 5),
                       ),
@@ -683,8 +683,6 @@ class _ProfileBodyState extends State<ProfileBody>
       margin: const EdgeInsets.only(bottom: 8),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -718,7 +716,7 @@ class _ProfileBodyState extends State<ProfileBody>
               ],
             ),
             child: CupertinoButton(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               borderRadius: BorderRadius.circular(18),
               onPressed: onTap,
               child: Row(
@@ -728,15 +726,15 @@ class _ProfileBodyState extends State<ProfileBody>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.woodWalnut.withOpacity(0.2),
-                          AppColors.woodLight.withOpacity(0.1),
+                          AppColors.bodyLine.withOpacity(0.2),
+                          AppColors.headerLine.withOpacity(0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       icon,
-                      color: AppColors.woodWalnut,
+                      color: AppColors.bodyLine,
                       size: 22,
                     ),
                   ),
@@ -757,7 +755,7 @@ class _ProfileBodyState extends State<ProfileBody>
               ),
             ),
           ),
-        ),
+
       ),
     );
   }
@@ -792,6 +790,7 @@ class _ProfileBodyState extends State<ProfileBody>
             onPressed: () => _showLogoutDialog(context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(
                   CupertinoIcons.arrow_right_square,

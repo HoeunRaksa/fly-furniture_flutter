@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -295,41 +295,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // Success state - show products
     // Success state - show products
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        children: [
-          // ✅ FULL WIDTH HEADER
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Container(
+    return ClipRRect(
+      borderRadius: BorderRadiusGeometry.all(Radius.circular(15)),
+      child: Container(
+        color: AppColors.primary,
+        child: Column(
+          children: [
+            Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                color: Colors.white,
+                border: Border.all(color: Colors.white, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
               child: HomeHeader(onSearchChanged: _onSearchChanged),
             ),
-          ), // ✅ BODY IS CONSTRAINED
-          Expanded(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  child: HomeBody(
-                    selectedIndex: selectedIndex,
-                    searchQuery: searchQuery,
-                    onCategorySelected: _onCategorySelected,
-                    products: products,
-                    scrollController: _scrollController,
-                    provider: provider,
+
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: Container(
+                    color: AppColors.primary,
+                    child: HomeBody(
+                      selectedIndex: selectedIndex,
+                      searchQuery: searchQuery,
+                      onCategorySelected: _onCategorySelected,
+                      products: products,
+                      scrollController: _scrollController,
+                      provider: provider,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

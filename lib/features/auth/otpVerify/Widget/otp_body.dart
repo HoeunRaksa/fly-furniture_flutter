@@ -168,11 +168,11 @@ class _OtpBodyState extends State<OtpBody> {
               inactiveFillColor: Colors.white,
               selectedFillColor: Colors.white,
               activeColor: Colors.grey.shade300,
-              selectedColor: AppColors.woodOak,
+              selectedColor: AppColors.headerLine,
               inactiveColor: Colors.grey.shade200,
             ),
             enableActiveFill: true,
-            cursorColor: AppColors.woodOak,
+            cursorColor: AppColors.headerLine,
             animationType: AnimationType.fade,
             animationDuration: const Duration(milliseconds: 250),
             backgroundColor: Colors.transparent,
@@ -187,7 +187,7 @@ class _OtpBodyState extends State<OtpBody> {
               Text(
                 "Didn't receive code? ",
                 style: TextStyle(
-                  color: AppColors.greyMedium,
+                  color: AppColors.bodyLine,
                   fontSize: 14,
                 ),
               ),
@@ -197,7 +197,7 @@ class _OtpBodyState extends State<OtpBody> {
                   isResendEnabled ? "Resend" : "Resend in ${resendTimer}s",
                   style: TextStyle(
                     color: isResendEnabled
-                        ? AppColors.woodOak
+                        ? AppColors.headerLine
                         : Colors.grey.shade400,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -218,7 +218,7 @@ class _OtpBodyState extends State<OtpBody> {
             Text(
               "Verifying...",
               style: TextStyle(
-                color: AppColors.greyMedium,
+                color: AppColors.bodyLine,
                 fontSize: 14,
               ),
             ),

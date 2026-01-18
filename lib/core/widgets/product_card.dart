@@ -49,19 +49,19 @@ class ProductCard extends StatelessWidget {
               children: [
                 Image(image: image, width: imageWidth, fit: BoxFit.contain),
                 Positioned(
-                  top: screenHeight * 0.025,
-                  right: screenWidth * 0.05,
+                  top: screenHeight * 0.012,
+                  right: screenWidth * 0.04,
                   child: Container(
-                    padding: EdgeInsets.all(screenWidth * 0.013),
+                    padding: EdgeInsets.all(screenWidth * 0.010),
                     decoration: BoxDecoration(
-                        color: AppColors.woodLight,
+                        color: AppColors.priceLine,
                         borderRadius: BorderRadius.all(Radius.circular(screenWidth * 0.026))
                     ),
                     child: Text(
-                      "- \$${product.discount}",
+                      "- ${product.discount.toInt()} %",
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w600,
                         fontSize: screenWidth * 0.04,
                       ),
                     ),
@@ -82,7 +82,7 @@ class ProductCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: screenWidth * 0.045,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.woodDark,
+                      color: AppColors.headerLine,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -110,7 +110,7 @@ class ProductCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: screenWidth * 0.042,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.woodWalnut,
+                      color: AppColors.priceLine,
                     ),
                   ),
               ],

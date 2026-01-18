@@ -104,7 +104,7 @@ class SmallCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.woodWalnut,
+                            color: AppColors.bodyLine,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

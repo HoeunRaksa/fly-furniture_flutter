@@ -42,7 +42,7 @@ class DetailFooter extends StatelessWidget {
                     icon: Icons.add,
                     onTap: onAdded!,
                     iconColor: Colors.white,
-                    backgroundColor: AppColors.woodWalnut,
+                    backgroundColor: AppColors.bodyLine,
                   ),
                 ],
               ),

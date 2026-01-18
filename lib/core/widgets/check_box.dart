@@ -26,7 +26,7 @@ class CheckBoxed extends StatelessWidget {
 
         if (label.isNotEmpty)
           Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.greyMedium.withAlpha(160)
+            color: AppColors.bodyLine.withAlpha(160)
           )),
       ],
     );

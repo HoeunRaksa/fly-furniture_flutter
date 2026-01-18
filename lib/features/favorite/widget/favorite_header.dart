@@ -14,7 +14,7 @@ class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
         children: [
           CircleIconButton(
             icon: Icons.arrow_back,
-            backgroundColor: AppColors.glassDark,
+            backgroundColor: AppColors.primary,
             iconSize: 25,
             sizedY: 44,
             sizeX: 44,
@@ -24,7 +24,7 @@ class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           CircleIconButton(
             icon: Icons.favorite_border,
-            backgroundColor: AppColors.glassDark,
+            backgroundColor: AppColors.primary,
             iconSize: 25,
             sizedY: 44,
             sizeX: 44,

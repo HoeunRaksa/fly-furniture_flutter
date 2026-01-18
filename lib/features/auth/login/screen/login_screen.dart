@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
             fontSize: 40,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.8,
-            color: AppColors.woodWalnut,
+            color: AppColors.bodyLine,
           ),
         ),
         centerTitle: true,
@@ -316,7 +316,7 @@ class PrimaryButton extends StatelessWidget {
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: cs.primary,
+          backgroundColor: AppColors.accentButton,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,

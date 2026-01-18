@@ -30,7 +30,7 @@ class ProfileHeader extends StatelessWidget implements PreferredSizeWidget {
               },
               sizedY: 40,
               sizeX: 40,
-              iconColor: AppColors.woodOak,
+              iconColor: AppColors.headerLine,
             ),
         ],
       ),
