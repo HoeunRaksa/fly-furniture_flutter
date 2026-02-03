@@ -4,7 +4,6 @@ import 'package:fly/features/auth/welcome/welcome_screen.dart';
 import 'package:fly/features/home/widget/home_bottomBar.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import '../../features/auth/login/screen/login_screen.dart';
 import '../../features/auth/otpVerify/screen/otp_screen.dart';
 import '../../features/auth/provider/auth_provider.dart';

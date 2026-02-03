@@ -56,7 +56,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                                 padding: const EdgeInsets.all(3),
                                 child: CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: Colors.blue,
+                                  backgroundColor: AppColors.accentButton,
                                   backgroundImage: user?.hasProfileImage == true
                                       ? CachedNetworkImageProvider(
                                           user!.profileImageUrl!,

@@ -118,7 +118,7 @@ class SmallCard extends StatelessWidget {
                             vertical: screenHeight * 0.002,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: AppColors.priceLine,
                             borderRadius: BorderRadius.circular(screenWidth * 0.01),
                           ),
                           child: Text(

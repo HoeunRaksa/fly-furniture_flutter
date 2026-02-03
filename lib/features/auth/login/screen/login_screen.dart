@@ -103,8 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFEFFAF3),
-              Color(0xFFFFFFFF),
+              AppColors.primary,
+              AppColors.secondary,
             ],
           ),
         ),

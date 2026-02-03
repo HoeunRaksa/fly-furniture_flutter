@@ -91,9 +91,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Color(0xFF000000),
                   ]
                 : const [
-                    Color.fromRGBO(255, 255, 255, 0.95),
-                    Color.fromRGBO(255, 255, 255, 0.98),
-                    Color(0xFFFFFFFF),
+                    AppColors.primary,
+                    AppColors.secondary,
+                    Colors.white,
                   ],
           ),
         ),

@@ -37,83 +37,106 @@ class ProductCard extends StatelessWidget {
       width: cardWidth,
       height: cardHeight,
       decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(screenWidth * 0.04),
-        color: Colors.white
+        border: Border.all(color: Colors.grey.shade100, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(screenWidth * 0.04),
-            child: Stack(
-              children: [
-                Image(image: image, width: imageWidth, fit: BoxFit.contain),
-                Positioned(
-                  top: screenHeight * 0.012,
-                  right: screenWidth * 0.04,
-                  child: Container(
-                    padding: EdgeInsets.all(screenWidth * 0.010),
-                    decoration: BoxDecoration(
-                        color: AppColors.priceLine,
-                        borderRadius: BorderRadius.all(Radius.circular(screenWidth * 0.026))
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(screenWidth * 0.04),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Image(
+                      image: image, 
+                      fit: BoxFit.cover,
                     ),
-                    child: Text(
-                      "- ${product.discount.toInt()} %",
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: screenWidth * 0.04,
+                  ),
+                  Positioned(
+                    top: screenHeight * 0.012,
+                    right: screenWidth * 0.04,
+                    child: Container(
+                      padding: EdgeInsets.all(screenWidth * 0.010),
+                      decoration: BoxDecoration(
+                          color: AppColors.priceLine,
+                          borderRadius: BorderRadius.all(Radius.circular(screenWidth * 0.026))
+                      ),
+                      child: Text(
+                        "- ${product.discount.toInt()} %",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: screenWidth * 0.04,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           SizedBox(height: screenHeight * 0.012),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.026),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (product.name.isNotEmpty)
-                  Text(
-                    product.name,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.headerLine,
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.026),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (product.name.isNotEmpty)
+                    Text(
+                      product.name,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.headerLine,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                  ),
-
-                SizedBox(height: screenHeight * 0.012),
-
-                // Description
-                if (product.description.isNotEmpty)
-                  Text(
-                    StringUtils.truncate(product.description, maxLength: 55),
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.039,
-                      color: Colors.grey.shade600,
+  
+                  SizedBox(height: screenHeight * 0.005),
+  
+                  // Description
+                  if (product.description.isNotEmpty)
+                    Text(
+                      product.description,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.035,
+                        color: Colors.grey.shade600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                  ),
-                SizedBox(height: screenHeight * 0.015),
-                if (product.price > 0)
-                  Text(
-                    '\$${product.price.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.042,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.priceLine,
+                  const Spacer(),
+                  if (product.price > 0)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.012),
+                      child: Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.042,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.priceLine,
+                        ),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
