@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/features/favorite/screen/favorite_screen.dart';
@@ -9,127 +10,117 @@ class HomeBottomBar extends StatefulWidget {
   const HomeBottomBar({super.key});
 
   @override
-  State<HomeBottomBar> createState() => _HomeBottomBar();
+  State<HomeBottomBar> createState() => _HomeBottomBarState();
 }
 
-class _HomeBottomBar extends State<HomeBottomBar> {
+class _HomeBottomBarState extends State<HomeBottomBar> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    FavoriteScreen(favorites: []),
-    const HomeScreen(),
+    FavoriteScreen(favorites: const []),
+    const HomeScreen(), // Placeholder for Cart
     const ProfileScreen(),
   ];
-
-  final Color activeColor = CupertinoColors.systemOrange;
-  final Color inactiveColor = CupertinoColors.systemGrey;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
-      body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: Container(
-        // ✅ grey background with 0.1 opacity
-        decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1)),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 1),
+      backgroundColor: AppColors.primary,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: _buildFurnitureBottomBar(),
+    );
+  }
+
+  Widget _buildFurnitureBottomBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.divider,
+            width: 0.5,
           ),
-          child: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            height: 70,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            indicatorColor: activeColor.withOpacity(0.12),
-            animationDuration: const Duration(milliseconds: 350),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((
-              states,
-            ) {
-              if (states.contains(MaterialState.selected)) {
-                return const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: CupertinoColors.systemOrange,
-                );
-              } else {
-                return const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                  color: CupertinoColors.systemGrey,
-                );
-              }
-            }),
-            destinations: [
-              NavigationDestination(
-                icon: Icon(
-                  CupertinoIcons.house,
-                  color: _currentIndex == 0 ? activeColor : inactiveColor,
-                  size: 24,
-                ),
-                selectedIcon: Icon(
-                  CupertinoIcons.house_fill,
-                  color: activeColor,
-                  size: 24,
-                ),
-                label: 'Home',
-              ),
-              NavigationDestination(
-                icon: Icon(
-                  CupertinoIcons.heart,
-                  color: _currentIndex == 1 ? activeColor : inactiveColor,
-                  size: 24,
-                ),
-                selectedIcon: Icon(
-                  CupertinoIcons.heart_fill,
-                  color: activeColor,
-                  size: 24,
-                ),
-                label: 'Favorite',
-              ),
-              NavigationDestination(
-                icon: Badge(
-                  label: const Text('3'),
-                  backgroundColor: CupertinoColors.systemRed,
-                  child: Icon(
-                    CupertinoIcons.cart,
-                    color: _currentIndex == 2 ? activeColor : inactiveColor,
-                    size: 24,
-                  ),
-                ),
-                selectedIcon: Badge(
-                  label: const Text('3'),
-                  backgroundColor: CupertinoColors.systemRed,
-                  child: Icon(
-                    CupertinoIcons.cart_fill,
-                    color: activeColor,
-                    size: 24,
-                  ),
-                ),
-                label: 'Cart',
-              ),
-              NavigationDestination(
-                icon: Icon(
-                  CupertinoIcons.person,
-                  color: _currentIndex == 3 ? activeColor : inactiveColor,
-                  size: 24,
-                ),
-                selectedIcon: Icon(
-                  CupertinoIcons.person_fill,
-                  color: activeColor,
-                  size: 24,
-                ),
-                label: 'Profile',
-              ),
+        ),
+      ),
+      child: SafeArea(
+        child: Container(
+          height: 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildTabItem(0, CupertinoIcons.house_fill, "Home"),
+              _buildTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
+              _buildTabItem(2, CupertinoIcons.bag_fill, "Cart", badgeCount: 3),
+              _buildTabItem(3, CupertinoIcons.person_fill, "Profile"),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabItem(int index, IconData icon, String label, {int? badgeCount}) {
+    bool isSelected = _currentIndex == index;
+    Color color = isSelected ? AppColors.furnitureBlue : AppColors.bodyLine.withOpacity(0.5);
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _currentIndex = index),
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          children: [
+            // Active top indicator in Furniture Blue
+            Container(
+              height: 3,
+              width: 36,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.furnitureBlue : Colors.transparent,
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(3)),
+              ),
+            ),
+            const Spacer(),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+                if (badgeCount != null)
+                  Positioned(
+                    top: -4,
+                    right: -6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppColors.saleRed,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        badgeCount.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );

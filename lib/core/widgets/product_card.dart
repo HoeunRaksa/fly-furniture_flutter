@@ -69,7 +69,7 @@ class ProductCard extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(screenWidth * 0.010),
                       decoration: BoxDecoration(
-                          color: AppColors.priceLine,
+                          color: AppColors.saleRed,
                           borderRadius: BorderRadius.all(Radius.circular(screenWidth * 0.026))
                       ),
                       child: Text(
@@ -131,7 +131,7 @@ class ProductCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: screenWidth * 0.042,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.priceLine,
+                          color: AppColors.furnitureBlue,
                         ),
                       ),
                     ),

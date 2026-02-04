@@ -301,13 +301,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         color: AppColors.primary,
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: HomeHeader(onSearchChanged: _onSearchChanged),
-            ),
+            HomeHeader(onSearchChanged: _onSearchChanged),
 
             Expanded(
               child: Align(

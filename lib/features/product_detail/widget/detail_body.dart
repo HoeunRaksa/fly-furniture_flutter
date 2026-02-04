@@ -139,7 +139,7 @@ class DetailBody extends StatelessWidget {
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
-                    color: AppColors.priceLine,
+                    color: AppColors.furnitureBlue,
                     height: 1,
                   ),
                 ),

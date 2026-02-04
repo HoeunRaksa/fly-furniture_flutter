@@ -4,9 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/app_color.dart';
-import '../../../../config/app_config.dart';
 import '../../../../core/routing/app_routes.dart';
-import '../../login/screen/login_screen.dart';
 import '../../provider/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -24,9 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
 
-  final _passwordVisible = ValueNotifier<bool>(false);
-
-  bool _rememberMe = false;
   bool _isLoading = false;
 
   @override
@@ -35,13 +30,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _lastNameCtrl.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
-    _passwordVisible.dispose();
     super.dispose();
   }
 
-  // =====================================================
-  // REGISTER (same behavior as RegisterInput)
-  // =====================================================
   Future<void> _onRegister() async {
     final messenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);
@@ -58,21 +49,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (!mounted) return;
-
-      FocusScope.of(context).unfocus();
-      await Future.delayed(const Duration(milliseconds: 100));
-
-      if (!mounted) return;
-
-      router.push(
-        AppRoutes.verifyEmail,
-        extra: {'email': _emailCtrl.text.trim()},
-      );
+      router.push(AppRoutes.verifyEmail, extra: {'email': _emailCtrl.text.trim()});
     } catch (e) {
       if (!mounted) return;
-
       messenger.showSnackBar(
-        SnackBar(content: Text(e.toString())),
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: AppColors.saleRed,
+        ),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -81,184 +65,116 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
-          "Register",
-          style: TextStyle(
-            fontSize: 40,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
-            color: AppColors.bodyLine,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+        title: const Text("Create Account", style: TextStyle(fontWeight: FontWeight.w800)),
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(AppRoutes.welcome);
-            }
-          },
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.headerLine, size: 20),
+          onPressed: () => context.pop(),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFEFFAF3),
-              Color(0xFFFFFFFF),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const Text(
-                    "Create your account to get started",
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  Image.asset("${AppConfig.imageUrl}/welcomestore.png"),
-
-                  const SizedBox(height: 20),
-
-                  // ---------------- First Name ----------------
-                  AuthTextField(
-                    controller: _firstNameCtrl,
-                    label: "First Name",
-                    hint: "John",
-                    validator: (v) =>
-                    v!.isEmpty ? "First name required" : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ---------------- Last Name ----------------
-                  AuthTextField(
-                    controller: _lastNameCtrl,
-                    label: "Last Name",
-                    hint: "Doe",
-                    validator: (v) =>
-                    v!.isEmpty ? "Last name required" : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ---------------- Email ----------------
-                  AuthTextField(
-                    controller: _emailCtrl,
-                    label: "Email",
-                    hint: "you@example.com",
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icons.email_outlined,
-                    validator: (v) {
-                      if (v!.isEmpty) return "Email required";
-                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
-                        return "Invalid email";
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ---------------- Password ----------------
-                  ValueListenableBuilder<bool>(
-                    valueListenable: _passwordVisible,
-                    builder: (_, visible, __) {
-                      return AuthTextField(
-                        controller: _passwordCtrl,
-                        label: "Password",
-                        hint: "Minimum 6 characters",
-                        obscureText: !visible,
-                        prefixIcon: Icons.lock_outline,
-                        suffix: IconButton(
-                          icon: Icon(
-                            visible
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () =>
-                          _passwordVisible.value = !visible,
-                        ),
-                        validator: (v) =>
-                        v!.length < 6 ? "Min 6 characters" : null,
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // ---------------- Remember Me ----------------
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (v) =>
-                            setState(() => _rememberMe = v ?? false),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(32),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "What's your name?",
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.headerLine, letterSpacing: -1.0),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Enter your details to join the FLY Furniture community.",
+                  style: TextStyle(fontSize: 15, color: AppColors.bodyLine),
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _firstNameCtrl,
+                        decoration: _inputDecoration("First name"),
                       ),
-                      const Text("Remember me"),
-                    ],
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _lastNameCtrl,
+                        decoration: _inputDecoration("Last name"),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _emailCtrl,
+                  decoration: _inputDecoration("Email address"),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordCtrl,
+                  obscureText: true,
+                  decoration: _inputDecoration("Password"),
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _onRegister,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.furnitureBlue,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 56),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
                   ),
-
-                  const SizedBox(height: 10),
-
-                  // ---------------- Register Button ----------------
-                  PrimaryButton(
-                    label: _isLoading ? "PLEASE WAIT..." : "REGISTER",
-                    onPressed: _isLoading ? () {} : _onRegister,
+                  child: Text(
+                    _isLoading ? "CREATING..." : "GET STARTED",
+                    style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1.0),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // ---------------- Login Link ----------------
-                  RichText(
-                    text: TextSpan(
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: cs.onSurface),
-                      children: [
-                        const TextSpan(text: "Already have an account? "),
-                        TextSpan(
-                          text: "Login",
-                          style: TextStyle(
-                            color: cs.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              context.push(AppRoutes.login);
-                            },
-                        ),
-                      ],
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: TextButton(
+                    onPressed: () => context.pop(),
+                    child: Text(
+                      "Already have an account?",
+                      style: TextStyle(color: AppColors.furnitureBlue, fontWeight: FontWeight.w800),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      fillColor: AppColors.secondary,
+      filled: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.divider),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.divider),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.furnitureBlue, width: 1.5),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      labelStyle: const TextStyle(color: AppColors.bodyLine, fontWeight: FontWeight.w500),
+      floatingLabelStyle: const TextStyle(color: AppColors.furnitureBlue, fontWeight: FontWeight.w700),
     );
   }
 }

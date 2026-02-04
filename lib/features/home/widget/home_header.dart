@@ -1,194 +1,235 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
-import '../../../core/widgets/input_field.dart';
 
-class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
+class HomeHeader extends StatefulWidget implements PreferredSizeWidget {
   const HomeHeader({super.key, required this.onSearchChanged});
   final void Function(String) onSearchChanged;
+
+  @override
+  State<HomeHeader> createState() => _HomeHeaderState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(115);
+}
+
+class _HomeHeaderState extends State<HomeHeader> {
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+        widget.onSearchChanged("");
+        _focusNode.unfocus();
+      } else {
+        _focusNode.requestFocus();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;
-    final userName = user?.name ?? "Guest";
 
-    String capitalizeFirst(String? text) {
-      if (text == null || text.isEmpty) return '';
-      return text[0].toUpperCase() + text.substring(1);
-    }
-
-    return PreferredSize(
-      preferredSize: preferredSize,
-          child: Container(
-            decoration: BoxDecoration(
-             color: AppColors.secondary,
-                 borderRadius: BorderRadius.all(Radius.circular(15))
-            ),
-            padding: const EdgeInsets.fromLTRB(24, 1, 24, 20),
-            child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  // Top Row: Avatar, Welcome, Notifications
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Profile Avatar
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        minSize: 0,
-                        onPressed: () => context.push("/profile"),
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.bodyLine,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: AppColors.accentButton,
-                                  backgroundImage: user?.hasProfileImage == true
-                                      ? CachedNetworkImageProvider(
-                                          user!.profileImageUrl!,
-                                        )
-                                      : const AssetImage(
-                                              "${AppConfig.imageUrl}/character.png",
-                                            )
-                                            as ImageProvider,
-                                ),
-                              ),
-                            ),
-                            // Online Indicator with glow
-                            Positioned(
-                              bottom: 2,
-                              right: 2,
-                              child: Container(
-                                width: 13,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: CupertinoColors.activeGreen,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: CupertinoTheme.of(
-                                      context,
-                                    ).scaffoldBackgroundColor,
-                                    width: 2.5,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: CupertinoColors.activeGreen
-                                          .withOpacity(0.5),
-                                      blurRadius: 8,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(width: 18),
-
-                      // Welcome Text
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Welcome Back',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.headerLine,
-                                letterSpacing: -0.5,
-                                height: 1.1,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              capitalizeFirst(userName),
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.headerLine,
-                                letterSpacing: -0.5,
-                                height: 1.1,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Notifications Button with glass effect
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: CupertinoColors.white.withOpacity(
-                                      0.2,
-                                    ),
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: CupertinoButton(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.all(11),
-                                  minSize: 0,
-                                  borderRadius: BorderRadius.circular(16),
-                                  onPressed: () {
-                                    debugPrint('Open notifications');
-                                  },
-                                  child: Icon(
-                                    Icons.mail,
-                                    size: 27,
-                                    color: AppColors.headerLine,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  InputField(
-                    label: "Search products...",
-                    prefixIcon: Icon(Icons.search),
-                    onChanged: onSearchChanged,
-                  ),
-                ],
-              ),
-            ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Container(
+        color: Colors.white,
+        child: SafeArea(
+          bottom: false,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: _isSearching ? _buildSearchingView() : _buildFurnitureHeader(user),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(150);
+  Widget _buildFurnitureHeader(user) {
+    return Column(
+      key: const ValueKey("furniture_header_view"),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Row 1: Premium Furniture Brand Row
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Row(
+            children: [
+              Text(
+                "fly",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.furnitureBlue,
+                  letterSpacing: -2.0,
+                  height: 1.0,
+                ),
+              ),
+              const Spacer(),
+              _buildFurnitureIconButton(CupertinoIcons.add, onTap: () {}),
+              const SizedBox(width: 10),
+              _buildFurnitureIconButton(CupertinoIcons.search, onTap: _toggleSearch),
+              const SizedBox(width: 10),
+              _buildFurnitureIconButton(CupertinoIcons.bag_fill, onTap: () {}),
+            ],
+          ),
+        ),
+        
+        // Row 2: Search/Status Bar Area
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => context.push("/profile"),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: AppColors.secondary,
+                  backgroundImage: user?.hasProfileImage == true
+                      ? CachedNetworkImageProvider(user!.profileImageUrl!)
+                      : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: _toggleSearch,
+                  child: Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Search architectural pieces...",
+                      style: TextStyle(
+                        color: AppColors.bodyLine.withOpacity(0.6),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.furnitureBlue, size: 24),
+            ],
+          ),
+        ),
+        
+        const Divider(height: 1, thickness: 1, color: AppColors.divider),
+      ],
+    );
+  }
+
+  Widget _buildSearchingView() {
+    return Column(
+      key: const ValueKey("searching_furniture"),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 60,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: _toggleSearch,
+                icon: const Icon(CupertinoIcons.arrow_left, size: 24, color: AppColors.headerLine),
+              ),
+              Expanded(
+                child: Container(
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary,
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _focusNode,
+                    autofocus: true,
+                    onChanged: widget.onSearchChanged,
+                    cursorColor: AppColors.furnitureBlue,
+                    style: const TextStyle(fontSize: 16, color: AppColors.headerLine),
+                    decoration: InputDecoration(
+                      hintText: "Search our collection",
+                      hintStyle: TextStyle(color: AppColors.bodyLine.withOpacity(0.5)),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      prefixIcon: Icon(CupertinoIcons.search, size: 18, color: AppColors.bodyLine.withOpacity(0.5)),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                                widget.onSearchChanged("");
+                                setState(() {});
+                              },
+                              child: Icon(CupertinoIcons.clear_fill, size: 18, color: AppColors.bodyLine.withOpacity(0.5)),
+                            )
+                          : null,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ),
+        const Divider(height: 1, thickness: 1, color: AppColors.divider),
+        Container(height: 52, color: Colors.white), 
+      ],
+    );
+  }
+
+  Widget _buildFurnitureIconButton(IconData icon, {required VoidCallback onTap}) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.secondary,
+        shape: BoxShape.circle,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
+            child: Icon(
+              icon,
+              size: 22,
+              color: AppColors.headerLine,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

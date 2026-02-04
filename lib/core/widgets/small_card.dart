@@ -104,7 +104,7 @@ class SmallCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.bodyLine,
+                            color: AppColors.furnitureBlue,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -118,7 +118,7 @@ class SmallCard extends StatelessWidget {
                             vertical: screenHeight * 0.002,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.priceLine,
+                            color: AppColors.saleRed,
                             borderRadius: BorderRadius.circular(screenWidth * 0.01),
                           ),
                           child: Text(
