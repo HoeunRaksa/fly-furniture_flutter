@@ -31,18 +31,16 @@ class ProductCard extends StatelessWidget {
     // Responsive dimensions with max width of 600
     final cardWidth = width ?? (screenWidth * 0.65).clamp(0, 600);
     final cardHeight = height ?? screenHeight * 0.5;
-    final imageWidth = imageX ?? cardWidth;
-
     return Container(
       width: cardWidth,
       height: cardHeight,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(screenWidth * 0.04),
+        borderRadius: BorderRadius.circular(screenWidth * 0.01),
         border: Border.all(color: Colors.grey.shade100, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -54,7 +52,7 @@ class ProductCard extends StatelessWidget {
           Expanded(
             flex: 3,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(screenWidth * 0.04),
+              borderRadius: BorderRadius.circular(screenWidth * 0.01),
               child: Stack(
                 children: [
                   Positioned.fill(

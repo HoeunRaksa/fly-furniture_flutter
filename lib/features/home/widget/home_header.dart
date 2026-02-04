@@ -82,11 +82,13 @@ class _HomeHeaderState extends State<HomeHeader> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Row(
             children: [
+              Icon(Icons.menu),
+              SizedBox(width: 10,),
               Text(
-                "fly",
+                "Batter_fly",
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 23,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.furnitureBlue,
                   letterSpacing: -2.0,
                   height: 1.0,
@@ -110,7 +112,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               GestureDetector(
                 onTap: () => context.push("/profile"),
                 child: CircleAvatar(
-                  radius: 20,
+                  radius: 23,
                   backgroundColor: AppColors.secondary,
                   backgroundImage: user?.hasProfileImage == true
                       ? CachedNetworkImageProvider(user!.profileImageUrl!)

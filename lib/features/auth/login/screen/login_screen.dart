@@ -75,12 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "fly",
+                      "You’re back already!",
                       style: TextStyle(
-                        fontSize: 64,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 45,
+                        fontWeight: FontWeight.w500,
                         color: AppColors.furnitureBlue, // Using the FB Blue for style consistency
-                        letterSpacing: -4.0,
+                        letterSpacing: -2.0,
                       ),
                     ),
                     Text(

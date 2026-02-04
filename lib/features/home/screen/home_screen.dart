@@ -302,7 +302,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Column(
           children: [
             HomeHeader(onSearchChanged: _onSearchChanged),
-
             Expanded(
               child: Align(
                 alignment: Alignment.topCenter,

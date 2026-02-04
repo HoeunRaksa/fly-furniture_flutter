@@ -39,20 +39,12 @@ class HomeBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          const SizedBox(height: 12),
-
+          const SizedBox(height: 30),
            const HomeSectionScroller(),
-          
-          const SizedBox(height: 24),
-
-          // Section Header
           _buildSectionHeader(context, "Featured Collection", isDark: isDark),
-          const SizedBox(height: 16),
-
-          // Vertical Product Grid
           _buildProductGrid(context, isDark),
-          
-          const SizedBox(height: 24),
+
+
         ],
       ),
     );
@@ -80,7 +72,7 @@ class HomeBody extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 16,
+        mainAxisSpacing: 20,
         crossAxisSpacing: 16,
         childAspectRatio: 0.7, // Adjust this based on ProductCard design
       ),
