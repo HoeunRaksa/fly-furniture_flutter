@@ -1,13 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fly/config/app_config.dart';
-import 'package:fly/features/auth/provider/auth_provider.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
+import 'package:fly/features/auth/provider/auth_provider.dart';
 
 class HomeHeader extends StatefulWidget implements PreferredSizeWidget {
   const HomeHeader({super.key, required this.onSearchChanged});
@@ -17,7 +13,7 @@ class HomeHeader extends StatefulWidget implements PreferredSizeWidget {
   State<HomeHeader> createState() => _HomeHeaderState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(115);
+  Size get preferredSize => const Size.fromHeight(60);
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
@@ -77,21 +73,25 @@ class _HomeHeaderState extends State<HomeHeader> {
       key: const ValueKey("furniture_header_view"),
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Row 1: Premium Furniture Brand Row
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Row(
             children: [
-              Icon(Icons.menu),
-              SizedBox(width: 10,),
-              Text(
-                "Batter_fly",
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.furnitureBlue,
-                  letterSpacing: -2.0,
-                  height: 1.0,
+              const Icon(Icons.menu),
+              const SizedBox(width: 10),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: const Text(
+                    "Butterfly",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.furnitureBlue,
+                      letterSpacing: -2.0,
+                      height: 1.0,
+                    ),
+                  ),
                 ),
               ),
               const Spacer(),
@@ -103,52 +103,6 @@ class _HomeHeaderState extends State<HomeHeader> {
             ],
           ),
         ),
-        
-        // Row 2: Search/Status Bar Area
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => context.push("/profile"),
-                child: CircleAvatar(
-                  radius: 23,
-                  backgroundColor: AppColors.secondary,
-                  backgroundImage: user?.hasProfileImage == true
-                      ? CachedNetworkImageProvider(user!.profileImageUrl!)
-                      : const AssetImage("${AppConfig.imageUrl}/character.png") as ImageProvider,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: GestureDetector(
-                  onTap: _toggleSearch,
-                  child: Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Search architectural pieces...",
-                      style: TextStyle(
-                        color: AppColors.bodyLine.withOpacity(0.6),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-              const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.furnitureBlue, size: 24),
-            ],
-          ),
-        ),
-        
-        const Divider(height: 1, thickness: 1, color: AppColors.divider),
       ],
     );
   }
@@ -165,11 +119,15 @@ class _HomeHeaderState extends State<HomeHeader> {
             children: [
               IconButton(
                 onPressed: _toggleSearch,
-                icon: const Icon(CupertinoIcons.arrow_left, size: 24, color: AppColors.headerLine),
+                icon: const Icon(
+                  CupertinoIcons.arrow_left,
+                  size: 24,
+                  color: AppColors.headerLine,
+                ),
               ),
               Expanded(
                 child: Container(
-                  height: 38,
+                  height: 45,
                   decoration: BoxDecoration(
                     color: AppColors.secondary,
                     borderRadius: BorderRadius.circular(22),
@@ -185,17 +143,25 @@ class _HomeHeaderState extends State<HomeHeader> {
                       hintText: "Search our collection",
                       hintStyle: TextStyle(color: AppColors.bodyLine.withOpacity(0.5)),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      prefixIcon: Icon(CupertinoIcons.search, size: 18, color: AppColors.bodyLine.withOpacity(0.5)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                      prefixIcon: Icon(
+                        CupertinoIcons.search,
+                        size: 18,
+                        color: AppColors.bodyLine.withOpacity(0.5),
+                      ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? GestureDetector(
-                              onTap: () {
-                                _searchController.clear();
-                                widget.onSearchChanged("");
-                                setState(() {});
-                              },
-                              child: Icon(CupertinoIcons.clear_fill, size: 18, color: AppColors.bodyLine.withOpacity(0.5)),
-                            )
+                        onTap: () {
+                          _searchController.clear();
+                          widget.onSearchChanged("");
+                          setState(() {});
+                        },
+                        child: Icon(
+                          CupertinoIcons.clear_fill,
+                          size: 18,
+                          color: AppColors.bodyLine.withOpacity(0.5),
+                        ),
+                      )
                           : null,
                     ),
                   ),
@@ -206,7 +172,6 @@ class _HomeHeaderState extends State<HomeHeader> {
           ),
         ),
         const Divider(height: 1, thickness: 1, color: AppColors.divider),
-        Container(height: 52, color: Colors.white), 
       ],
     );
   }

@@ -7,7 +7,6 @@ class Product {
   final double price;
   final double discount;
   final int stock;
-  final double rating;
   final String? category;
   final String? brand;
   final List<ProductImage> images;
@@ -24,7 +23,6 @@ class Product {
     required this.price,
     required this.discount,
     required this.stock,
-    required this.rating,
     this.category,
     this.brand,
     required this.images,
@@ -47,7 +45,6 @@ class Product {
       price: _parseDouble(json['price']),
       discount: _parseDouble(json['discount']),
       stock: _parseInt(json['stock']),
-      rating: _parseDouble(json['rating']),
       category: json['category']?.toString(),
       brand: json['brand']?.toString(),
       images: imagesList,
@@ -97,7 +94,6 @@ class Product {
       'price': price,
       'discount': discount,
       'stock': stock,
-      'rating': rating,
       'category': category,
       'brand': brand,
       'images': images.map((img) => img.toJson()).toList(),
@@ -152,9 +148,6 @@ class Product {
   }
 
   // Helper method to get rating stars (0-5)
-  int get fullStars => rating.floor();
-  bool get hasHalfStar => (rating - fullStars) >= 0.5;
-  int get emptyStars => 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   // Helper method to format price
   String get formattedPrice => '\$${price.toStringAsFixed(2)}';
@@ -210,7 +203,6 @@ class Product {
       price: price ?? this.price,
       discount: discount ?? this.discount,
       stock: stock ?? this.stock,
-      rating: rating ?? this.rating,
       category: category ?? this.category,
       brand: brand ?? this.brand,
       images: images ?? this.images,

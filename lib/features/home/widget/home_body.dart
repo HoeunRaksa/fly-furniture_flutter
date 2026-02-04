@@ -39,8 +39,8 @@ class HomeBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          const SizedBox(height: 30),
-           const HomeSectionScroller(),
+          const SizedBox(height: 12),
+          const HomeSectionScroller(),
           _buildSectionHeader(context, "Featured Collection", isDark: isDark),
           _buildProductGrid(context, isDark),
 
@@ -58,10 +58,10 @@ class HomeBody extends StatelessWidget {
     // Filter products if searchQuery is present
     final filteredProducts = searchQuery == null || searchQuery!.isEmpty
         ? products
-        : products.where((p) => 
-            p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
-            p.description.toLowerCase().contains(searchQuery!.toLowerCase())
-          ).toList();
+        : products.where((p) =>
+    p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
+        p.description.toLowerCase().contains(searchQuery!.toLowerCase())
+    ).toList();
 
     if (filteredProducts.isEmpty) {
       return _buildEmptyState(context);
@@ -72,28 +72,25 @@ class HomeBody extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 20,
+        mainAxisSpacing: 15,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.7, // Adjust this based on ProductCard design
+        childAspectRatio: 0.6,
       ),
       itemCount: filteredProducts.length,
       itemBuilder: (context, index) {
         final product = filteredProducts[index];
         final imageProvider = product.images.isNotEmpty
             ? CachedNetworkImageProvider(
-                AppConfig.getImageUrl(product.images[0].imageUrl),
-              )
+          AppConfig.getImageUrl(product.images[0].imageUrl),
+        )
             : const AssetImage('assets/images/placeholder.png') as ImageProvider;
 
         return CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => context.push('/detail/${product.id}'),
           child: ProductCard(
-            width: double.infinity,
-            height: double.infinity,
             image: imageProvider,
             product: product,
-            setIcon: true,
             onAdded: () {},
           ),
         );
@@ -124,20 +121,23 @@ class HomeBody extends StatelessWidget {
   }
 
   Widget _buildSectionHeader(
-    BuildContext context,
-    String title, {
-    required bool isDark,
-  }) {
+      BuildContext context,
+      String title, {
+        required bool isDark,
+      }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
-              ),
+        Expanded(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         TextButton(
           onPressed: () {},

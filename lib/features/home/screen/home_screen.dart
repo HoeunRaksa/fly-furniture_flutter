@@ -1,10 +1,14 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
+import 'package:fly/model/user_auth.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
+import '../../../config/app_config.dart';
 import '../../../providers/product_provider.dart';
 import '../../../model/product.dart';
 import '../../auth/provider/auth_provider.dart';
@@ -37,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           productProvider.fetchProducts(),
           authProvider.fetchUser(),
         ]);
-
         debugPrint('✅ Products loaded: ${productProvider.products.length}');
       } catch (e) {
         debugPrint('❌ Error fetching data: $e');
@@ -69,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final productProvider = context.watch<ProductProvider>();
+    final authProvider = context.watch<AuthProvider>();
+    final users = authProvider.user;
     final products = productProvider.products;
     final loading = productProvider.loading;
     final error = productProvider.error;
@@ -78,34 +83,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: AppColors.primary,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? const [
-                    Color.fromRGBO(0, 0, 0, 0.95),
-                    Color.fromRGBO(0, 0, 0, 0.98),
-                    Color(0xFF000000),
-                  ]
-                : const [
-                    AppColors.primary,
-                    AppColors.secondary,
-                    Colors.white,
-                  ],
-          ),
-        ),
-        child: SizedBox(
-          child: _buildBody(
-            loading,
-            error,
-            products,
-            productProvider,
-            isDark,
-            context,
-          ),
+        decoration: BoxDecoration(color: AppColors.primary),
+        child: _buildBody(
+          loading,
+          error,
+          products,
+          productProvider,
+          isDark,
+          context,
+          users,
         ),
       ),
     );
@@ -118,212 +106,91 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     ProductProvider provider,
     bool isDark,
     BuildContext context,
+    User? users,
   ) {
-    // Loading state
     if (loading && products.isEmpty) {
-      return Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDark
-                      ? const [
-                          Color.fromRGBO(255, 255, 255, 0.08),
-                          Color.fromRGBO(255, 255, 255, 0.04),
-                        ]
-                      : const [
-                          Color.fromRGBO(255, 255, 255, 0.5),
-                          Color.fromRGBO(255, 255, 255, 0.3),
-                        ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? const Color.fromRGBO(255, 255, 255, 0.15)
-                      : const Color.fromRGBO(255, 255, 255, 0.4),
-                  width: 1,
-                ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 122, 255, 0.1),
-                    blurRadius: 20,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CupertinoActivityIndicator(
-                    radius: 16,
-                    color: CupertinoColors.systemBlue,
-                  ),
-                  SizedBox(height: 16),
-                  Text('Loading products...', style: TextStyle(fontSize: 16)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+      return const Center(child: CupertinoActivityIndicator(radius: 16));
     }
 
-    // Error state
     if (error != null && products.isEmpty) {
       return Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color.fromRGBO(255, 59, 48, 0.15),
-                    Color.fromRGBO(255, 59, 48, 0.08),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: const Color.fromRGBO(255, 59, 48, 0.4),
-                  width: 1.5,
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    CupertinoIcons.exclamationmark_triangle,
-                    size: 48,
-                    color: CupertinoColors.destructiveRed,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error Loading Products',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    error,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 16),
-                  CupertinoButton.filled(
-                    onPressed: () {
-                      provider.clearError();
-                      provider.fetchProducts(forceRefresh: true);
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Empty state
-    if (products.isEmpty && !loading) {
-      return Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDark
-                      ? const [
-                          Color.fromRGBO(255, 255, 255, 0.08),
-                          Color.fromRGBO(255, 255, 255, 0.04),
-                        ]
-                      : const [
-                          Color.fromRGBO(255, 255, 255, 0.5),
-                          Color.fromRGBO(255, 255, 255, 0.3),
-                        ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? const Color.fromRGBO(255, 255, 255, 0.15)
-                      : const Color.fromRGBO(255, 255, 255, 0.4),
-                  width: 1.5,
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    CupertinoIcons.cube_box,
-                    size: 64,
-                    color: CupertinoColors.systemGrey,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No Products Found',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Check back later for new arrivals',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  CupertinoButton.filled(
-                    onPressed: () {
-                      provider.fetchProducts(forceRefresh: true);
-                    },
-                    child: const Text('Refresh'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Success state - show products
-    // Success state - show products
-    return ClipRRect(
-      borderRadius: BorderRadiusGeometry.all(Radius.circular(15)),
-      child: Container(
-        color: AppColors.primary,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            HomeHeader(onSearchChanged: _onSearchChanged),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Container(
-                    color: AppColors.primary,
-                    child: HomeBody(
-                      selectedIndex: selectedIndex,
-                      searchQuery: searchQuery,
-                      onCategorySelected: _onCategorySelected,
-                      products: products,
-                      scrollController: _scrollController,
-                      provider: provider,
-                    ),
-                  ),
-                ),
-              ),
+            const Icon(
+              CupertinoIcons.exclamationmark_triangle,
+              size: 48,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Error Loading Products',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
+            CupertinoButton.filled(
+              onPressed: () {
+                provider.clearError();
+                provider.fetchProducts(forceRefresh: true);
+              },
+              child: const Text('Retry'),
             ),
           ],
         ),
-      ),
+      );
+    }
+    final String profileUrl = (users?.profileImageUrl ?? '').toString().trim();
+    return Column(
+      children: [
+        HomeHeader(onSearchChanged: _onSearchChanged),
+        // User Profile Section - 100% width, no overflow
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: Colors.grey.shade200,
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: AppConfig.getImageUrl(profileUrl),
+                    width: 44,
+                    height: 44,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.broken_image),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15), // Replaced spacing for compatibility
+              const Expanded(
+                child: Text(
+                  "You will find the best for you!",
+                  style: TextStyle(fontWeight: FontWeight.w400),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1, thickness: 1, color: AppColors.divider),
+        Expanded(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: HomeBody(
+              selectedIndex: selectedIndex,
+              searchQuery: searchQuery,
+              onCategorySelected: _onCategorySelected,
+              products: products,
+              scrollController: _scrollController,
+              provider: provider,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

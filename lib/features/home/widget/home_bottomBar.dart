@@ -19,8 +19,8 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
   final List<Widget> _screens = [
     const HomeScreen(),
     FavoriteScreen(favorites: const []),
-    const HomeScreen(), // Placeholder for Cart
-    const ProfileScreen(),
+    const HomeScreen(), // Placeholder for Cart/Shop
+    const ProfileScreen(isSetHeader: true), // Restored Profile Screen
   ];
 
   @override
@@ -31,31 +31,31 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: _buildFurnitureBottomBar(),
+      bottomNavigationBar: _buildFBStyleBottomBar(),
     );
   }
 
-  Widget _buildFurnitureBottomBar() {
+  Widget _buildFBStyleBottomBar() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: AppColors.divider,
+            color: const Color(0xFFE4E6EB),
             width: 0.5,
           ),
         ),
       ),
       child: SafeArea(
         child: Container(
-          height: 56,
+          height: 54,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildTabItem(0, CupertinoIcons.house_fill, "Home"),
-              _buildTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
-              _buildTabItem(2, CupertinoIcons.bag_fill, "Cart", badgeCount: 3),
-              _buildTabItem(3, CupertinoIcons.person_fill, "Profile"),
+              _buildFBTabItem(0, CupertinoIcons.house_fill, "Home"),
+              _buildFBTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
+              _buildFBTabItem(2, CupertinoIcons.bag_fill, "Shop", badgeCount: 3),
+              _buildFBTabItem(3, CupertinoIcons.person_fill, "Profile"), // Restored Profile Tab Icon
             ],
           ),
         ),
@@ -63,9 +63,9 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
     );
   }
 
-  Widget _buildTabItem(int index, IconData icon, String label, {int? badgeCount}) {
+  Widget _buildFBTabItem(int index, IconData icon, String label, {int? badgeCount}) {
     bool isSelected = _currentIndex == index;
-    Color color = isSelected ? AppColors.furnitureBlue : AppColors.bodyLine.withOpacity(0.5);
+    Color color = isSelected ? AppColors.furnitureBlue : const Color(0xFF65676B);
 
     return Expanded(
       child: GestureDetector(
@@ -73,10 +73,9 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
         behavior: HitTestBehavior.opaque,
         child: Column(
           children: [
-            // Active top indicator in Furniture Blue
             Container(
               height: 3,
-              width: 36,
+              width: 40,
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.furnitureBlue : Colors.transparent,
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(3)),
@@ -89,7 +88,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
                 Icon(
                   icon,
                   color: color,
-                  size: 24,
+                  size: 26,
                 ),
                 if (badgeCount != null)
                   Positioned(

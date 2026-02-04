@@ -18,23 +18,15 @@ class SmallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // Responsive dimensions with max width of 600
-    final cardWidth = width ?? (screenWidth * 0.9).clamp(0, 600);
-    final cardHeight = height ?? screenHeight * 0.14;
-    final imageSize = cardHeight * 0.82;
-    final horizontalPadding = screenWidth * 0.02;
-    final spacing = screenWidth * 0.025;
+    const double cardHeight = 110.0;
+    const double imageSize = 90.0;
 
     return Container(
-      width: cardWidth,
       height: cardHeight,
-      padding: EdgeInsets.all(horizontalPadding),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(screenWidth * 0.04),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
@@ -47,9 +39,9 @@ class SmallCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Image - Responsive size
+          // Image
           ClipRRect(
-            borderRadius: BorderRadius.circular(screenWidth * 0.03),
+            borderRadius: BorderRadius.circular(12),
             child: Image(
               image: image,
               width: imageSize,
@@ -58,34 +50,32 @@ class SmallCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: spacing),
+          const SizedBox(width: 12),
 
-          // Product info - Flexible to prevent overflow
+          // Product info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Product name
                 if (product.name.isNotEmpty)
                   Text(
                     product.name,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.035,
+                    style: const TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                // Description
                 if (product.description.isNotEmpty) ...[
-                  SizedBox(height: screenHeight * 0.004),
+                  const SizedBox(height: 4),
                   Text(
                     product.description,
                     style: TextStyle(
-                      fontSize: screenWidth * 0.029,
+                      fontSize: 13,
                       color: Colors.grey.shade600,
                     ),
                     maxLines: 1,
@@ -93,16 +83,15 @@ class SmallCard extends StatelessWidget {
                   ),
                 ],
 
-                // Price and discount
                 if (product.price > 0) ...[
-                  SizedBox(height: screenHeight * 0.008),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Flexible(
                         child: Text(
                           '\$${product.price.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
+                          style: const TextStyle(
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: AppColors.furnitureBlue,
                           ),
@@ -111,21 +100,21 @@ class SmallCard extends StatelessWidget {
                         ),
                       ),
                       if (product.discount > 0) ...[
-                        SizedBox(width: screenWidth * 0.015),
+                        const SizedBox(width: 8),
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * 0.01,
-                            vertical: screenHeight * 0.002,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.saleRed,
-                            borderRadius: BorderRadius.circular(screenWidth * 0.01),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             '-${product.discount.toStringAsFixed(0)}%',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth * 0.024,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
