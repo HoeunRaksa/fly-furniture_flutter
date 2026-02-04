@@ -74,8 +74,9 @@ class _HomeHeaderState extends State<HomeHeader> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Icon(Icons.menu),
               const SizedBox(width: 10),

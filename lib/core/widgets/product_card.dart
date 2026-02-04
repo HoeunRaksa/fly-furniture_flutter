@@ -42,9 +42,9 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 3, // Increased flex for image
+            flex: 4, // Increased flex for image
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -88,7 +88,7 @@ class ProductCard extends StatelessWidget {
                     Text(
                       product.name,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 20,
                         fontWeight: FontWeight.w800,
                         color: AppColors.headerLine,
                       ),

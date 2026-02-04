@@ -6,6 +6,7 @@ import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:fly/model/user_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
@@ -145,26 +146,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         HomeHeader(onSearchChanged: _onSearchChanged),
         // User Profile Section - 100% width, no overflow
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: Colors.grey.shade200,
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: AppConfig.getImageUrl(profileUrl),
-                    width: 44,
-                    height: 44,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.broken_image),
-                  ),
-                ),
-              ),
+             InkWell(
+               child: CircleAvatar(
+                 radius: 22,
+                 backgroundColor: Colors.grey.shade200,
+                 child: ClipOval(
+                   child: CachedNetworkImage(
+                     imageUrl: AppConfig.getImageUrl(profileUrl),
+                     width: 44,
+                     height: 44,
+                     fit: BoxFit.cover,
+                     placeholder: (context, url) => const Center(
+                       child: CircularProgressIndicator(strokeWidth: 2),
+                     ),
+                     errorWidget: (context, url, error) =>
+                     const Icon(Icons.broken_image),
+                   ),
+                 ),
+               ),
+               onTap: () {
+                 context.push('/profile');
+               },
+             ),
               const SizedBox(width: 15), // Replaced spacing for compatibility
               const Expanded(
                 child: Text(

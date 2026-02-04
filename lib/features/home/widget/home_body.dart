@@ -36,15 +36,13 @@ class HomeBody extends StatelessWidget {
       onRefresh: () async => await provider.refreshProducts(),
       child: ListView(
         controller: scrollController,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const SizedBox(height: 12),
           const HomeSectionScroller(),
           _buildSectionHeader(context, "Featured Collection", isDark: isDark),
           _buildProductGrid(context, isDark),
-
-
         ],
       ),
     );
@@ -54,8 +52,6 @@ class HomeBody extends StatelessWidget {
     if (products.isEmpty) {
       return _buildEmptyState(context);
     }
-
-    // Filter products if searchQuery is present
     final filteredProducts = searchQuery == null || searchQuery!.isEmpty
         ? products
         : products.where((p) =>
@@ -68,6 +64,8 @@ class HomeBody extends StatelessWidget {
     }
 
     return GridView.builder(
+      padding: EdgeInsets.zero,
+      primary: false,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -120,36 +118,56 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(
-      BuildContext context,
-      String title, {
-        required bool isDark,
-      }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
+  Widget _buildSectionHeader(BuildContext context, String title, {required bool isDark}) {
+    final titleStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
+      fontSize: 20,
+      fontWeight: FontWeight.w800,
+      letterSpacing: -0.3,
+      height: 1.0,
+    );
+
+    return SizedBox(
+      height: 60,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600
+                )
+              ),
             ),
-            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Sort & Filter",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w600,
+          const SizedBox(width: 8),
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,                 // ✅ no padding
+              minimumSize: const Size(0, 0),            // ✅ no minimum
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,     // ✅ tighter height
+            ),
+            child: Text(
+              "Sort & Filter",
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.0,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+
 }
