@@ -8,7 +8,6 @@ class Product {
   final double discount;
   final int stock;
   final String? category;
-  final String? brand;
   final List<ProductImage> images;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -24,7 +23,6 @@ class Product {
     required this.discount,
     required this.stock,
     this.category,
-    this.brand,
     required this.images,
     required this.createdAt,
     required this.updatedAt,
@@ -46,7 +44,6 @@ class Product {
       discount: _parseDouble(json['discount']),
       stock: _parseInt(json['stock']),
       category: json['category']?.toString(),
-      brand: json['brand']?.toString(),
       images: imagesList,
       createdAt: _parseDateTime(json['created_at']),
       updatedAt: _parseDateTime(json['updated_at']),
@@ -95,7 +92,6 @@ class Product {
       'discount': discount,
       'stock': stock,
       'category': category,
-      'brand': brand,
       'images': images.map((img) => img.toJson()).toList(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -186,7 +182,6 @@ class Product {
     double? price,
     double? discount,
     int? stock,
-    double? rating,
     String? category,
     String? brand,
     List<ProductImage>? images,
@@ -204,7 +199,6 @@ class Product {
       discount: discount ?? this.discount,
       stock: stock ?? this.stock,
       category: category ?? this.category,
-      brand: brand ?? this.brand,
       images: images ?? this.images,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

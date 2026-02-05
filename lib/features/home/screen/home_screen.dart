@@ -78,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final products = productProvider.products;
     final loading = productProvider.loading;
     final error = productProvider.error;
-
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
 
@@ -141,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       );
     }
     final String profileUrl = (users?.profileImageUrl ?? '').toString().trim();
+    final bool isSelect = false;
     return Column(
       children: [
         HomeHeader(onSearchChanged: _onSearchChanged),
@@ -193,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               products: products,
               scrollController: _scrollController,
               provider: provider,
+              isSelect: isSelect,
             ),
           ),
         ),

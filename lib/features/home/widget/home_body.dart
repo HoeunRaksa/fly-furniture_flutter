@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:fly/providers/product_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../config/app_color.dart';
 import '../../../core/widgets/product_card.dart';
 import '../../../model/product.dart';
 import 'home_section_scroller.dart';
@@ -15,6 +16,7 @@ class HomeBody extends StatelessWidget {
   final List<Product> products;
   final ScrollController? scrollController;
   final ProductProvider provider;
+  final bool isSelect;
 
   const HomeBody({
     super.key,
@@ -24,13 +26,13 @@ class HomeBody extends StatelessWidget {
     required this.products,
     this.scrollController,
     required this.provider,
+    required this.isSelect,
   });
 
   @override
   Widget build(BuildContext context) {
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
-
     return RefreshIndicator(
       backgroundColor: Colors.white,
       onRefresh: () async => await provider.refreshProducts(),
@@ -42,6 +44,8 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 12),
           const HomeSectionScroller(),
           _buildSectionHeader(context, "Featured Collection", isDark: isDark),
+          SizedBox(height: 45, child: _buildCategory(context)),
+          const SizedBox(height: 12),
           _buildProductGrid(context, isDark),
         ],
       ),
@@ -172,4 +176,43 @@ class HomeBody extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildCategory(BuildContext context) {
+    final categories = products
+        .map((p) => p.category)
+        .where((c) => c != null && c!.trim().isNotEmpty)
+        .map((c) => c!)
+        .toSet()
+        .toList();
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (_, index) {
+
+        final selected = index == selectedIndex;
+
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: selected ? AppColors.furnitureBlue : Colors.white,
+              foregroundColor: selected
+                  ? Colors.white
+                  : Theme.of(context).textTheme.bodyMedium?.color,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+                side: BorderSide(
+                  color: selected ? AppColors.furnitureBlue : Colors.grey.shade300,
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            ),
+            onPressed: () => onCategorySelected(index),
+            child: Text('Living Room'),
+          ),
+        );
+      },
+    );
+  }
+
 }
