@@ -95,15 +95,13 @@ class ProductCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-
-                  const SizedBox(height: 4),
-
+                  const SizedBox(height: 7),
                   if (product.description.isNotEmpty)
                     Text(
                       product.description,
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.grey.shade600,
+                        color: Colors.grey.shade800,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -115,7 +113,7 @@ class ProductCard extends StatelessWidget {
                     Text(
                       '\$${product.price.toStringAsFixed(2)}',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.furnitureBlue,
                       ),
