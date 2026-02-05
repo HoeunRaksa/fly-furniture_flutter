@@ -1,9 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_color.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/routing/app_routes.dart';
 import '../../provider/auth_provider.dart';
 
@@ -15,10 +13,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isChecked = false;
+  bool _obscurePassword = false;
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
-  
+
   bool _isLoading = false;
 
   @override
@@ -65,7 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // FLY Furniture Branding - Furniture Specific
               Container(
                 height: 250,
                 width: double.infinity,
@@ -77,35 +76,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       "You’re back already!",
                       style: TextStyle(
-                        fontSize: 45,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.furnitureBlue, // Using the FB Blue for style consistency
+                        fontSize: 43,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors
+                            .furnitureBlue, // Using the FB Blue for style consistency
                         letterSpacing: -2.0,
                       ),
                     ),
+                    SizedBox(height: 10),
                     Text(
-                      "ARCHITECTURAL FURNITURE",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.headerLine.withOpacity(0.4),
-                        letterSpacing: 2.5,
-                      ),
+                      "Dear loved user welcome back to our market place",
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ],
                 ),
               ),
-              
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Email',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
                       TextFormField(
                         controller: _emailCtrl,
                         decoration: InputDecoration(
-                          hintText: "Email address",
+                          hintText: "your email@gmail.com",
                           fillColor: AppColors.secondary,
                           filled: true,
                           border: OutlineInputBorder(
@@ -113,16 +116,42 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.all(20),
+                          prefixIcon: Icon(Icons.email, color: Colors.grey.shade800,),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 50),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Password',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
                       TextFormField(
                         controller: _passwordCtrl,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         decoration: InputDecoration(
-                          hintText: "Password",
+                          hintText: "••••••",
+                          hintStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                           fillColor: AppColors.secondary,
                           filled: true,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                               color: Colors.grey.shade800,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          prefixIcon: Icon(Icons.lock, color: Colors.grey.shade800,),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -130,42 +159,91 @@ class _LoginScreenState extends State<LoginScreen> {
                           contentPadding: const EdgeInsets.all(20),
                         ),
                       ),
-                      const SizedBox(height: 24),
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              },
+                            ),
+                            Text(
+                              'Remember',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Spacer(),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Forgot password?",
+                                style: TextStyle(
+                                  color: AppColors.bodyLine,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: _isLoading ? null : _onLogin,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.furnitureBlue,
                           foregroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 56),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           elevation: 0,
                         ),
                         child: Text(
                           _isLoading ? "SIGNING IN..." : "SIGN IN",
-                          style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1.0),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.0,
+                          ),
                         ),
+                      ),
+                      const SizedBox(height: 40),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(thickness: 1, color: Colors.grey),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text(
+                              "Or",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(thickness: 1, color: Colors.grey),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Forgot password?",
-                          style: TextStyle(color: AppColors.bodyLine, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 40),
-                      
-                      OutlinedButton(
                         onPressed: () => context.push(AppRoutes.register),
                         style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 56),
-                          side: BorderSide(color: AppColors.furnitureBlue.withOpacity(0.3)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
                         child: const Text(
-                          "CREATE NEW ACCOUNT",
-                          style: TextStyle(color: AppColors.furnitureBlue, fontWeight: FontWeight.w800, letterSpacing: 1.0),
+                          "Register",
+                          style: TextStyle(
+                            color: AppColors.furnitureBlue,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            letterSpacing: 1.0,
+                          ),
                         ),
                       ),
                     ],

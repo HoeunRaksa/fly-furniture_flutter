@@ -78,7 +78,7 @@ class _HomeHeaderState extends State<HomeHeader> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.menu),
+              const Icon(Icons.menu, size: 30,),
               const SizedBox(width: 10),
               Flexible(
                 child: FittedBox(

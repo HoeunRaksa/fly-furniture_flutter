@@ -54,10 +54,15 @@ class HomeBody extends StatelessWidget {
     }
     final filteredProducts = searchQuery == null || searchQuery!.isEmpty
         ? products
-        : products.where((p) =>
-    p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
-        p.description.toLowerCase().contains(searchQuery!.toLowerCase())
-    ).toList();
+        : products
+              .where(
+                (p) =>
+                    p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
+                    p.description.toLowerCase().contains(
+                      searchQuery!.toLowerCase(),
+                    ),
+              )
+              .toList();
 
     if (filteredProducts.isEmpty) {
       return _buildEmptyState(context);
@@ -79,9 +84,10 @@ class HomeBody extends StatelessWidget {
         final product = filteredProducts[index];
         final imageProvider = product.images.isNotEmpty
             ? CachedNetworkImageProvider(
-          AppConfig.getImageUrl(product.images[0].imageUrl),
-        )
-            : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+                AppConfig.getImageUrl(product.images[0].imageUrl),
+              )
+            : const AssetImage('assets/images/placeholder.png')
+                  as ImageProvider;
 
         return CupertinoButton(
           padding: EdgeInsets.zero,
@@ -107,9 +113,9 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'No pieces found',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey.shade600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           const Text('Try adjusting your search or filters'),
@@ -118,14 +124,11 @@ class HomeBody extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, {required bool isDark}) {
-    final titleStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-      fontSize: 20,
-      fontWeight: FontWeight.w800,
-      letterSpacing: -0.3,
-      height: 1.0,
-    );
-
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title, {
+    required bool isDark,
+  }) {
     return SizedBox(
       height: 60,
       child: Row(
@@ -140,8 +143,9 @@ class HomeBody extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 25,
-                  fontWeight: FontWeight.w600
-                )
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -149,10 +153,10 @@ class HomeBody extends StatelessWidget {
           TextButton(
             onPressed: () {},
             style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,                 // ✅ no padding
-              minimumSize: const Size(0, 0),            // ✅ no minimum
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 0),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              visualDensity: VisualDensity.compact,     // ✅ tighter height
+              visualDensity: VisualDensity.compact,
             ),
             child: Text(
               "Sort & Filter",
@@ -168,6 +172,4 @@ class HomeBody extends StatelessWidget {
       ),
     );
   }
-
-
 }
