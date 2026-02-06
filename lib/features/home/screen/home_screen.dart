@@ -1,15 +1,18 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:fly/model/user_auth.dart';
+import 'package:fly/providers/category_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
+import '../../../model/product_category.dart';
 import '../../../providers/product_provider.dart';
 import '../../../model/product.dart';
 import '../../auth/provider/auth_provider.dart';
@@ -74,8 +77,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final productProvider = context.watch<ProductProvider>();
     final authProvider = context.watch<AuthProvider>();
+    final categoryProvider = context.watch<CategoryProvider>();
     final users = authProvider.user;
     final products = productProvider.products;
+    final categories = categoryProvider.categories;
     final loading = productProvider.loading;
     final error = productProvider.error;
     final brightness = MediaQuery.of(context).platformBrightness;
@@ -90,7 +95,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           loading,
           error,
           products,
+          categories,
           productProvider,
+          categoryProvider,
           isDark,
           context,
           users,
@@ -103,7 +110,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     bool loading,
     String? error,
     List<Product> products,
+    List<ProductCategory> categories,
     ProductProvider provider,
+    CategoryProvider cateProvider,
     bool isDark,
     BuildContext context,
     User? users,
@@ -191,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               searchQuery: searchQuery,
               onCategorySelected: _onCategorySelected,
               products: products,
+              categories: [],
               scrollController: _scrollController,
               provider: provider,
               isSelect: isSelect,

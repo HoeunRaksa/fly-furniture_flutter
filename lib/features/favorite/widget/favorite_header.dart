@@ -12,18 +12,14 @@ class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Text("Favorite",  style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w900,
+            color: AppColors.furnitureBlue,
+            height: 1.0,
+          ),),
           CircleIconButton(
-            icon: Icons.arrow_back,
-            backgroundColor: AppColors.primary,
-            iconSize: 25,
-            sizedY: 44,
-            sizeX: 44,
-            onTap: () {
-              debugPrint("Tap back!");
-            },
-          ),
-          CircleIconButton(
-            icon: Icons.favorite_border,
+            icon: Icons.search,
             backgroundColor: AppColors.primary,
             iconSize: 25,
             sizedY: 44,

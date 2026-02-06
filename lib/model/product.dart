@@ -1,5 +1,7 @@
 import 'package:fly/model/product_image.dart';
 
+import 'product_category.dart';
+
 class Product {
   final String id;
   final String name;
@@ -7,7 +9,7 @@ class Product {
   final double price;
   final double discount;
   final int stock;
-  final String? category;
+  final ProductCategory? category;
   final List<ProductImage> images;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -43,7 +45,9 @@ class Product {
       price: _parseDouble(json['price']),
       discount: _parseDouble(json['discount']),
       stock: _parseInt(json['stock']),
-      category: json['category']?.toString(),
+      category: json['category'] != null
+          ? ProductCategory.fromJson(json['category'])
+          : null,
       images: imagesList,
       createdAt: _parseDateTime(json['created_at']),
       updatedAt: _parseDateTime(json['updated_at']),
@@ -182,7 +186,7 @@ class Product {
     double? price,
     double? discount,
     int? stock,
-    String? category,
+    ProductCategory? category,
     String? brand,
     List<ProductImage>? images,
     DateTime? createdAt,

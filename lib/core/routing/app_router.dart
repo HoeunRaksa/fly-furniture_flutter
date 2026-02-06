@@ -12,15 +12,14 @@ import '../../features/product_detail/screen/product_screen.dart';
 import '../../providers/product_provider.dart';
 
 class AppRouter {
-  static GoRouter router(
-      AuthProvider authProvider, ProductProvider productProvider) {
+  static GoRouter router(AuthProvider authProvider, ProductProvider productProvider) {
     return GoRouter(
-      initialLocation: AppRoutes.home,
+      initialLocation: AppRoutes.welcome, // ✅ start here
       refreshListenable: authProvider,
       routes: [
         GoRoute(
           path: AppRoutes.welcome,
-          builder: (context, state) => WelcomeScreen(),
+          builder: (context, state) => const WelcomeScreen(),
         ),
         GoRoute(
           path: AppRoutes.login,
@@ -34,8 +33,6 @@ class AppRouter {
           path: AppRoutes.verifyEmail,
           builder: (context, state) {
             final email = (state.extra as Map?)?['email'] as String?;
-
-            // Use the authProvider parameter instead of context.read
             final finalEmail = email ?? authProvider.user?.email;
 
             if (finalEmail == null || finalEmail.isEmpty) {
@@ -54,42 +51,54 @@ class AppRouter {
           path: '${AppRoutes.detail}/:id',
           builder: (context, state) {
             final id = state.pathParameters['id']!;
+
             final product = productProvider.products.firstWhere(
                   (p) => p.id.toString() == id,
+              orElse: () => throw Exception("Product not found"),
             );
+
             return ProductScreen(product: product);
           },
         ),
         GoRoute(
           path: AppRoutes.profile,
-          builder: (context, state) =>
-          const ProfileScreen(isSetHeader: true),
+          builder: (context, state) => const ProfileScreen(isSetHeader: true),
         ),
       ],
+
       redirect: (context, state) {
-        // ✅ FIX: Use the authProvider parameter instead of context.read
-        // This prevents "Looking up a deactivated widget's ancestor" error
-        final loggedIn = authProvider.isLoggedIn;
-        final otpPending = authProvider.otpPending;
         final currentPath = state.uri.path;
 
+        // ✅ wait until token load finished
+        if (!authProvider.sessionLoaded) {
+          // allow welcome while loading
+          return currentPath == AppRoutes.welcome ? null : AppRoutes.welcome;
+        }
+
+        final loggedIn = authProvider.isLoggedIn; // ✅ token-based
+        final otpPending = authProvider.otpPending;
+
+        // OTP flow
         if (otpPending && currentPath != AppRoutes.verifyEmail) {
           return AppRoutes.verifyEmail;
         }
 
-        final protectedRoutes = [
-          AppRoutes.home,
-          AppRoutes.profile,
-          AppRoutes.detail,
-        ];
-        final isTryingProtectedRoute =
-        protectedRoutes.any((route) => currentPath.startsWith(route));
+        // public pages
+        final isPublic = currentPath == AppRoutes.welcome ||
+            currentPath == AppRoutes.login ||
+            currentPath == AppRoutes.register ||
+            currentPath == AppRoutes.verifyEmail;
 
-        if (!loggedIn && isTryingProtectedRoute) {
+        // protected pages
+        final isProtected = currentPath.startsWith(AppRoutes.home) ||
+            currentPath.startsWith(AppRoutes.profile) ||
+            currentPath.startsWith(AppRoutes.detail);
+
+        if (!loggedIn && isProtected) {
           return AppRoutes.login;
         }
 
-        if (loggedIn && currentPath == AppRoutes.login) {
+        if (loggedIn && isPublic && currentPath != AppRoutes.verifyEmail) {
           return AppRoutes.home;
         }
 

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../config/app_color.dart';
 import '../../../core/widgets/product_card.dart';
 import '../../../model/product.dart';
+import '../../../model/product_category.dart';
 import 'home_section_scroller.dart';
 
 class HomeBody extends StatelessWidget {
@@ -14,6 +15,7 @@ class HomeBody extends StatelessWidget {
   final String? searchQuery;
   final Function(int) onCategorySelected;
   final List<Product> products;
+  final List<ProductCategory> categories;
   final ScrollController? scrollController;
   final ProductProvider provider;
   final bool isSelect;
@@ -24,6 +26,7 @@ class HomeBody extends StatelessWidget {
     this.searchQuery,
     required this.onCategorySelected,
     required this.products,
+    required this.categories,
     this.scrollController,
     required this.provider,
     required this.isSelect,
@@ -178,17 +181,11 @@ class HomeBody extends StatelessWidget {
   }
 
   Widget _buildCategory(BuildContext context) {
-    final categories = products
-        .map((p) => p.category)
-        .where((c) => c != null && c!.trim().isNotEmpty)
-        .map((c) => c!)
-        .toSet()
-        .toList();
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: 6,
+      itemCount: categories.length,
       itemBuilder: (_, index) {
-
+      final ProductCategory cate = categories[index];
         final selected = index == selectedIndex;
 
         return Padding(
@@ -208,7 +205,7 @@ class HomeBody extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             ),
             onPressed: () => onCategorySelected(index),
-            child: Text('Living Room'),
+            child: Text(cate.name),
           ),
         );
       },

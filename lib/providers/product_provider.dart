@@ -210,7 +210,7 @@ class ProductProvider with ChangeNotifier {
     }
 
     return _products.where((product) {
-      return product.category?.toLowerCase() == category.toLowerCase();
+      return product.category?.name.toLowerCase() == category.toLowerCase();
     }).toList();
   }
 

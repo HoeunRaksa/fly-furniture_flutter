@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../config/app_color.dart';
 import '../../../core/widgets/circleIcon_button.dart';
+import '../widget/favorite_header.dart';
 
 class FavoriteScreen extends StatelessWidget {
   final List<Map<String, dynamic>> favorites;
@@ -10,28 +12,7 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        leading:  CircleIconButton(
-          icon: Icons.arrow_back,
-          // backgroundColor: AppColors.glassFillDark,
-          backgroundColor: Colors.transparent,
-          iconColor: Colors.white,
-          iconSize: 25,
-          sizedY: 44,
-          sizeX: 44,
-          onTap: () {
-            debugPrint("Tap back!");
-          },
-        ),
-        title: Text(
-          "My Favourite",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-          ),
-        ),
-      ),
+      appBar: FavoriteHeader(),
       body: favorites.isEmpty
           ? _buildEmptyState()
           : GridView.builder(

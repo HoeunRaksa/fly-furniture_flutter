@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/app.dart';
+import 'package:fly/providers/category_provider.dart';
 import 'features/auth/provider/auth_provider.dart';
 import 'providers/product_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,9 @@ void main() {
 
         // ProductProvider manages product data
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        
+        //ProductCategories management
+        ChangeNotifierProvider(create: (_) => CategoryProvider())
       ],
       child: const MyApp(),
     ),

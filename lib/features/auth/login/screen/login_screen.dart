@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: Icon(Icons.email, color: Colors.grey.shade800,),
                         ),
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 40),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(

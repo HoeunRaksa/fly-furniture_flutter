@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import '../../../config/app_color.dart';
 import '../../../core/routing/app_routes.dart';
+import '../../auth/provider/auth_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -11,8 +14,6 @@ class WelcomeScreen extends StatefulWidget {
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
-
-// ... existing imports
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final PageController _pageController = PageController();
@@ -29,7 +30,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // ✅ carousel timer
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!mounted) return;
+
       if (_currentPage < images.length - 1) {
         _currentPage++;
       } else {
@@ -42,6 +47,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         curve: Curves.easeInOut,
       );
     });
+
+    // ✅ load saved token session (cookie style)
+    Future.microtask(() => context.read<AuthProvider>().loadSession());
   }
 
   @override
@@ -56,21 +64,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          /// 🔹 Background Carousel
           Positioned.fill(
             child: PageView.builder(
               controller: _pageController,
               itemCount: images.length,
               onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
+                setState(() => _currentPage = index);
               },
               itemBuilder: (context, index) {
-                return Image.asset(
-                  images[index],
-                  fit: BoxFit.cover,
-                );
+                return Image.asset(images[index], fit: BoxFit.cover);
               },
             ),
           ),
@@ -139,7 +141,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Login',style: TextStyle(fontSize: 18),),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
 
@@ -158,10 +163,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(color: Colors.white, fontSize: 18,),
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 40),
                 ],
               ),

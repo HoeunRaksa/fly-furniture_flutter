@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../service/auth_service.dart';
 import '../../../model/user_auth.dart';
 
@@ -9,33 +10,76 @@ class AuthProvider extends ChangeNotifier {
 
   User? _user;
   String? _token;
+
   bool _otpPending = false;
   bool _isResendEnabled = true;
   int _resendSeconds = 60;
 
+  // ✅ important: avoid router redirect before session load finishes
+  bool _sessionLoaded = false;
+
   User? get user => _user;
   String? get token => _token;
-  bool get isLoggedIn => _token != null && _user != null;
+
+  // ✅ logged in if token exists (cookie style)
+  bool get isLoggedIn => _token != null;
+
   bool get otpPending => _otpPending;
   bool get isResendEnabled => _isResendEnabled;
   int get resendSeconds => _resendSeconds;
+  bool get sessionLoaded => _sessionLoaded;
+
+  // ✅ secure storage
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  static const String _tokenKey = "auth_token";
+
+  Future<void> _saveToken(String token) async {
+    await _storage.write(key: _tokenKey, value: token);
+  }
+
+  Future<String?> _readToken() async {
+    return await _storage.read(key: _tokenKey);
+  }
+
+  Future<void> _clearToken() async {
+    await _storage.delete(key: _tokenKey);
+  }
+
+  // ✅ call once at app start
+  Future<void> loadSession() async {
+    try {
+      final saved = await _readToken();
+
+      if (saved != null && saved.isNotEmpty) {
+        _token = saved;
+        notifyListeners();
+
+        // try fetch user using token
+        await fetchUser();
+      }
+    } finally {
+      _sessionLoaded = true;
+      notifyListeners();
+    }
+  }
 
   // ---------------- LOGIN ----------------
   Future<void> login(String email, String password) async {
-    // IMPORTANT: Clear everything first
     _user = null;
     _token = null;
     _otpPending = false;
-    notifyListeners(); // Force UI update
+    notifyListeners();
 
     final result = await _authService.login(email, password);
 
     _user = result;
     _token = result.token;
 
+    if (_token != null) {
+      await _saveToken(_token!);
+    }
+
     notifyListeners();
-    debugPrint('✅ Login successful: ${result.email}');
-    debugPrint('✅ Current user in provider: ${_user?.email}');
   }
 
   // ---------------- REGISTER ----------------
@@ -45,36 +89,28 @@ class AuthProvider extends ChangeNotifier {
       String password, {
         File? profileImage,
       }) async {
-    try {
-      final result = await _authService.register(
-        name,
-        email,
-        password,
-        profileImage: profileImage,
-      );
+    final result = await _authService.register(
+      name,
+      email,
+      password,
+      profileImage: profileImage,
+    );
 
-      // OTP not verified yet - don't save token
-      _token = null;
-      _otpPending = true;
+    _token = null;
+    _otpPending = true;
 
-      // Store temporary user info for OTP screen
-      _user = User(
-        id: result?.id ?? '',
-        name: result?.name ?? name,
-        email: result?.email ?? email,
-        role: result?.role ?? 'user',
-        profileImage: result?.profileImage,
-        profileImageUrl: result?.profileImageUrl,
-        isVerified: false,
-        token: null,
-      );
+    _user = User(
+      id: result?.id ?? '',
+      name: result?.name ?? name,
+      email: result?.email ?? email,
+      role: result?.role ?? 'user',
+      profileImage: result?.profileImage,
+      profileImageUrl: result?.profileImageUrl,
+      isVerified: false,
+      token: null,
+    );
 
-      notifyListeners();
-      debugPrint("✅ Register success, OTP pending for: $email");
-    } catch (e) {
-      debugPrint("❌ Register failed: $e");
-      rethrow;
-    }
+    notifyListeners();
   }
 
   // ---------------- VERIFY OTP ----------------
@@ -85,8 +121,11 @@ class AuthProvider extends ChangeNotifier {
     _token = result.token;
     _otpPending = false;
 
+    if (_token != null) {
+      await _saveToken(_token!);
+    }
+
     notifyListeners();
-    debugPrint('✅ OTP verified: ${result.email}');
   }
 
   // ---------------- RESEND OTP ----------------
@@ -108,30 +147,22 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> resendOtp(String email) async {
-    try {
-      await _authService.resendOtp(email);
-      startResendTimer();
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+    await _authService.resendOtp(email);
+    startResendTimer();
   }
 
   // ---------------- GET CURRENT USER ----------------
   Future<void> fetchUser() async {
-    if (_token == null) {
-      debugPrint('⚠️ Cannot fetch user: No token available');
-      return;
-    }
+    if (_token == null) return;
 
     try {
       final result = await _authService.getUser(_token!);
       _user = result;
       notifyListeners();
-      debugPrint('✅ User fetched: ${result.email}');
     } catch (e) {
-      debugPrint('❌ Failed to fetch user: $e');
-      // If token is invalid, logout
-      if (e.toString().contains('401') || e.toString().contains('Unauthenticated')) {
+      // invalid token -> logout fully
+      if (e.toString().contains('401') ||
+          e.toString().contains('Unauthenticated')) {
         await logout();
       }
       rethrow;
@@ -145,102 +176,50 @@ class AuthProvider extends ChangeNotifier {
     String? password,
     File? profileImage,
   }) async {
-    if (_token == null) {
-      throw Exception('Not authenticated');
-    }
+    if (_token == null) throw Exception('Not authenticated');
 
-    try {
-      final result = await _authService.updateProfile(
-        token: _token!,
-        name: name,
-        email: email,
-        password: password,
-        profileImage: profileImage,
-      );
+    final result = await _authService.updateProfile(
+      token: _token!,
+      name: name,
+      email: email,
+      password: password,
+      profileImage: profileImage,
+    );
 
-      _user = result;
-      notifyListeners();
-      debugPrint('✅ Profile updated: ${result.email}');
-    } catch (e) {
-      debugPrint('❌ Failed to update profile: $e');
-      rethrow;
-    }
+    _user = result;
+    notifyListeners();
   }
 
   // ---------------- DELETE PROFILE IMAGE ----------------
   Future<void> deleteProfileImage() async {
-    if (_token == null) {
-      throw Exception('Not authenticated');
+    if (_token == null) throw Exception('Not authenticated');
+
+    await _authService.deleteProfileImage(_token!);
+
+    if (_user != null) {
+      _user = _user!.copyWith(profileImage: null, profileImageUrl: null);
     }
 
-    try {
-      await _authService.deleteProfileImage(_token!);
-
-      // Update user object
-      if (_user != null) {
-        _user = User(
-          id: _user!.id,
-          name: _user!.name,
-          email: _user!.email,
-          role: _user!.role,
-          profileImage: null,
-          profileImageUrl: null,
-          isVerified: _user!.isVerified,
-          token: _user!.token,
-          emailVerifiedAt: _user!.emailVerifiedAt,
-        );
-      }
-
-      notifyListeners();
-      debugPrint('✅ Profile image deleted');
-    } catch (e) {
-      debugPrint('❌ Failed to delete profile image: $e');
-      rethrow;
-    }
+    notifyListeners();
   }
 
   // ---------------- LOGOUT ----------------
   Future<void> logout() async {
-    debugPrint('🚪 Logging out: ${_user?.email}');
-
     final currentToken = _token;
-    final currentEmail = _user?.email;
 
-    // CRITICAL: Clear memory state COMPLETELY
     _user = null;
     _token = null;
     _otpPending = false;
     _isResendEnabled = true;
     _resendSeconds = 60;
 
-    // Force immediate UI update
+    await _clearToken();
     notifyListeners();
 
-    debugPrint('✅ User cleared from AuthProvider');
-    debugPrint('   Previous: $currentEmail');
-    debugPrint('   Current: ${_user?.email} (should be null)');
-    debugPrint('   Token cleared: ${_token == null}');
-
-    // Call backend logout
     if (currentToken != null) {
       try {
         await _authService.logout(currentToken);
-        debugPrint('✅ Backend logout successful');
-      } catch (e) {
-        debugPrint('⚠️ Backend logout failed: $e');
-      }
+      } catch (_) {}
     }
-
-    debugPrint('✅ Logout complete');
-  }
-
-  // ---------------- DEBUG HELPER ----------------
-  void printCurrentState() {
-    debugPrint('========== AUTH STATE ==========');
-    debugPrint('User: ${_user?.email}');
-    debugPrint('Token: ${_token != null ? '${_token!.substring(0, 20)}...' : 'null'}');
-    debugPrint('Profile Image: ${_user?.profileImageUrl ?? 'none'}');
-    debugPrint('Logged in: $isLoggedIn');
-    debugPrint('================================');
   }
 }

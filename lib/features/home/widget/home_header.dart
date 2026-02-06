@@ -78,8 +78,6 @@ class _HomeHeaderState extends State<HomeHeader> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.menu, size: 30,),
-              const SizedBox(width: 10),
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -87,19 +85,15 @@ class _HomeHeaderState extends State<HomeHeader> {
                     "Butterfly",
                     style: TextStyle(
                       fontSize: 23,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w900,
                       color: AppColors.furnitureBlue,
-                      letterSpacing: -2.0,
                       height: 1.0,
                     ),
                   ),
                 ),
               ),
               const Spacer(),
-              _buildFurnitureIconButton(CupertinoIcons.add, onTap: () {}),
-              const SizedBox(width: 10),
               _buildFurnitureIconButton(CupertinoIcons.search, onTap: _toggleSearch),
-              const SizedBox(width: 10),
               _buildFurnitureIconButton(CupertinoIcons.bag_fill, onTap: () {}),
             ],
           ),

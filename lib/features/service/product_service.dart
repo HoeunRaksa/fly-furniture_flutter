@@ -27,26 +27,40 @@ class ProductService {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        
-        // Handle both wrapped and direct array responses
-        List<dynamic> data;
+
+        List<dynamic> list;
+
         if (responseData is Map<String, dynamic>) {
-          // Wrapped response: {"success": true, "data": [...]}
-          if (responseData.containsKey('data')) {
-            data = responseData['data'] as List<dynamic>;
-          } else if (responseData.containsKey('products')) {
-            data = responseData['products'] as List<dynamic>;
+          // Case 1: { success: true, data: { products: [...] } }
+          final dataField = responseData['data'];
+
+          if (dataField is Map<String, dynamic> && dataField['products'] is List) {
+            list = dataField['products'] as List<dynamic>;
+
+            // Case 2: { products: [...] }
+          } else if (responseData['products'] is List) {
+            list = responseData['products'] as List<dynamic>;
+
+            // Case 3: { success: true, data: [...] }
+          } else if (dataField is List) {
+            list = dataField;
+
           } else {
-            throw Exception("Invalid response format: no 'data' or 'products' field");
+            throw Exception("Invalid response format (expected products list)");
           }
+
         } else if (responseData is List) {
           // Direct array response: [...]
-          data = responseData;
+          list = responseData;
+
         } else {
           throw Exception("Invalid response format: expected Map or List");
         }
-        
-        final products = data.map((json) => Product.fromJson(json)).toList();
+
+        final products = list
+            .map((e) => Product.fromJson(e as Map<String, dynamic>))
+            .toList();
+
 
         // Cache the results
         _cachedProducts = products;

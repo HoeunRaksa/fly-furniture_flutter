@@ -27,7 +27,7 @@ class User {
 
     return User(
       id: userData['id']?.toString() ?? '',
-      name: userData['name'] ?? '',
+      name: userData['username'] ?? '',
       email: userData['email'] ?? '',
       role: userData['role'] ?? 'user',
       profileImage: userData['profile_image'],
@@ -44,7 +44,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id']?.toString() ?? '',
-      name: json['name'] ?? '',
+      name: json['username'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? 'user',
       profileImage: json['profile_image'],
@@ -60,7 +60,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'username': name,
       'email': email,
       'role': role,
       'profile_image': profileImage,
