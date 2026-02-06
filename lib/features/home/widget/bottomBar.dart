@@ -6,14 +6,14 @@ import 'package:fly/features/profile/screen/profile_screen.dart';
 import '../../../config/app_color.dart';
 import '../screen/home_screen.dart';
 
-class HomeBottomBar extends StatefulWidget {
-  const HomeBottomBar({super.key});
+class BottomBar extends StatefulWidget {
+  const BottomBar({super.key});
 
   @override
-  State<HomeBottomBar> createState() => _HomeBottomBarState();
+  State<BottomBar> createState() => _BottomBarState();
 }
 
-class _HomeBottomBarState extends State<HomeBottomBar> {
+class _BottomBarState extends State<BottomBar> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -47,7 +47,7 @@ class _HomeBottomBarState extends State<HomeBottomBar> {
         ),
       ),
       child: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: 54,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
