@@ -45,8 +45,8 @@ class Product {
       price: _parseDouble(json['price']),
       discount: _parseDouble(json['discount']),
       stock: _parseInt(json['stock']),
-      category: json['category'] != null
-          ? ProductCategory.fromJson(json['category'])
+      category: json['category'] != null && json['category'] is Map<String, dynamic>
+          ? ProductCategory.fromJson(json['category'] as Map<String, dynamic>)
           : null,
       images: imagesList,
       createdAt: _parseDateTime(json['created_at']),

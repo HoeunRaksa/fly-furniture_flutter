@@ -50,10 +50,12 @@ class HomeBody extends StatelessWidget {
           SizedBox(height: 45, child: _buildCategory(context)),
           const SizedBox(height: 12),
           _buildProductGrid(context, isDark),
+
         ],
       ),
     );
   }
+
 
   Widget _buildProductGrid(BuildContext context, bool isDark) {
     if (products.isEmpty) {
@@ -74,6 +76,8 @@ class HomeBody extends StatelessWidget {
     if (filteredProducts.isEmpty) {
       return _buildEmptyState(context);
     }
+    debugPrint("✅ categories length = ${categories.length}");
+    debugPrint("✅ products length = ${products.length}");
 
     return GridView.builder(
       padding: EdgeInsets.zero,

@@ -1,9 +1,6 @@
-import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fly/core/widgets/input_field.dart';
 import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:fly/model/user_auth.dart';
@@ -39,11 +36,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final productProvider = context.read<ProductProvider>();
       final authProvider = context.read<AuthProvider>();
+      final categoryProvider = context.read<CategoryProvider>();
 
       try {
         await Future.wait([
           productProvider.fetchProducts(),
           authProvider.fetchUser(),
+          categoryProvider.getCategory(),
+
         ]);
         debugPrint('✅ Products loaded: ${productProvider.products.length}');
       } catch (e) {
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               searchQuery: searchQuery,
               onCategorySelected: _onCategorySelected,
               products: products,
-              categories: [],
+              categories: categories,
               scrollController: _scrollController,
               provider: provider,
               isSelect: isSelect,
