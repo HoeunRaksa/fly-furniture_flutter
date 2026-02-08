@@ -7,9 +7,8 @@ class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
   const FavoriteHeader({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-      child: Row(
+    return SafeArea(
+      child: Padding(padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("Favorite",  style: TextStyle(
@@ -29,7 +28,7 @@ class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
         ],
-      ),
+      ),)
     );
   }
 
