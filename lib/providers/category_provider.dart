@@ -9,8 +9,8 @@ class CategoryProvider extends ChangeNotifier {
 
   final ProductService service = ProductService();
 
-  Future<void> getCategory() async {
-    final products = await service.fetchProducts();
+  Future<void> getCategory({String? token}) async {
+    final products = await service.fetchProducts(token: token);
 
     _categories.clear();
 

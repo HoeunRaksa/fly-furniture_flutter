@@ -18,7 +18,7 @@ class ProductProvider with ChangeNotifier {
   bool get hasProducts => _products.isNotEmpty;
 
   // Fetch products (uses cache from service)
-  Future<void> fetchProducts({bool forceRefresh = false}) async {
+  Future<void> fetchProducts({bool forceRefresh = false, String? token}) async {
     // Skip if already loading
     if (_loading) return;
 
@@ -30,7 +30,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await _service.fetchProducts(forceRefresh: forceRefresh);
+      _products = await _service.fetchProducts(forceRefresh: forceRefresh, token: token);
       _isInitialized = true;
       _error = null;
 
@@ -49,7 +49,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   // Fetch single product by ID
-  Future<Product?> fetchProductById(String id) async {
+  Future<Product?> fetchProductById(String id, {String? token}) async {
     // First check if product exists in cache
     try {
       final cachedProduct = _products.firstWhere((p) => p.id == id);
@@ -59,7 +59,7 @@ class ProductProvider with ChangeNotifier {
     }
 
     try {
-      final product = await _service.fetchProductById(id);
+      final product = await _service.fetchProductById(id, token: token);
 
       // Update cache if product exists
       final index = _products.indexWhere((p) => p.id == id);
@@ -81,8 +81,8 @@ class ProductProvider with ChangeNotifier {
   }
 
   // Refresh products (forces cache refresh)
-  Future<void> refreshProducts() async {
-    await fetchProducts(forceRefresh: true);
+  Future<void> refreshProducts({String? token}) async {
+    await fetchProducts(forceRefresh: true, token: token);
   }
 
   // Create new product

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fly/app.dart';
 import 'package:fly/providers/category_provider.dart';
+import 'package:fly/providers/favorite_provider.dart';
 import 'features/auth/provider/auth_provider.dart';
 import 'providers/product_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,9 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         
         //ProductCategories management
-        ChangeNotifierProvider(create: (_) => CategoryProvider())
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
       ],
       child: const MyApp(),
     ),

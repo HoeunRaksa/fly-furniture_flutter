@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
+import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:fly/providers/product_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_color.dart';
 import '../../../core/widgets/product_card.dart';
@@ -20,6 +22,8 @@ class HomeBody extends StatelessWidget {
   final ProductProvider provider;
   final bool isSelect;
 
+  final void Function(String productId) onToggleFavorite;
+
   const HomeBody({
     super.key,
     required this.selectedIndex,
@@ -30,15 +34,20 @@ class HomeBody extends StatelessWidget {
     this.scrollController,
     required this.provider,
     required this.isSelect,
+    required this.onToggleFavorite,
   });
 
   @override
   Widget build(BuildContext context) {
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
+
     return RefreshIndicator(
       backgroundColor: Colors.white,
-      onRefresh: () async => await provider.refreshProducts(),
+      onRefresh: () async {
+        final token = context.read<AuthProvider>().token;
+        await provider.refreshProducts(token: token);
+      },
       child: ListView(
         controller: scrollController,
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -50,34 +59,32 @@ class HomeBody extends StatelessWidget {
           SizedBox(height: 45, child: _buildCategory(context)),
           const SizedBox(height: 12),
           _buildProductGrid(context, isDark),
-
         ],
       ),
     );
   }
 
-
   Widget _buildProductGrid(BuildContext context, bool isDark) {
-    if (products.isEmpty) {
-      return _buildEmptyState(context);
-    }
-    final filteredProducts = searchQuery == null || searchQuery!.isEmpty
-        ? products
-        : products
-              .where(
-                (p) =>
-                    p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
-                    p.description.toLowerCase().contains(
-                      searchQuery!.toLowerCase(),
-                    ),
-              )
-              .toList();
+    if (products.isEmpty) return _buildEmptyState(context);
 
-    if (filteredProducts.isEmpty) {
-      return _buildEmptyState(context);
+    List<Product> filtered = products;
+
+    if (selectedIndex != -1 && selectedIndex < categories.length) {
+      final selectedCategory = categories[selectedIndex];
+      filtered = filtered
+          .where((p) => p.category?.id == selectedCategory.id)
+          .toList();
     }
-    debugPrint("✅ categories length = ${categories.length}");
-    debugPrint("✅ products length = ${products.length}");
+
+    final filteredProducts = (searchQuery == null || searchQuery!.isEmpty)
+        ? filtered
+        : filtered
+        .where((p) =>
+    p.name.toLowerCase().contains(searchQuery!.toLowerCase()) ||
+        p.description.toLowerCase().contains(searchQuery!.toLowerCase()))
+        .toList();
+
+    if (filteredProducts.isEmpty) return _buildEmptyState(context);
 
     return GridView.builder(
       padding: EdgeInsets.zero,
@@ -93,12 +100,15 @@ class HomeBody extends StatelessWidget {
       itemCount: filteredProducts.length,
       itemBuilder: (context, index) {
         final product = filteredProducts[index];
+
         final imageProvider = product.images.isNotEmpty
             ? CachedNetworkImageProvider(
-                AppConfig.getImageUrl(product.images[0].imageUrl),
-              )
-            : const AssetImage('assets/images/placeholder.png')
-                  as ImageProvider;
+          AppConfig.getImageUrl(product.images[0].imageUrl),
+        )
+            : const AssetImage('assets/images/placeholder.png') as ImageProvider;
+
+        final bool isFav = product.isFavorite;
+
 
         return CupertinoButton(
           padding: EdgeInsets.zero,
@@ -106,7 +116,8 @@ class HomeBody extends StatelessWidget {
           child: ProductCard(
             image: imageProvider,
             product: product,
-            onAdded: () {},
+            isFavorite: isFav,
+            onFavoriteTap: () => onToggleFavorite(product.id)
           ),
         );
       },
@@ -124,9 +135,10 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'No pieces found',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(color: Colors.grey.shade600),
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           const Text('Try adjusting your search or filters'),
@@ -136,10 +148,10 @@ class HomeBody extends StatelessWidget {
   }
 
   Widget _buildSectionHeader(
-    BuildContext context,
-    String title, {
-    required bool isDark,
-  }) {
+      BuildContext context,
+      String title, {
+        required bool isDark,
+      }) {
     return SizedBox(
       height: 60,
       child: Row(
@@ -152,7 +164,7 @@ class HomeBody extends StatelessWidget {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -185,12 +197,19 @@ class HomeBody extends StatelessWidget {
   }
 
   Widget _buildCategory(BuildContext context) {
+    final display = <ProductCategory>[
+      ProductCategory(id: -1, name: "All"),
+      ...categories,
+    ];
+
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: categories.length,
+      itemCount: display.length,
       itemBuilder: (_, index) {
-      final ProductCategory cate = categories[index];
-        final selected = index == selectedIndex;
+        final bool isAll = index == 0;
+        final String title = isAll ? "All" : categories[index - 1].name;
+        final bool selected =
+        isAll ? selectedIndex == -1 : selectedIndex == index - 1;
 
         return Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -203,17 +222,18 @@ class HomeBody extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),
                 side: BorderSide(
-                  color: selected ? AppColors.furnitureBlue : Colors.grey.shade300,
+                  color: selected
+                      ? AppColors.furnitureBlue
+                      : Colors.grey.shade300,
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             ),
-            onPressed: () => onCategorySelected(index),
-            child: Text(cate.name),
+            onPressed: () => onCategorySelected(isAll ? -1 : index - 1),
+            child: Text(title),
           ),
         );
       },
     );
   }
-
 }

@@ -16,6 +16,7 @@ class Product {
   final int reviewCount;
   final bool isFeatured;
   final bool isActive;
+  final bool isFavorite;
 
   Product({
     required this.id,
@@ -31,6 +32,7 @@ class Product {
     this.reviewCount = 0,
     this.isFeatured = false,
     this.isActive = true,
+    this.isFavorite = false
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class Product {
       reviewCount: _parseInt(json['review_count']),
       isFeatured: json['is_featured'] == true || json['is_featured'] == 1,
       isActive: json['is_active'] == true || json['is_active'] == 1,
+      isFavorite: json['is_favorite'] ?? false,
     );
   }
 
@@ -187,13 +190,13 @@ class Product {
     double? discount,
     int? stock,
     ProductCategory? category,
-    String? brand,
     List<ProductImage>? images,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? reviewCount,
     bool? isFeatured,
     bool? isActive,
+    bool? isFavorite, // ✅ ADD
   }) {
     return Product(
       id: id ?? this.id,
@@ -209,8 +212,11 @@ class Product {
       reviewCount: reviewCount ?? this.reviewCount,
       isFeatured: isFeatured ?? this.isFeatured,
       isActive: isActive ?? this.isActive,
+      isFavorite: isFavorite ?? this.isFavorite, // ✅ ADD
     );
   }
+
+
 
   @override
   bool operator ==(Object other) {

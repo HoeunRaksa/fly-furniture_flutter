@@ -5,6 +5,7 @@ import 'package:fly/features/home/widget/home_body.dart';
 import 'package:fly/features/home/widget/home_header.dart';
 import 'package:fly/model/user_auth.dart';
 import 'package:fly/providers/category_provider.dart';
+import 'package:fly/providers/favorite_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
@@ -27,23 +28,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int selectedIndex = -1;
   String? searchQuery;
 
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _animationController = AnimationController(vsync: this);
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final productProvider = context.read<ProductProvider>();
       final authProvider = context.read<AuthProvider>();
       final categoryProvider = context.read<CategoryProvider>();
-
       try {
         await Future.wait([
-          productProvider.fetchProducts(),
+          productProvider.fetchProducts(token: authProvider.token),
           authProvider.fetchUser(),
-          categoryProvider.getCategory(),
-
+          categoryProvider.getCategory(token: authProvider.token),
         ]);
         debugPrint('✅ Products loaded: ${productProvider.products.length}');
       } catch (e) {
@@ -58,21 +57,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _animationController.dispose();
     super.dispose();
   }
-
   void _onSearchChanged(String value) {
     if (!mounted) return;
     setState(() {
       searchQuery = value;
     });
   }
-
   void _onCategorySelected(int index) {
     if (!mounted) return;
     setState(() {
       selectedIndex = selectedIndex == index ? -1 : index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final productProvider = context.watch<ProductProvider>();
@@ -85,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final error = productProvider.error;
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.primary,
@@ -105,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
   Widget _buildBody(
     bool loading,
     String? error,
@@ -120,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (loading && products.isEmpty) {
       return const Center(child: CupertinoActivityIndicator(radius: 16));
     }
-
     if (error != null && products.isEmpty) {
       return Center(
         child: Column(
@@ -140,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             CupertinoButton.filled(
               onPressed: () {
                 provider.clearError();
-                provider.fetchProducts(forceRefresh: true);
+                provider.fetchProducts(forceRefresh: true, token: context.read<AuthProvider>().token);
               },
               child: const Text('Retry'),
             ),
@@ -153,34 +146,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Column(
       children: [
         HomeHeader(onSearchChanged: _onSearchChanged),
-        // User Profile Section - 100% width, no overflow
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: [
-             InkWell(
-               child: CircleAvatar(
-                 radius: 22,
-                 backgroundColor: Colors.grey.shade200,
-                 child: ClipOval(
-                   child: CachedNetworkImage(
-                     imageUrl: AppConfig.getImageUrl(profileUrl),
-                     width: 44,
-                     height: 44,
-                     fit: BoxFit.cover,
-                     placeholder: (context, url) => const Center(
-                       child: CircularProgressIndicator(strokeWidth: 2),
-                     ),
-                     errorWidget: (context, url, error) =>
-                     const Icon(Icons.broken_image),
-                   ),
-                 ),
-               ),
-               onTap: () {
-                 context.push('/profile');
-               },
-             ),
-              const SizedBox(width: 15), // Replaced spacing for compatibility
+              InkWell(
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Colors.grey.shade200,
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: AppConfig.getImageUrl(profileUrl),
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.broken_image),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  context.push('/profile');
+                },
+              ),
+              const SizedBox(width: 15),
               const Expanded(
                 child: Text(
                   "You will find the best for you!",
@@ -204,7 +196,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               scrollController: _scrollController,
               provider: provider,
               isSelect: isSelect,
-            ),
+              onToggleFavorite: (productId) async {
+                final token = context.read<AuthProvider>().token;
+                if (token == null) return;
+                await context.read<FavoriteProvider>().toggleFavorite(
+                  productProvider: context.read<ProductProvider>(),
+                  token: token,
+                  productId: productId,
+                );
+              },
+            )
           ),
         ),
       ],

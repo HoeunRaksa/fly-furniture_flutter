@@ -4,6 +4,10 @@ import 'package:fly/features/product_detail/widget/detail_footer.dart';
 import '../widget/detail_body.dart';
 import '../widget/detail_header.dart';
 import '../../../model/product.dart';
+import 'package:provider/provider.dart';
+import '../../auth/provider/auth_provider.dart';
+import '../../../providers/favorite_provider.dart';
+import '../../../providers/product_provider.dart';
 
 class ProductScreen extends StatefulWidget {
   final Product product;
@@ -30,6 +34,12 @@ class _ProductScreen extends State<ProductScreen> {
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
 
+    final productProvider = context.watch<ProductProvider>();
+    final product = productProvider.products.firstWhere(
+      (p) => p.id == widget.product.id,
+      orElse: () => widget.product,
+    );
+
     return Scaffold(
       backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
       body: Container(
@@ -52,12 +62,23 @@ class _ProductScreen extends State<ProductScreen> {
         ),
         child: Stack(
           children: [
-            DetailBody(product: widget.product),
+            DetailBody(product: product),
             Positioned(
               top: 5,
               left: 10,
               right: 10,
-              child: const DetailHeader(),
+              child: DetailHeader(
+                product: product,
+                onFavoriteTap: () async {
+                  final token = context.read<AuthProvider>().token;
+                  if (token == null) return;
+                  await context.read<FavoriteProvider>().toggleFavorite(
+                    productProvider: context.read<ProductProvider>(),
+                    token: token,
+                    productId: product.id,
+                  );
+                },
+              ),
             ),
           ],
         ),

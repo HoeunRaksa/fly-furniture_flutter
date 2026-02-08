@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/features/favorite/screen/favorite_screen.dart';
@@ -18,9 +17,9 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    FavoriteScreen(favorites: const []),
-    const HomeScreen(), // Placeholder for Cart/Shop
-    const ProfileScreen(isSetHeader: true), // Restored Profile Screen
+    FavoriteScreen(),
+    const HomeScreen(),
+    const ProfileScreen(isSetHeader: true),
   ];
 
   @override
@@ -55,7 +54,7 @@ class _BottomBarState extends State<BottomBar> {
               _buildFBTabItem(0, CupertinoIcons.house_fill, "Home"),
               _buildFBTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
               _buildFBTabItem(2, CupertinoIcons.bag_fill, "Shop", badgeCount: 3),
-              _buildFBTabItem(3, CupertinoIcons.person_fill, "Profile"), // Restored Profile Tab Icon
+              _buildFBTabItem(3, CupertinoIcons.person_fill, "Profile"),
             ],
           ),
         ),

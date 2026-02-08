@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/app_color.dart';
 import '../../model/product.dart';
-import '../helperFunction/string_util.dart';
 
 class ProductCard extends StatelessWidget {
   final double? width;
@@ -9,8 +8,10 @@ class ProductCard extends StatelessWidget {
   final double? imageX;
   final Product product;
   final ImageProvider image;
-  final bool setIcon;
-  final VoidCallback onAdded;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteTap;
+
+
 
   const ProductCard({
     super.key,
@@ -19,8 +20,9 @@ class ProductCard extends StatelessWidget {
     this.imageX,
     required this.product,
     required this.image,
-    required this.onAdded,
-    this.setIcon = false,
+     this.onFavoriteTap,
+    this.isFavorite = false
+
   });
 
   @override
@@ -44,30 +46,57 @@ class ProductCard extends StatelessWidget {
           Expanded(
             flex: 4, // Increased flex for image
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image(
-                      image: image,
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image(image: image, fit: BoxFit.cover),
                   ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.saleRed,
-                        borderRadius: BorderRadius.circular(8),
+                  if (product.discount > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.saleRed,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          "- ${product.discount.toInt()} %",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
-                      child: Text(
-                        "- ${product.discount.toInt()} %",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
+                    ),
+
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: onFavoriteTap,
+                        child: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          size: 25,
+                          color: isFavorite ? Colors.pink : Colors.blueGrey,
                         ),
                       ),
                     ),
@@ -106,9 +135,7 @@ class ProductCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-
                   const Spacer(),
-
                   if (product.price > 0)
                     Text(
                       '\$${product.price.toStringAsFixed(2)}',

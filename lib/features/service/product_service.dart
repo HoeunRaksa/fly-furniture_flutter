@@ -11,7 +11,7 @@ class ProductService {
   static DateTime? _lastFetchTime;
   static const Duration _cacheExpiry = Duration(minutes: 5);
 
-  Future<List<Product>> fetchProducts({bool forceRefresh = false}) async {
+  Future<List<Product>> fetchProducts({bool forceRefresh = false, String? token}) async {
     // Return cached data if valid and not forcing refresh
     if (!forceRefresh &&
         _cachedProducts != null &&
@@ -21,8 +21,19 @@ class ProductService {
     }
 
     try {
+      final Map<String, String> headers = {
+        'Accept': 'application/json',
+      };
+
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
       final response = await http
-          .get(Uri.parse("${AppConfig.baseUrl}/products"))
+          .get(
+            Uri.parse("${AppConfig.baseUrl}/products"),
+            headers: headers,
+          )
           .timeout(_timeout);
 
       if (response.statusCode == 200) {
@@ -79,10 +90,21 @@ class ProductService {
     }
   }
 
-  Future<Product> fetchProductById(String id) async {
+  Future<Product> fetchProductById(String id, {String? token}) async {
     try {
+      final Map<String, String> headers = {
+        'Accept': 'application/json',
+      };
+
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
       final response = await http
-          .get(Uri.parse("${AppConfig.baseUrl}/products/$id"))
+          .get(
+            Uri.parse("${AppConfig.baseUrl}/products/$id"),
+            headers: headers,
+          )
           .timeout(_timeout);
 
       if (response.statusCode == 200) {

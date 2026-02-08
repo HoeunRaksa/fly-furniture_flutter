@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 class ButtonHeader extends StatefulWidget {
   final VoidCallback? onClickedBack;
   final VoidCallback? onClickedFavorite;
+  final bool isFavorite;
 
-  const ButtonHeader({super.key, this.onClickedBack, this.onClickedFavorite});
+  const ButtonHeader({
+    super.key,
+    this.onClickedBack,
+    this.onClickedFavorite,
+    this.isFavorite = false,
+  });
 
   @override
   State<ButtonHeader> createState() => _ButtonHeaderState();
 }
 
 class _ButtonHeaderState extends State<ButtonHeader> {
-  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +56,10 @@ class _ButtonHeaderState extends State<ButtonHeader> {
                   border: Border.all(color: Colors.grey.shade100, width: 1),
                 ),
                 child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isFavorite = !isFavorite; // toggle color
-                    });
-                    if (widget.onClickedFavorite != null) {
-                      widget.onClickedFavorite!(); // optional callback
-                    }
-                  },
+                  onPressed: widget.onClickedFavorite,
                   icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.black,
+                    widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: widget.isFavorite ? Colors.red : Colors.black,
                   ),
                 ),
               ),
