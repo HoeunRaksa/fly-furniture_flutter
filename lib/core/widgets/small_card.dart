@@ -8,7 +8,11 @@ class SmallCard extends StatelessWidget {
   final Product product;
   final ImageProvider image;
   final Future<void> Function() onToggle;
+  final Future<void> Function() onDelete;
+  final Future<void> Function()? onAdd;
+  final VoidCallback onTap;
   final bool isFavorite;
+  final bool isInCard;
   const SmallCard({
     super.key,
     this.width,
@@ -16,7 +20,11 @@ class SmallCard extends StatelessWidget {
     required this.product,
     required this.image,
     required this.onToggle,
+    this.onAdd,
     this.isFavorite = false,
+    required this.onTap,
+    this.isInCard = false,
+    required this.onDelete
   });
 
   @override
@@ -44,16 +52,18 @@ class SmallCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image(
-                  image: image,
-                  width: imageSize,
-                  height: imageSize,
-                  fit: BoxFit.cover,
+              InkWell(
+                onTap: onTap,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image(
+                    image: image,
+                    width: imageSize,
+                    height: imageSize,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-
               const SizedBox(width: 12),
 
               // Product info
@@ -108,7 +118,7 @@ class SmallCard extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: onAdd,
                             child: Text(
                               'AddToCard',
                               style: Theme.of(context).textTheme.bodyLarge,
@@ -123,18 +133,32 @@ class SmallCard extends StatelessWidget {
             ],
           ),
         ),
+        if(isFavorite == true)
         Positioned(
-          right: 20,
-          top: 10,
+          right: 10,
+          top: 3,
           child: InkWell(
             onTap: onToggle,
             child: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : Colors.grey,
+              Icons.favorite,
+              color: Colors.red,
               size: 30,
             ),
           ),
         ),
+        if(isInCard == true)
+          Positioned(
+            right: 10,
+            top: 10,
+            child: InkWell(
+              onTap: onDelete,
+              child: Icon(
+                Icons.delete,
+                color: Colors.red,
+                size: 30,
+              ),
+            ),
+          ),
       ],
     );
   }

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/core/widgets/small_card.dart';
+import 'package:go_router/go_router.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
+import '../../../core/routing/app_routes.dart';
 import '../../../model/product.dart';
 import '../../../model/product_category.dart';
 
@@ -10,27 +12,36 @@ class FavoriteBody extends StatelessWidget {
   final List<Product> favorites;
   final List<ProductCategory> categories;
   final Future<void> Function(Product) onToggle;
-  final bool isSelect;
+  final int? selectCategoryId;
+  final Future<void> Function(Product) onAdd;
+  final void Function(int? categoryId) onCategorySelect;
   const FavoriteBody({
     super.key,
     required this.favorites,
     required this.onToggle,
     required this.categories,
-    this.isSelect = false,
+    this.selectCategoryId,
+    required this.onCategorySelect,
+    required this.onAdd
   });
   @override
   Widget build(BuildContext context) {
+    final display = <ProductCategory>[
+      ProductCategory(id: -1, name: 'All'),
+      ...categories,
+    ];
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           SizedBox(
-            height: 40,
+            height: 45,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
+              itemCount: display.length,
               itemBuilder: (_, index) {
-                final p = categories[index];
+                final p = display[index];
+                final isSelect = selectCategoryId == p.id;
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 3),
                   child: TextButton(
@@ -54,9 +65,7 @@ class FavoriteBody extends StatelessWidget {
                         vertical: 8,
                       ),
                     ),
-                    onPressed: () {
-                      debugPrint('Click');
-                    },
+                    onPressed: () => onCategorySelect(p.id),
                     child: Text(p.name),
                   ),
                 );
@@ -64,7 +73,7 @@ class FavoriteBody extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          Divider(thickness: 1,height: 1,color:  AppColors.divider),
+          Divider(thickness: 1, height: 1, color: AppColors.divider),
           SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
@@ -78,14 +87,45 @@ class FavoriteBody extends StatelessWidget {
                     : const AssetImage('assets/images/placeholder.png')
                           as ImageProvider;
 
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 3),
-                  child: SizedBox(
-                    child: SmallCard(
-                      product: p,
-                      image: imageProvider,
-                      isFavorite: true,
-                      onToggle: () => onToggle(p),
+                return Dismissible(
+                  key: ValueKey(p.id),
+                  onDismissed: (_) async {
+                    await onToggle(p);
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text('Removed: ${p.name}'),
+                          action: SnackBarAction(
+                            label: "Undo",
+                            onPressed: () async {
+                              await onToggle(p);
+                            },
+                          ),
+                        ),
+                      );
+                  },
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    padding: EdgeInsets.only(right: 30),
+                    color: Colors.red,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3),
+                    child: SizedBox(
+                      child: SmallCard(
+                        onTap:() => context.push('${AppRoutes.detail}/${p.id}'),
+                        product: p,
+                        image: imageProvider,
+                        isFavorite: true,
+                        onToggle: () => onToggle(p),
+                        onDelete: () async {debugPrint('Click delete');},
+                        onAdd: () => onAdd(p) ,
+                      ),
                     ),
                   ),
                 );

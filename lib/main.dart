@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fly/app.dart';
+import 'package:fly/providers/cardProvider.dart';
 import 'package:fly/providers/category_provider.dart';
 import 'package:fly/providers/favorite_provider.dart';
 import 'features/auth/provider/auth_provider.dart';
@@ -8,19 +9,12 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Suppress harmless tooltip ticker errors from Flutter framework
   FlutterError.onError = (FlutterErrorDetails details) {
     final exception = details.exception.toString();
-
-    // Ignore known harmless errors
     if (exception.contains('TooltipState') &&
         exception.contains('SingleTickerProviderStateMixin')) {
-      // This is a Flutter framework issue, not our code - safe to ignore
       return;
     }
-
-    // Show all other errors normally
     FlutterError.presentError(details);
   };
 
@@ -37,6 +31,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
 
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        
+        ChangeNotifierProvider(create: (context) => CardProvider()),
       ],
       child: const MyApp(),
     ),

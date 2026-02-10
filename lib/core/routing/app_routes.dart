@@ -8,6 +8,7 @@ class AppRoutes {
   static const String profile="/profile";
   static const String detail = "/detail";
   static const String favorite = "/favorite";
+  static const String card ='/card';
   static const String notFound = '/404';
   static const String test ="/test";
 }

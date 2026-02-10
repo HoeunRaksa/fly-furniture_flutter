@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fly/features/card/screen/cardScreen.dart';
 import 'package:fly/features/favorite/screen/favorite_screen.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import '../../../config/app_color.dart';
@@ -18,8 +19,9 @@ class _BottomBarState extends State<BottomBar> {
   final List<Widget> _screens = [
     const HomeScreen(),
     FavoriteScreen(),
-    const HomeScreen(),
+    const CardScreen(),
     const ProfileScreen(isSetHeader: true),
+
   ];
 
   @override
@@ -53,7 +55,7 @@ class _BottomBarState extends State<BottomBar> {
             children: [
               _buildFBTabItem(0, CupertinoIcons.house_fill, "Home"),
               _buildFBTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
-              _buildFBTabItem(2, CupertinoIcons.bag_fill, "Shop", badgeCount: 3),
+              _buildFBTabItem(2, CupertinoIcons.bag_fill, "Card", badgeCount: 3),
               _buildFBTabItem(3, CupertinoIcons.person_fill, "Profile"),
             ],
           ),

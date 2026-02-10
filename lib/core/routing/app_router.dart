@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fly/core/routing/app_routes.dart';
 import 'package:fly/features/auth/welcome/welcome_screen.dart';
+import 'package:fly/features/card/screen/cardScreen.dart';
 import 'package:fly/features/home/widget/bottomBar.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +29,9 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.register,
           builder: (context, state) => const RegisterScreen(),
+        ),  GoRoute(
+          path: AppRoutes.card,
+          builder: (context, state) => const CardScreen(),
         ),
         GoRoute(
           path: AppRoutes.verifyEmail,

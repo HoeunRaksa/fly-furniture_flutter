@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/model/product_category.dart';
+import 'package:fly/providers/cardProvider.dart';
 import 'package:fly/providers/category_provider.dart';
 import 'package:fly/providers/favorite_provider.dart';
 import 'package:fly/providers/product_provider.dart';
@@ -18,6 +19,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+   int? selectCategoryId = -1;
   @override
   void initState() {
     super.initState();
@@ -35,10 +37,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         .where((p) => p.isFavorite == true)
         .toList();
     final List<ProductCategory>  categories = categoriesProvider.categories;
+    final allFavorites = productProvider.products.where((p) => p.isFavorite).toList();
+    final filteredFavorites = selectCategoryId == null
+        ? allFavorites
+        : allFavorites.where((p) => p.category?.id == selectCategoryId).toList();
     return Scaffold(
       appBar: const FavoriteHeader(),
       body: FavoriteBody(
-        favorites: favoriteProduct,
+        favorites: selectCategoryId != -1 ? filteredFavorites : favoriteProduct,
+        onCategorySelect:(id){
+          setState(() {
+            selectCategoryId = id;
+          });
+        },
+        selectCategoryId: selectCategoryId,
         categories: categories,
         onToggle: (p) async {
           final token = context.read<AuthProvider>().token;
@@ -48,6 +60,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             token: token,
             productId: p.id,
           );
+        },
+        onAdd: (p) async {
+           await context.read<CardProvider>().cardToggle(p);
+           debugPrint(p.name);
         },
       ),
     );
