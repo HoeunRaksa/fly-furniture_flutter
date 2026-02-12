@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../config/app_color.dart';
 import '../../model/product.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductSquareCard extends StatelessWidget {
   final double? width;
   final double? height;
   final double? imageX;
@@ -13,7 +13,7 @@ class ProductCard extends StatelessWidget {
 
 
 
-  const ProductCard({
+  const ProductSquareCard({
     super.key,
     this.height,
     this.width,

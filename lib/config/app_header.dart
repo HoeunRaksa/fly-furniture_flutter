@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fly/core/widgets/circleIcon_button.dart';
 
-import '../../../config/app_color.dart';
+import 'app_color.dart';
 
-class FavoriteHeader extends StatelessWidget implements PreferredSizeWidget {
-  const FavoriteHeader({super.key});
+class AppHeader extends StatelessWidget implements PreferredSizeWidget {
+  final String nameScreen;
+  const AppHeader({super.key, required this.nameScreen});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(padding: EdgeInsets.only(left: 20, right: 20, bottom: 20), child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Favorite",  style: TextStyle(
+          Text(nameScreen,  style: TextStyle(
             fontSize: 23,
             fontWeight: FontWeight.w900,
             color: AppColors.furnitureBlue,

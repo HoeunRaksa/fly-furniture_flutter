@@ -7,7 +7,7 @@ import 'package:fly/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_color.dart';
-import '../../../core/widgets/product_card.dart';
+import '../../../core/widgets/product_square_card.dart';
 import '../../../model/product.dart';
 import '../../../model/product_category.dart';
 import 'home_section_scroller.dart';
@@ -113,7 +113,7 @@ class HomeBody extends StatelessWidget {
         return CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => context.push('/detail/${product.id}'),
-          child: ProductCard(
+          child: ProductSquareCard(
             image: imageProvider,
             product: product,
             isFavorite: isFav,

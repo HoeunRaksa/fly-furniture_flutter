@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fly/core/widgets/small_card.dart';
+import 'package:fly/core/widgets/horizontal_card.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
@@ -117,13 +117,12 @@ class FavoriteBody extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 3),
                     child: SizedBox(
-                      child: SmallCard(
+                      child: ProductHorizontalCard(
                         onTap:() => context.push('${AppRoutes.detail}/${p.id}'),
                         product: p,
                         image: imageProvider,
                         isFavorite: true,
                         onToggle: () => onToggle(p),
-                        onDelete: () async {debugPrint('Click delete');},
                         onAdd: () => onAdd(p) ,
                       ),
                     ),

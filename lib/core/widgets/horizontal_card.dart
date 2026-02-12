@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import '../../config/app_color.dart';
 import '../../model/product.dart';
 
-class SmallCard extends StatelessWidget {
+class ProductHorizontalCard extends StatelessWidget {
   final double? width;
   final double? height;
   final Product product;
   final ImageProvider image;
   final Future<void> Function() onToggle;
-  final Future<void> Function() onDelete;
   final Future<void> Function()? onAdd;
   final VoidCallback onTap;
   final bool isFavorite;
   final bool isInCard;
-  const SmallCard({
+  const ProductHorizontalCard({
     super.key,
     this.width,
     this.height,
@@ -24,9 +23,7 @@ class SmallCard extends StatelessWidget {
     this.isFavorite = false,
     required this.onTap,
     this.isInCard = false,
-    required this.onDelete
   });
-
   @override
   Widget build(BuildContext context) {
     const double cardHeight = 130.0;
@@ -146,19 +143,6 @@ class SmallCard extends StatelessWidget {
             ),
           ),
         ),
-        if(isInCard == true)
-          Positioned(
-            right: 10,
-            top: 10,
-            child: InkWell(
-              onTap: onDelete,
-              child: Icon(
-                Icons.delete,
-                color: Colors.red,
-                size: 30,
-              ),
-            ),
-          ),
       ],
     );
   }
