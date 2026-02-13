@@ -9,6 +9,7 @@ class AppRoutes {
   static const String detail = "/detail";
   static const String favorite = "/favorite";
   static const String card ='/card';
+  static const String checkout ='/checkout';
   static const String notFound = '/404';
   static const String test ="/test";
 }

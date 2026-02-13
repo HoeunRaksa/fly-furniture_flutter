@@ -8,7 +8,7 @@ import 'package:fly/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../model/product.dart';
 import '../widget/favorite_body.dart';
-import '../../../config/app_header.dart';
+import '../../../core/widgets/app_header.dart';
 import '../../auth/provider/auth_provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -42,7 +42,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         ? allFavorites
         : allFavorites.where((p) => p.category?.id == selectCategoryId).toList();
     return Scaffold(
-      appBar: const AppHeader(nameScreen: "Favorite",),
+      appBar: AppHeader(nameScreen: "Favorite",),
       body: FavoriteBody(
         favorites: selectCategoryId != -1 ? filteredFavorites : favoriteProduct,
         onCategorySelect:(id){

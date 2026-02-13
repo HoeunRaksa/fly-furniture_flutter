@@ -3,6 +3,7 @@ import 'package:fly/app.dart';
 import 'package:fly/providers/cardProvider.dart';
 import 'package:fly/providers/category_provider.dart';
 import 'package:fly/providers/favorite_provider.dart';
+import 'package:fly/providers/order_provider.dart';
 import 'features/auth/provider/auth_provider.dart';
 import 'providers/product_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +30,12 @@ void main() {
         
         //ProductCategories management
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
-
+        //Favorite Provider management
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
-        
+        //Card Provider management
         ChangeNotifierProvider(create: (context) => CardProvider()),
+        //Order Provider management
+        ChangeNotifierProvider(create:(context) => OrderProvider())
       ],
       child: const MyApp(),
     ),

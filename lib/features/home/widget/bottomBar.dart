@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fly/features/card/screen/cardScreen.dart';
 import 'package:fly/features/favorite/screen/favorite_screen.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
@@ -15,6 +16,8 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _currentIndex = 0;
+  bool _isBottomBarVisible = true;
+
 
   final List<Widget> _screens = [
     const HomeScreen(),
@@ -28,13 +31,35 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+        body: NotificationListener<UserScrollNotification>(
+          onNotification: (notification) {
+            if (notification.direction == ScrollDirection.reverse) {
+              if (_isBottomBarVisible) {
+                setState(() => _isBottomBarVisible = false);
+              }
+            } else if (notification.direction == ScrollDirection.forward) {
+              if (!_isBottomBarVisible) {
+                setState(() => _isBottomBarVisible = true);
+              }
+            }
+            return true;
+          },
+          child: IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+        ),
+      bottomNavigationBar: AnimatedSize(
+        duration: const Duration(milliseconds: 380),
+        curve: Curves.easeInOut,
+        child: SizedBox(
+          height: _isBottomBarVisible ? 70 : 0,
+          child: _buildFBStyleBottomBar(),
+        ),
       ),
-      bottomNavigationBar: _buildFBStyleBottomBar(),
+
     );
-  }
+        }
 
   Widget _buildFBStyleBottomBar() {
     return Container(

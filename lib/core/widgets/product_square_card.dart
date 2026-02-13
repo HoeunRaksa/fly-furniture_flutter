@@ -11,8 +11,6 @@ class ProductSquareCard extends StatelessWidget {
   final bool isFavorite;
   final VoidCallback? onFavoriteTap;
 
-
-
   const ProductSquareCard({
     super.key,
     this.height,

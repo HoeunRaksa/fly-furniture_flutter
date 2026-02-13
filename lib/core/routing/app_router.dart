@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fly/core/routing/app_routes.dart';
 import 'package:fly/features/auth/welcome/welcome_screen.dart';
 import 'package:fly/features/card/screen/cardScreen.dart';
+import 'package:fly/features/checkout/screen/checkout_screen.dart';
 import 'package:fly/features/home/widget/bottomBar.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ import '../../features/auth/otpVerify/screen/otp_screen.dart';
 import '../../features/auth/provider/auth_provider.dart';
 import '../../features/auth/register/screen/register_screen.dart';
 import '../../features/product_detail/screen/product_screen.dart';
+import '../../model/order_item.dart';
 import '../../providers/product_provider.dart';
 
 class AppRouter {
@@ -29,9 +31,22 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.register,
           builder: (context, state) => const RegisterScreen(),
-        ),  GoRoute(
+        ),
+        GoRoute(
           path: AppRoutes.card,
           builder: (context, state) => const CardScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.checkout,
+          builder: (context, state) {
+            final data = state.extra as Map<String, dynamic>;
+            final items = data["items"] as List<OrderItem>;
+            final total = data["total"] as double;
+            return CheckoutScreen(
+              items: items,
+              total: total,
+            );
+          },
         ),
         GoRoute(
           path: AppRoutes.verifyEmail,
