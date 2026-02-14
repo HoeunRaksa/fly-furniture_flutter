@@ -11,7 +11,12 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final responses = await _service.createOrder(request, token);
-      createdOrder = responses['data'];
+      final rawData = responses['data'] ?? responses; // Fallback to root if data is missing
+      if (rawData != null && rawData is Map<String, dynamic> && rawData.containsKey('order')) {
+        createdOrder = rawData['order'];
+      } else {
+        createdOrder = rawData;
+      }
     } catch (e) {
       rethrow;
     } finally {

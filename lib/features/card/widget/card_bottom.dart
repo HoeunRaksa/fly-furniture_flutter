@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fly/core/widgets/elevated_button.dart';
 
 import '../../../config/app_color.dart';
 
@@ -24,7 +25,8 @@ class CardBottom extends StatelessWidget {
               children: [
                 Text("Total: \$${total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.headlineSmall,),
                 SizedBox(height: 10,),
-                ElevatedButton(
+                EleButton(
+                  backgroundColor: AppColors.furnitureBlue,
                   onPressed: onCheckout,
                   child: Text(
                     'CheckOut',

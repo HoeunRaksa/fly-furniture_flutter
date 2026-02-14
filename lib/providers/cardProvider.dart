@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import '../model/product.dart';
-class CardProvider extends ChangeNotifier{
+
+class CardProvider extends ChangeNotifier {
   List<Product> productCard = [];
+
   Future<void> cardToggle(Product pro) async {
     try {
-      if(productCard.contains(pro)){
+      if (productCard.contains(pro)) {
         productCard.remove(pro);
-      }else{
+      } else {
         productCard.add(pro);
       }
       notifyListeners();
     } catch (ex) {
       debugPrint(ex.toString());
     }
+  }
+
+  Future<void> clear() async {
+    productCard.clear();
+    notifyListeners();
   }
 }

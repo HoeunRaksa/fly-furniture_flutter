@@ -26,7 +26,10 @@ class CardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = cardProduct.fold<double>(0, (sum, p) => sum + (p.price * getCount(p)));
-    final items = cardProduct.map((p) => OrderItem(productId: int.parse(p.id), quantity: getCount(p))).toList();
+    final items = cardProduct.map((p) => OrderItem(
+      productId: int.tryParse(p.id) ?? 0, 
+      quantity: getCount(p),
+    )).toList();
     return Column(
       children: [
         Expanded(child: ListView.builder(

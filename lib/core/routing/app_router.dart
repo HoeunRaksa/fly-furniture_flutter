@@ -17,7 +17,7 @@ import '../../providers/product_provider.dart';
 class AppRouter {
   static GoRouter router(AuthProvider authProvider, ProductProvider productProvider) {
     return GoRouter(
-      initialLocation: AppRoutes.welcome, // ✅ start here
+      initialLocation: AppRoutes.welcome,
       refreshListenable: authProvider,
       routes: [
         GoRoute(
