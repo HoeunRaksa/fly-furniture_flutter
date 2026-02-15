@@ -62,4 +62,19 @@ class OrderService {
     return body;
   }
 
+  Future<Map<String, dynamic>> finalizePayment(String invoiceNo, {required String token}) async {
+    final response = await http.get(
+      Uri.parse("${AppConfig.baseUrl}/qr/pay/$invoiceNo"),
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    if (response.statusCode != 200) {
+      throw Exception(body["message"] ?? "payment finalization failed");
+    }
+    return body;
+  }
 }
