@@ -23,7 +23,10 @@ class CardBottom extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Total: \$${total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.headlineSmall,),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Total: \$${total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.headlineSmall,),
+                ),
                 SizedBox(height: 10,),
                 EleButton(
                   backgroundColor: AppColors.furnitureBlue,
