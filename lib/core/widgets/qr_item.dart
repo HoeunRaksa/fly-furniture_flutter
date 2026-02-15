@@ -28,8 +28,14 @@ class _QrImageScreenState extends State<QrImageScreen> {
   bool _checking = false;
   bool _isPaid = false;
   
-  // Toggle to find compatible format for the Bank App
-  String _qrFormat = 'link'; // Options: 'link', 'id', 'json'
+  // Custom QR Data for debugging
+  String _customQrData = "";
+
+  void _updateQr(String newData) {
+      setState(() {
+          _customQrData = newData;
+      });
+  }
 
   @override
   void initState() {
@@ -136,19 +142,8 @@ class _QrImageScreenState extends State<QrImageScreen> {
       );
     }
 
-    // Determine data based on selected format
-    String qrData;
-    switch (_qrFormat) {
-      case 'id':
-        qrData = widget.invoiceNo;
-        break;
-      case 'json':
-        qrData = '{"invoice_no":"${widget.invoiceNo}","amount":0}';
-        break;
-      case 'link':
-      default:
-        qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
-    }
+    // Use custom data if edited, otherwise fallback to defaults
+    String qrData = _customQrData.isNotEmpty ? _customQrData : "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
 
     return Scaffold(
       appBar: AppBar(title: const Text("Pay by QR")),
@@ -177,23 +172,28 @@ class _QrImageScreenState extends State<QrImageScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(
-                "Invoice: ${widget.invoiceNo}",
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                  child: TextField(
+                      decoration: const InputDecoration(
+                          labelText: "Edit QR Content (Debug)",
+                          border: OutlineInputBorder(),
+                      ),
+                      onChanged: (val) {
+                          setState(() {
+                              _customQrData = val;
+                          });
+                      },
+                      controller: TextEditingController(text: qrData),
+                  ),
               ),
-              
-              const SizedBox(height: 20),
-              // Toggle Buttons
-              const Text("Try different formats if scan fails:", style: TextStyle(color: Colors.grey)),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8.0,
                 children: [
-                    _buildFormatButton('link', "Link"),
-                    const SizedBox(width: 8),
-                    _buildFormatButton('id', "ID Only"),
-                    const SizedBox(width: 8),
-                    _buildFormatButton('json', "JSON"),
+                    ActionChip(label: const Text("Link"), onPressed: () => _updateQr("https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}")),
+                    ActionChip(label: const Text("ID"), onPressed: () => _updateQr(widget.invoiceNo)),
+                    ActionChip(label: const Text("JSON"), onPressed: () => _updateQr('{"invoice_no":"${widget.invoiceNo}"}')),
                 ],
               ),
 
