@@ -134,7 +134,8 @@ class _QrImageScreenState extends State<QrImageScreen> {
     }
 
     // Use a clean local variable for the encoded data
-    final qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
+    // Sending RAW Invoice Number allows the Bank App to scan it and use it directly as an ID
+    final qrData = widget.invoiceNo;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Pay by QR")),
