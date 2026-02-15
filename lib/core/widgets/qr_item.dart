@@ -27,6 +27,9 @@ class _QrImageScreenState extends State<QrImageScreen> {
   Timer? _timer;
   bool _checking = false;
   bool _isPaid = false;
+  
+  // Toggle to find compatible format for the Bank App
+  String _qrFormat = 'link'; // Options: 'link', 'id', 'json'
 
   @override
   void initState() {
@@ -133,9 +136,19 @@ class _QrImageScreenState extends State<QrImageScreen> {
       );
     }
 
-    // Use a clean local variable for the encoded data
-    // Sending RAW Invoice Number allows the Bank App to scan it and use it directly as an ID
-    final qrData = widget.invoiceNo;
+    // Determine data based on selected format
+    String qrData;
+    switch (_qrFormat) {
+      case 'id':
+        qrData = widget.invoiceNo;
+        break;
+      case 'json':
+        qrData = '{"invoice_no":"${widget.invoiceNo}","amount":0}';
+        break;
+      case 'link':
+      default:
+        qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Pay by QR")),
@@ -168,7 +181,23 @@ class _QrImageScreenState extends State<QrImageScreen> {
                 "Invoice: ${widget.invoiceNo}",
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              const SizedBox(height: 12),
+              
+              const SizedBox(height: 20),
+              // Toggle Buttons
+              const Text("Try different formats if scan fails:", style: TextStyle(color: Colors.grey)),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                    _buildFormatButton('link', "Link"),
+                    const SizedBox(width: 8),
+                    _buildFormatButton('id', "ID Only"),
+                    const SizedBox(width: 8),
+                    _buildFormatButton('json', "JSON"),
+                ],
+              ),
+
+              const SizedBox(height: 20),
                Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -192,5 +221,17 @@ class _QrImageScreenState extends State<QrImageScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildFormatButton(String format, String label) {
+      final isSelected = _qrFormat == format;
+      return ElevatedButton(
+          onPressed: () => setState(() => _qrFormat = format),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
+              foregroundColor: isSelected ? Colors.white : Colors.black,
+          ),
+          child: Text(label),
+      );
   }
 }
