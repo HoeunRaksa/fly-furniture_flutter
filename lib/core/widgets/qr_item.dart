@@ -128,33 +128,9 @@ class _QrImageScreenState extends State<QrImageScreen> {
                 const Text("Waiting for payment callback...", style: TextStyle(color: Colors.grey)),
               ],
             ),
-            const SizedBox(height: 40),
-            TextButton(
-              onPressed: _simulatePayment,
-              child: const Text("Simulate Payment Success (Testing Only)"),
-            ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _simulatePayment() async {
-    try {
-      final token = context.read<AuthProvider>().token;
-      if (token == null) return;
-
-      // This calls the endpoint that marks the order as 'paid'
-      await _service.finalizePayment(widget.invoiceNo, token: token);
-      
-      // The polling timer will pick up the change in the next 3 seconds
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Payment triggered! Waiting for poll...")),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to trigger payment: $e")),
-      );
-    }
   }
 }
