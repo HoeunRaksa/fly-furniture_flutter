@@ -21,7 +21,7 @@ class CardBottom extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Total: \$${total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.headlineSmall,),
                 SizedBox(height: 10,),
