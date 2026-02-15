@@ -172,32 +172,43 @@ class _QrImageScreenState extends State<QrImageScreen> {
                 ),
               ),
               const SizedBox(height: 24),
+              // Debug Controls Restored for troubleshooting
               Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: TextField(
                       decoration: const InputDecoration(
-                          labelText: "Edit QR Content (Debug)",
+                          labelText: "QR Content Debugger",
                           border: OutlineInputBorder(),
+                          isDense: true,
                       ),
-                      onChanged: (val) {
-                          setState(() {
-                              _customQrData = val;
-                          });
-                      },
+                      onChanged: _updateQr,
                       controller: TextEditingController(text: qrData),
                   ),
               ),
               const SizedBox(height: 12),
-              Wrap(
-                spacing: 8.0,
-                children: [
-                    ActionChip(label: const Text("Link"), onPressed: () => _updateQr("https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}")),
-                    ActionChip(label: const Text("ID"), onPressed: () => _updateQr(widget.invoiceNo)),
-                    ActionChip(label: const Text("JSON"), onPressed: () => _updateQr('{"invoice_no":"${widget.invoiceNo}"}')),
-                ],
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      _buildChip("Link", "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}"),
+                      const SizedBox(width: 8),
+                      _buildChip("ID Only", widget.invoiceNo),
+                      const SizedBox(width: 8),
+                      _buildChip("JSON (Basic)", '{"invoice_no":"${widget.invoiceNo}"}'),
+                      const SizedBox(width: 8),
+                      // Try including Amount/Currency based on user's hint about "pay" logic
+                      _buildChip("JSON (Full)", '{"invoice_no":"${widget.invoiceNo}","amount":0.00,"currency":"USD"}'), 
+                  ],
+                ),
               ),
-
-              const SizedBox(height: 20),
+              
+              const SizedBox(height: 24),
+              Text(
+                "Invoice: ${widget.invoiceNo}",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 12),
                Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -207,7 +218,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   const SizedBox(width: 12),
-                  const Text("Waiting for payment callback...", style: TextStyle(color: Colors.grey)),
+                  const Text("Waiting for payment...", style: TextStyle(color: Colors.grey)),
                 ],
               ),
               const SizedBox(height: 40),
@@ -223,15 +234,10 @@ class _QrImageScreenState extends State<QrImageScreen> {
     );
   }
 
-  Widget _buildFormatButton(String format, String label) {
-      final isSelected = _qrFormat == format;
-      return ElevatedButton(
-          onPressed: () => setState(() => _qrFormat = format),
-          style: ElevatedButton.styleFrom(
-              backgroundColor: isSelected ? Colors.blue : Colors.grey[200],
-              foregroundColor: isSelected ? Colors.white : Colors.black,
-          ),
-          child: Text(label),
+  Widget _buildChip(String label, String data) {
+      return ActionChip(
+          label: Text(label),
+          onPressed: () => _updateQr(data),
+          backgroundColor: _customQrData == data ? Colors.blue[100] : null,
       );
   }
-}
