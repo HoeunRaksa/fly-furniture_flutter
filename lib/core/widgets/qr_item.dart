@@ -115,117 +115,285 @@ class _QrImageScreenState extends State<QrImageScreen> {
   Widget build(BuildContext context) {
     if (_isPaid) {
       return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green, size: 100),
-              const SizedBox(height: 24),
-              const Text(
-                "Payment Successful!",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              Text("Invoice: ${widget.invoiceNo}"),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () => context.go('/home'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF11998e), Color(0xFF38ef7d)],
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      )
+                    ],
+                  ),
+                  child: Icon(Icons.check_circle, color: Color(0xFF11998e), size: 100),
                 ),
-                child: const Text("Back to Home", style: TextStyle(fontSize: 18)),
-              ),
-            ],
+                const SizedBox(height: 32),
+                Text(
+                  "Payment Successful!",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    widget.invoiceNo,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
+                ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Color(0xFF11998e),
+                    padding: EdgeInsets.symmetric(horizontal: 48, vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "Back to Home",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
 
-    // Use custom data if edited, otherwise fallback to defaults
-    String qrData = _customQrData.isNotEmpty ? _customQrData : "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
+    final qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Pay by QR")),
-      body: Center(
-        child: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          ),
+        ),
+        child: SafeArea(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: 5,
-                    )
-                  ],
-                ),
-                child: QrImageView(
-                  data: qrData,
-                  version: QrVersions.auto,
-                  size: 260.0,
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Debug Controls Restored for troubleshooting
+              // Header
               Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: TextField(
-                      decoration: const InputDecoration(
-                          labelText: "QR Content Debugger",
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                      ),
-                      onChanged: _updateQr,
-                      controller: TextEditingController(text: qrData),
-                  ),
-              ),
-              const SizedBox(height: 12),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.all(20.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      _buildChip("Link", "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}"),
-                      const SizedBox(width: 8),
-                      _buildChip("ID Only", widget.invoiceNo),
-                      const SizedBox(width: 8),
-                      _buildChip("JSON (Basic)", '{"invoice_no":"${widget.invoiceNo}"}'),
-                      const SizedBox(width: 8),
-                      // Try including Amount/Currency based on user's hint about "pay" logic
-                      _buildChip("JSON (Full)", '{"invoice_no":"${widget.invoiceNo}","amount":0.00,"currency":"USD"}'), 
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Scan to Pay",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(width: 48), // Balance the back button
                   ],
                 ),
               ),
-              
-              const SizedBox(height: 24),
-              Text(
-                "Invoice: ${widget.invoiceNo}",
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 12),
-               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
                   ),
-                  const SizedBox(width: 12),
-                  const Text("Waiting for payment...", style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-              const SizedBox(height: 40),
-              TextButton.icon(
-                onPressed: _simulatePayment,
-                icon: const Icon(Icons.bolt, color: Colors.orange),
-                label: const Text("Simulate Scan & Pay (Testing)", style: TextStyle(color: Colors.orange)),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        // QR Code Container
+                        Container(
+                          padding: EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFF667eea).withOpacity(0.3),
+                                blurRadius: 20,
+                                spreadRadius: 5,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: QrImageView(
+                                  data: qrData,
+                                  version: QrVersions.auto,
+                                  size: 220.0,
+                                  backgroundColor: Colors.white,
+                                  padding: EdgeInsets.all(8),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                "Scan with Bank App",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1a1a1a),
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF667eea).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  widget.invoiceNo,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF667eea),
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 32),
+
+                        // Status Indicator
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFf5f7fa), Color(0xFFc3cfe2)],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Waiting for payment",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF1a1a1a),
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Scan the QR code to complete payment",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 24),
+
+                        // Instructions
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.info_outline, color: Color(0xFF667eea), size: 20),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "How to pay",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF1a1a1a),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                              _buildStep("1", "Open your Bank App"),
+                              _buildStep("2", "Tap the Scan button"),
+                              _buildStep("3", "Scan this QR code"),
+                              _buildStep("4", "Confirm payment"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -234,11 +402,39 @@ class _QrImageScreenState extends State<QrImageScreen> {
     );
   }
 
-  Widget _buildChip(String label, String data) {
-      return ActionChip(
-          label: Text(label),
-          onPressed: () => _updateQr(data),
-          backgroundColor: _customQrData == data ? Colors.blue[100] : null,
-      );
+  Widget _buildStep(String number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: Color(0xFF667eea),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                number,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[700],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
