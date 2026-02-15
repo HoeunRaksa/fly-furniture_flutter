@@ -1,4 +1,13 @@
-import 'package:qr_flutter/qr_flutter.dart'; // Add this import
+import 'dart:async';
+
+import 'package:flutter/material.dart'; // REQUIRED for ScaffoldMessenger
+import 'package:flutter/cupertino.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:provider/provider.dart'; // REQUIRED for context.read
+import 'package:go_router/go_router.dart'; // REQUIRED for context.go
+import 'package:fly/features/auth/provider/auth_provider.dart'; // REQUIRED for AuthProvider
+
+import '../../features/service/order_service.dart';
 
 class QrImageScreen extends StatefulWidget {
   final String qrImage; // "data:image/png;base64,..." (Ignored now)
