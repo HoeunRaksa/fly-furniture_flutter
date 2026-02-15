@@ -124,7 +124,8 @@ class _QrImageScreenState extends State<QrImageScreen> {
                 ],
               ),
               child: QrImageView(
-                data: widget.invoiceNo, // Encode ONLY the invoice number
+                // Use the full URL so the Bank App recognizes it as a valid link
+                data: "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}",
                 version: QrVersions.auto,
                 size: 260.0,
               ),
