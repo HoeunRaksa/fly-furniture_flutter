@@ -1,13 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:flutter/material.dart'; // REQUIRED for ScaffoldMessenger
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fly/features/service/order_service.dart';
+import 'package:fly/providers/cardProvider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:provider/provider.dart'; // REQUIRED for context.read
-import 'package:go_router/go_router.dart'; // REQUIRED for context.go
-import 'package:fly/features/auth/provider/auth_provider.dart'; // REQUIRED for AuthProvider
-
-import '../../features/service/order_service.dart';
 
 class QrImageScreen extends StatefulWidget {
   final String qrImage; // "data:image/png;base64,..." (Ignored now)
@@ -74,6 +74,28 @@ class _QrImageScreenState extends State<QrImageScreen> {
     }
   }
 
+  Future<void> _simulatePayment() async {
+    try {
+      final token = context.read<AuthProvider>().token;
+      if (token == null) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Simulating payment scan...")),
+      );
+
+      // This calls the endpoint that marks the order as 'paid'
+      await _service.finalizePayment(widget.invoiceNo, token: token);
+      
+      // The polling timer will pick up the change in the next 3 seconds
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to trigger payment: $e")),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -111,79 +133,63 @@ class _QrImageScreenState extends State<QrImageScreen> {
       );
     }
 
-    // Use locally generated QR code with raw Invoice Number
-    // This allows the custom Bank App to scan it and recognize the ID directly
+    // Use a clean local variable for the encoded data
+    final qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
+
     return Scaffold(
       appBar: AppBar(title: const Text("Pay by QR")),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 10,
-                    spreadRadius: 5,
-                  )
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      spreadRadius: 5,
+                    )
+                  ],
+                ),
+                child: QrImageView(
+                  data: qrData,
+                  version: QrVersions.auto,
+                  size: 260.0,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Invoice: ${widget.invoiceNo}",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 12),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text("Waiting for payment callback...", style: TextStyle(color: Colors.grey)),
                 ],
               ),
-              child: QrImageView(
-                // Use the full URL so the Bank App recognizes it as a valid link
-                data: "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}",
-                version: QrVersions.auto,
-                size: 260.0,
+              const SizedBox(height: 40),
+              TextButton.icon(
+                onPressed: _simulatePayment,
+                icon: const Icon(Icons.bolt, color: Colors.orange),
+                label: const Text("Simulate Scan & Pay (Testing)", style: TextStyle(color: Colors.orange)),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              "Invoice: ${widget.invoiceNo}",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 12),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                const SizedBox(width: 12),
-                const Text("Waiting for payment callback...", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-            const SizedBox(height: 40),
-            TextButton.icon(
-              onPressed: _simulatePayment,
-              icon: const Icon(Icons.bolt, color: Colors.orange),
-              label: const Text("Simulate Scan & Pay (Testing)", style: TextStyle(color: Colors.orange)),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
-  Future<void> _simulatePayment() async {
-    try {
-      final token = context.read<AuthProvider>().token;
-      if (token == null) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Simulating payment scan...")),
-      );
-
-      // This calls the endpoint that marks the order as 'paid'
-      await _service.finalizePayment(widget.invoiceNo, token: token);
-      
-      // The polling timer will pick up the change in the next 3 seconds
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to trigger payment: $e")),
-      );
-    }
   }
 }
