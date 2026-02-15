@@ -158,8 +158,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
         ),
       ),
     );
-  }
-
   Future<void> _simulatePayment() async {
     try {
       final token = context.read<AuthProvider>().token;
