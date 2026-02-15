@@ -1,14 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:fly/features/service/order_service.dart';
-import 'package:fly/providers/cardProvider.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:fly/features/auth/provider/auth_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart'; // Add this import
 
 class QrImageScreen extends StatefulWidget {
-  final String qrImage; // "data:image/png;base64,..."
+  final String qrImage; // "data:image/png;base64,..." (Ignored now)
   final String invoiceNo; // from backend
   const QrImageScreen({
     super.key,
@@ -63,7 +56,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
       }
     } catch (e) {
       debugPrint("Polling error: $e");
-      // Optionally show error in a snackbar if it's a real issue
     } finally {
       if (mounted) {
         setState(() {
@@ -110,19 +102,40 @@ class _QrImageScreenState extends State<QrImageScreen> {
       );
     }
 
-    final bytes = base64Decode(widget.qrImage.split(',').last);
-
+    // Use locally generated QR code with raw Invoice Number
+    // This allows the custom Bank App to scan it and recognize the ID directly
     return Scaffold(
       appBar: AppBar(title: const Text("Pay by QR")),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.memory(bytes, width: 260),
-            const SizedBox(height: 12),
-            Text("Invoice: ${widget.invoiceNo}"),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 10,
+                    spreadRadius: 5,
+                  )
+                ],
+              ),
+              child: QrImageView(
+                data: widget.invoiceNo, // Encode ONLY the invoice number
+                version: QrVersions.auto,
+                size: 260.0,
+              ),
+            ),
             const SizedBox(height: 24),
-            Row(
+            Text(
+              "Invoice: ${widget.invoiceNo}",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(
