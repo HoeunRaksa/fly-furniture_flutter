@@ -241,3 +241,4 @@ class _QrImageScreenState extends State<QrImageScreen> {
           backgroundColor: _customQrData == data ? Colors.blue[100] : null,
       );
   }
+}
