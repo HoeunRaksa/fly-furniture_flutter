@@ -41,13 +41,18 @@ class _QrImageScreenState extends State<QrImageScreen> {
       if (token == null) return;
 
       final res = await _service.getOrderStatus(widget.invoiceNo, token: token);
+      debugPrint("Polling status for ${widget.invoiceNo}: $res");
 
       final data = res["data"] as Map<String, dynamic>?;
-      final paymentStatus = data?["payment_status"]?.toString();
+      final paymentStatus = data?["payment_status"]?.toString().toLowerCase();
 
       if (!mounted) return;
 
       if (paymentStatus == "paid") {
+        debugPrint("Payment detected as PAID!");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Payment Successful!")),
+        );
         setState(() {
           _isPaid = true;
         });
@@ -56,8 +61,9 @@ class _QrImageScreenState extends State<QrImageScreen> {
         // ✅ Clear cart on success
         await context.read<CardProvider>().clear();
       }
-    } catch (_) {
-      // ignore errors during polling
+    } catch (e) {
+      debugPrint("Polling error: $e");
+      // Optionally show error in a snackbar if it's a real issue
     } finally {
       if (mounted) {
         setState(() {
