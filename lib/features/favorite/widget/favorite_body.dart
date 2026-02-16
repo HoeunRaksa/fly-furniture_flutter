@@ -2,18 +2,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/core/widgets/horizontal_card.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_config.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../model/product.dart';
 import '../../../model/product_category.dart';
+import '../../../providers/cardProvider.dart';
 
 class FavoriteBody extends StatelessWidget {
   final List<Product> favorites;
   final List<ProductCategory> categories;
   final Future<void> Function(Product) onToggle;
   final int? selectCategoryId;
-  final Future<void> Function(Product) onAdd;
+  final Future<void> Function(Product, int qty) onAdd;
   final void Function(int? categoryId) onCategorySelect;
   const FavoriteBody({
     super.key,
@@ -26,6 +28,7 @@ class FavoriteBody extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+
     final display = <ProductCategory>[
       ProductCategory(id: -1, name: 'All'),
       ...categories,
@@ -40,7 +43,9 @@ class FavoriteBody extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: display.length,
               itemBuilder: (_, index) {
+
                 final p = display[index];
+
                 final isSelect = selectCategoryId == p.id;
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 3),
@@ -86,7 +91,9 @@ class FavoriteBody extends StatelessWidget {
                       )
                     : const AssetImage('assets/images/placeholder.png')
                           as ImageProvider;
-
+                final cart = context.watch<CardProvider>();   // or read(), see note below
+                final qty = cart.getQty(p);                   // must exist in provider
+                final qtyToAdd = qty == 0 ? 1 : qty;
                 return Dismissible(
                   key: ValueKey(p.id),
                   onDismissed: (_) async {
@@ -123,7 +130,7 @@ class FavoriteBody extends StatelessWidget {
                         image: imageProvider,
                         isFavorite: true,
                         onToggle: () => onToggle(p),
-                        onAdd: () => onAdd(p) ,
+                        onAdd: () => onAdd(p,qtyToAdd) ,
                       ),
                     ),
                   ),

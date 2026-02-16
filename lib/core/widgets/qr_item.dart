@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fly/features/service/order_service.dart';
 import 'package:fly/providers/cardProvider.dart';
@@ -10,8 +8,8 @@ import 'package:fly/features/auth/provider/auth_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrImageScreen extends StatefulWidget {
-  final String qrImage; // "data:image/png;base64,..." (Ignored now)
-  final String invoiceNo; // from backend
+  final String qrImage;
+  final String invoiceNo;
   const QrImageScreen({
     super.key,
     required this.qrImage,
@@ -27,8 +25,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
   Timer? _timer;
   bool _checking = false;
   bool _isPaid = false;
-  
-  // Custom QR Data for debugging
   String _customQrData = "";
 
   void _updateQr(String newData) {
@@ -68,9 +64,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
           _isPaid = true;
         });
         _timer?.cancel();
-
-        // ✅ Clear cart on success
-        await context.read<CardProvider>().clear();
+        context.read<CardProvider>().clear();
       }
     } catch (e) {
       debugPrint("Polling error: $e");
@@ -83,27 +77,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
     }
   }
 
-  Future<void> _simulatePayment() async {
-    try {
-      final token = context.read<AuthProvider>().token;
-      if (token == null) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Simulating payment scan...")),
-      );
-
-      // This calls the endpoint that marks the order as 'paid'
-      await _service.finalizePayment(widget.invoiceNo, token: token);
-      
-      // The polling timer will pick up the change in the next 3 seconds
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to trigger payment: $e")),
-        );
-      }
-    }
-  }
 
   @override
   void dispose() {

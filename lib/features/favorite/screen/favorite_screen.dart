@@ -18,7 +18,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-   int? selectCategoryId = -1;
+  int? selectCategoryId = -1;
   @override
   void initState() {
     super.initState();
@@ -35,16 +35,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     final List<Product> favoriteProduct = productProvider.products
         .where((p) => p.isFavorite == true)
         .toList();
-    final List<ProductCategory>  categories = categoriesProvider.categories;
-    final allFavorites = productProvider.products.where((p) => p.isFavorite).toList();
+    final List<ProductCategory> categories = categoriesProvider.categories;
+    final allFavorites = productProvider.products
+        .where((p) => p.isFavorite)
+        .toList();
     final filteredFavorites = selectCategoryId == null
         ? allFavorites
-        : allFavorites.where((p) => p.category?.id == selectCategoryId).toList();
+        : allFavorites
+              .where((p) => p.category?.id == selectCategoryId)
+              .toList();
     return Scaffold(
-      appBar: AppHeader(nameScreen: "Favorite",),
+      appBar: AppHeader(nameScreen: "Favorite"),
       body: FavoriteBody(
         favorites: selectCategoryId != -1 ? filteredFavorites : favoriteProduct,
-        onCategorySelect:(id){
+        onCategorySelect: (id) {
           setState(() {
             selectCategoryId = id;
           });
@@ -60,9 +64,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             productId: p.id,
           );
         },
-        onAdd: (p) async {
-           await context.read<CardProvider>().cardToggle(p);
-           debugPrint(p.name);
+        onAdd: (Product p, int qty) async {
+          final qtyToAdd = qty == 0 ? 1 : qty;
+          context.read<CardProvider>().add(p, qtyToAdd);
+          debugPrint("Added ${p.name} x$qtyToAdd");
         },
       ),
     );

@@ -2,22 +2,31 @@ import 'package:flutter/material.dart';
 import '../model/product.dart';
 
 class CardProvider extends ChangeNotifier {
-  List<Product> productCard = [];
 
-  Future<void> cardToggle(Product pro) async {
-    try {
-      if (productCard.contains(pro)) {
-        productCard.remove(pro);
-      } else {
-        productCard.add(pro);
-      }
-      notifyListeners();
-    } catch (ex) {
-      debugPrint(ex.toString());
+  final Map<Product, int> productCard = {};
+
+  void add(Product pro, int qty) {
+    if (qty <= 0) return;
+
+    if (productCard.containsKey(pro)) {
+      productCard[pro] = productCard[pro]! + qty;
+    } else {
+      productCard[pro] = qty;
     }
+
+    notifyListeners();
   }
 
-  Future<void> clear() async {
+  void remove(Product pro) {
+    productCard.remove(pro);
+    notifyListeners();
+  }
+
+  int getQty(Product pro) {
+    return productCard[pro] ?? 0;
+  }
+
+  void clear() {
     productCard.clear();
     notifyListeners();
   }

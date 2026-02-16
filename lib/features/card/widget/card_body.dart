@@ -27,7 +27,7 @@ class CardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final total = cardProduct.fold<double>(0, (sum, p) => sum + (p.price * getCount(p)));
     final items = cardProduct.map((p) => OrderItem(
-      productId: int.tryParse(p.id) ?? 0, 
+      productId: int.tryParse(p.id) ?? 0,
       quantity: getCount(p),
     )).toList();
     return Column(
@@ -57,12 +57,10 @@ class CardBody extends StatelessWidget {
           },
         ),),
         if(total > 0)
-        Expanded(
-            child: CardBottom(
-              onCheckout:() async => await onCheckout(items, total),
-              bottomGap: bottomGap,
-              total: total,
-            )
+        CardBottom(
+          onCheckout:() async => await onCheckout(items, total),
+          bottomGap: bottomGap,
+          total: total,
         )
       ],
     );

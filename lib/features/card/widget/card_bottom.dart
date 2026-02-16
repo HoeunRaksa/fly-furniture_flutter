@@ -11,36 +11,37 @@ class CardBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    Stack(
-      children: [
-        Positioned(
-          bottom: bottomGap,
-          left: 16,
-          right: 16,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Total: \$${total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.headlineSmall,),
-                ),
-                SizedBox(height: 10,),
-                EleButton(
-                  backgroundColor: AppColors.furnitureBlue,
-                  onPressed: onCheckout,
-                  child: Text(
-                    'CheckOut',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith( color: AppColors.primary),
-                  ),
-                ),
-              ],
+    return Container(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 20,
+        bottom: bottomGap + 20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Total: \$${total.toStringAsFixed(2)}",
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-          )
-        ),
-      ],
+          ),
+          SizedBox(height: 10),
+          EleButton(
+            backgroundColor: AppColors.furnitureBlue,
+            onPressed: onCheckout,
+            child: Text(
+              'CheckOut',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

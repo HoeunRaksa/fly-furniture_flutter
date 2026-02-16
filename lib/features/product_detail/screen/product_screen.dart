@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fly/features/product_detail/widget/detail_footer.dart';
+import '../../../providers/cardProvider.dart';
 import '../widget/detail_body.dart';
 import '../widget/detail_header.dart';
 import '../../../model/product.dart';
@@ -49,15 +50,15 @@ class _ProductScreen extends State<ProductScreen> {
             end: Alignment.bottomCenter,
             colors: isDark
                 ? [
-              CupertinoColors.black.withOpacity(0.95),
-              CupertinoColors.black.withOpacity(0.98),
-              CupertinoColors.black,
-            ]
+                    CupertinoColors.black.withOpacity(0.95),
+                    CupertinoColors.black.withOpacity(0.98),
+                    CupertinoColors.black,
+                  ]
                 : [
-              CupertinoColors.systemBackground.withOpacity(0.95),
-              CupertinoColors.systemGrey6.withOpacity(0.3),
-              CupertinoColors.systemBackground,
-            ],
+                    CupertinoColors.systemBackground.withOpacity(0.95),
+                    CupertinoColors.systemGrey6.withOpacity(0.3),
+                    CupertinoColors.systemBackground,
+                  ],
           ),
         ),
         child: Stack(
@@ -99,18 +100,24 @@ class _ProductScreen extends State<ProductScreen> {
             ),
           ],
         ),
-        child: DetailFooter(
+        child:DetailFooter(
+          product: product,
           count: count,
-          amount: amount,
-          onAdded: () => setState(() {
+          amount: product.price * count,
+
+          onIncrease: () => setState(() {
             count++;
-            amount = widget.product.price * count;
           }),
-          onRemoved: () => setState(() {
+
+          onDecrease: () => setState(() {
             if (count > 0) count--;
-            amount = widget.product.price * count;
           }),
+
+          onAddToCart: (Product p, int qty) async {
+            context.read<CardProvider>().add(p, qty);
+          },
         ),
+
       ),
     );
   }
