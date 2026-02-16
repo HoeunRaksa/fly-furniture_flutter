@@ -19,6 +19,7 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
   int? selectCategoryId = -1;
+  String searchText = "";
   @override
   void initState() {
     super.initState();
@@ -36,18 +37,25 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         .where((p) => p.isFavorite == true)
         .toList();
     final List<ProductCategory> categories = categoriesProvider.categories;
-    final allFavorites = productProvider.products
-        .where((p) => p.isFavorite)
-        .toList();
-    final filteredFavorites = selectCategoryId == null
+    final allFavorites =
+    productProvider.products.where((p) => p.isFavorite == true).toList();
+    final categoryFiltered = (selectCategoryId == null || selectCategoryId == -1)
         ? allFavorites
-        : allFavorites
-              .where((p) => p.category?.id == selectCategoryId)
-              .toList();
+        : allFavorites.where((p) => p.category?.id == selectCategoryId).toList();
+    final nameFiltered = searchText.trim().isEmpty
+        ? categoryFiltered
+        : categoryFiltered
+        .where((p) =>
+        p.name.toLowerCase().contains(searchText.trim().toLowerCase()))
+        .toList();
+
     return Scaffold(
-      appBar: AppHeader(nameScreen: "Favorite"),
+      appBar: AppHeader(nameScreen: "Favorite", onChanged: (text) {
+        setState(() => searchText = text);
+      },),
+
       body: FavoriteBody(
-        favorites: selectCategoryId != -1 ? filteredFavorites : favoriteProduct,
+        favorites: nameFiltered,
         onCategorySelect: (id) {
           setState(() {
             selectCategoryId = id;

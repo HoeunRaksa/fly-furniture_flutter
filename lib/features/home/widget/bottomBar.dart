@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:fly/features/card/screen/cardScreen.dart';
 import 'package:fly/features/favorite/screen/favorite_screen.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
+import 'package:fly/providers/cardProvider.dart';
+import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import '../screen/home_screen.dart';
 
@@ -26,6 +28,7 @@ class _BottomBarState extends State<BottomBar> {
     const ProfileScreen(isSetHeader: true),
 
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,7 @@ class _BottomBarState extends State<BottomBar> {
         }
 
   Widget _buildFBStyleBottomBar() {
+    final cardProvider = context.watch<CardProvider>().countCate();
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -80,7 +84,7 @@ class _BottomBarState extends State<BottomBar> {
             children: [
               _buildFBTabItem(0, CupertinoIcons.house_fill, "Home"),
               _buildFBTabItem(1, CupertinoIcons.heart_fill, "Favorites"),
-              _buildFBTabItem(2, CupertinoIcons.bag_fill, "Card", badgeCount: 3),
+              _buildFBTabItem(2, CupertinoIcons.bag_fill, "Card", badgeCount: cardProvider),
               _buildFBTabItem(3, CupertinoIcons.person_fill, "Profile"),
             ],
           ),
@@ -116,7 +120,7 @@ class _BottomBarState extends State<BottomBar> {
                   color: color,
                   size: 26,
                 ),
-                if (badgeCount != null)
+                if (badgeCount != null && badgeCount > 0)
                   Positioned(
                     top: -4,
                     right: -6,

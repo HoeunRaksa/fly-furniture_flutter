@@ -17,6 +17,8 @@ class CardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+   int countCate() {return productCard.length;}
+
   void remove(Product pro) {
     productCard.remove(pro);
     notifyListeners();
