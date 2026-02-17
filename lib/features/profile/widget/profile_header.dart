@@ -25,7 +25,6 @@ class ProfileHeader extends StatelessWidget implements PreferredSizeWidget {
             CircleIconButton(
               icon: Icons.settings,
               onTap: () {
-                // Navigate to settings or show settings dialog
                 debugPrint('Settings tapped');
               },
               sizedY: 40,

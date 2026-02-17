@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fly/config/app_config.dart';
 import '../../../core/widgets/product_incard.dart';
 import '../../../model/order_item.dart';
@@ -32,6 +32,8 @@ class CardBody extends StatelessWidget {
     )).toList();
     return Column(
       children: [
+        Divider(height: 1,thickness: 1,color: Colors.grey.shade400,),
+        SizedBox(height: 10,),
         Expanded(child: ListView.builder(
           itemCount: cardProduct.length,
           itemBuilder: (_, index) {

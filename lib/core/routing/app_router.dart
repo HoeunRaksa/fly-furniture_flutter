@@ -36,6 +36,9 @@ class AppRouter {
           path: AppRoutes.card,
           builder: (context, state) => const CardScreen(),
         ),
+        GoRoute(path: AppRoutes.cardNoHeader,
+          builder: (context, state) => const CardScreen(headerSearch: true,)
+        ),
         GoRoute(
           path: AppRoutes.checkout,
           builder: (context, state) {

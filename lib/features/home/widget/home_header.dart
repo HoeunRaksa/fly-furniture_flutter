@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fly/providers/cardProvider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_color.dart';
 import 'package:fly/features/auth/provider/auth_provider.dart';
+
+import '../../../core/routing/app_routes.dart';
 
 class HomeHeader extends StatefulWidget implements PreferredSizeWidget {
   const HomeHeader({super.key, required this.onSearchChanged});
@@ -58,7 +62,9 @@ class _HomeHeaderState extends State<HomeHeader> {
           bottom: false,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _isSearching ? _buildSearchingView() : _buildFurnitureHeader(user),
+            child: _isSearching
+                ? _buildSearchingView()
+                : _buildFurnitureHeader(user),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return FadeTransition(opacity: animation, child: child);
             },
@@ -93,8 +99,15 @@ class _HomeHeaderState extends State<HomeHeader> {
                 ),
               ),
               const Spacer(),
-              _buildFurnitureIconButton(CupertinoIcons.search, onTap: _toggleSearch),
-              _buildFurnitureIconButton(CupertinoIcons.bag_fill, onTap: () {}),
+              _buildFurnitureIconButton(
+                CupertinoIcons.search,
+                onTap: _toggleSearch,
+              ),
+              _buildFurnitureIconButton(
+                CupertinoIcons.bag_fill,
+                redPoint: true,
+                onTap: () => context.push(AppRoutes.cardNoHeader),
+              ),
             ],
           ),
         ),
@@ -133,12 +146,20 @@ class _HomeHeaderState extends State<HomeHeader> {
                     autofocus: true,
                     onChanged: widget.onSearchChanged,
                     cursorColor: AppColors.furnitureBlue,
-                    style: const TextStyle(fontSize: 16, color: AppColors.headerLine),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: AppColors.headerLine,
+                    ),
                     decoration: InputDecoration(
                       hintText: "Search our collection",
-                      hintStyle: TextStyle(color: AppColors.bodyLine.withOpacity(0.5)),
+                      hintStyle: TextStyle(
+                        color: AppColors.bodyLine.withOpacity(0.5),
+                      ),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 13,
+                      ),
                       prefixIcon: Icon(
                         CupertinoIcons.search,
                         size: 18,
@@ -146,17 +167,17 @@ class _HomeHeaderState extends State<HomeHeader> {
                       ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? GestureDetector(
-                        onTap: () {
-                          _searchController.clear();
-                          widget.onSearchChanged("");
-                          setState(() {});
-                        },
-                        child: Icon(
-                          CupertinoIcons.clear_fill,
-                          size: 18,
-                          color: AppColors.bodyLine.withOpacity(0.5),
-                        ),
-                      )
+                              onTap: () {
+                                _searchController.clear();
+                                widget.onSearchChanged("");
+                                setState(() {});
+                              },
+                              child: Icon(
+                                CupertinoIcons.clear_fill,
+                                size: 18,
+                                color: AppColors.bodyLine.withOpacity(0.5),
+                              ),
+                            )
                           : null,
                     ),
                   ),
@@ -171,27 +192,50 @@ class _HomeHeaderState extends State<HomeHeader> {
     );
   }
 
-  Widget _buildFurnitureIconButton(IconData icon, {required VoidCallback onTap}) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.secondary,
-        shape: BoxShape.circle,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: const CircleBorder(),
-          child: Padding(
-            padding: const EdgeInsets.all(9.0),
-            child: Icon(
-              icon,
-              size: 22,
-              color: AppColors.headerLine,
+  Widget _buildFurnitureIconButton(
+    IconData icon, {
+    required VoidCallback onTap,
+    bool redPoint = false,
+  }) {
+    final int card  = context.watch<CardProvider>().countCate();
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AppColors.secondary,
+            shape: BoxShape.circle,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              customBorder: const CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.all(9.0),
+                child: Icon(icon, size: 22, color: AppColors.headerLine),
+              ),
             ),
           ),
         ),
-      ),
+        if (redPoint == true && card > 0)
+          Positioned(
+            right: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              child: Container(
+                height: 18,
+                width: 18,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  color: Colors.red,
+                ),
+                child: Center(
+                  child: Text(card.toString(), style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

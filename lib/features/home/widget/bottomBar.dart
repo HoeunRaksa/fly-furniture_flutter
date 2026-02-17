@@ -25,7 +25,7 @@ class _BottomBarState extends State<BottomBar> {
     const HomeScreen(),
     FavoriteScreen(),
     const CardScreen(),
-    const ProfileScreen(isSetHeader: true),
+    const ProfileScreen(isSetHeader: false),
 
   ];
 
@@ -56,7 +56,7 @@ class _BottomBarState extends State<BottomBar> {
         duration: const Duration(milliseconds: 380),
         curve: Curves.easeInOut,
         child: SizedBox(
-          height: _isBottomBarVisible ? 70 : 0,
+          height: _isBottomBarVisible ? 80 : 0,
           child: _buildFBStyleBottomBar(),
         ),
       ),

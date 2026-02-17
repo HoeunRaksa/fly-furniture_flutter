@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../ui/button_header.dart';
-
 import '../../../model/product.dart';
 
 class DetailHeader extends StatelessWidget {

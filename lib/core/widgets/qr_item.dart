@@ -25,13 +25,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
   Timer? _timer;
   bool _checking = false;
   bool _isPaid = false;
-  String _customQrData = "";
-
-  void _updateQr(String newData) {
-      setState(() {
-          _customQrData = newData;
-      });
-  }
 
   @override
   void initState() {
@@ -57,9 +50,9 @@ class _QrImageScreenState extends State<QrImageScreen> {
 
       if (paymentStatus == "paid") {
         debugPrint("Payment detected as PAID!");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Payment Successful!")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Payment Successful!")));
         setState(() {
           _isPaid = true;
         });
@@ -77,7 +70,6 @@ class _QrImageScreenState extends State<QrImageScreen> {
     }
   }
 
-
   @override
   void dispose() {
     _timer?.cancel();
@@ -89,6 +81,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
     if (_isPaid) {
       return Scaffold(
         body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -110,10 +103,14 @@ class _QrImageScreenState extends State<QrImageScreen> {
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
                         spreadRadius: 5,
-                      )
+                      ),
                     ],
                   ),
-                  child: Icon(Icons.check_circle, color: Color(0xFF11998e), size: 100),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Color(0xFF11998e),
+                    size: 100,
+                  ),
                 ),
                 const SizedBox(height: 32),
                 Text(
@@ -163,9 +160,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
         ),
       );
     }
-
     final qrData = "https://bank.furniture.learner-teach.online/pay/${widget.invoiceNo}";
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -228,7 +223,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
                                 color: Color(0xFF667eea).withOpacity(0.3),
                                 blurRadius: 20,
                                 spreadRadius: 5,
-                              )
+                              ),
                             ],
                           ),
                           child: Column(
@@ -237,7 +232,10 @@ class _QrImageScreenState extends State<QrImageScreen> {
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                    colors: [
+                                      Color(0xFF667eea),
+                                      Color(0xFF764ba2),
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -260,7 +258,10 @@ class _QrImageScreenState extends State<QrImageScreen> {
                               ),
                               SizedBox(height: 8),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Color(0xFF667eea).withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),
@@ -297,7 +298,9 @@ class _QrImageScreenState extends State<QrImageScreen> {
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 3,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFF667eea),
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 16),
@@ -343,7 +346,11 @@ class _QrImageScreenState extends State<QrImageScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.info_outline, color: Color(0xFF667eea), size: 20),
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: Color(0xFF667eea),
+                                    size: 20,
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     "How to pay",
@@ -399,13 +406,7 @@ class _QrImageScreenState extends State<QrImageScreen> {
             ),
           ),
           SizedBox(width: 12),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[700],
-            ),
-          ),
+          Text(text, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
         ],
       ),
     );

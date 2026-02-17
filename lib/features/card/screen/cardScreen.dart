@@ -9,14 +9,15 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CardScreen extends StatefulWidget {
-  const CardScreen({super.key});
+  final bool headerSearch;
+  const CardScreen({super.key, this.headerSearch = false});
   @override
   State<CardScreen> createState() => _CardScreenState();
 }
 
 class _CardScreenState extends State<CardScreen> {
   bool isUserScroll = false;
-  String searchText = ""; // ✅
+  String searchText = "";
 
   int _getCount(Product p) => context.read<CardProvider>().getQty(p);
 
@@ -49,6 +50,7 @@ class _CardScreenState extends State<CardScreen> {
         .toList();
     return Scaffold(
       appBar: AppHeader(
+        suffixIcon: widget.headerSearch,
         nameScreen: "Card",
         onChanged: (text) => setState(() => searchText = text),
       ),
