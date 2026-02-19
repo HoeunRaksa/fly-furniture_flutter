@@ -16,8 +16,7 @@ class ProfileBody extends StatefulWidget {
   State<ProfileBody> createState() => _ProfileBodyState();
 }
 
-class _ProfileBodyState extends State<ProfileBody>
-    with TickerProviderStateMixin {
+class _ProfileBodyState extends State<ProfileBody> with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
@@ -37,15 +36,16 @@ class _ProfileBodyState extends State<ProfileBody>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
+    );
 
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
-        );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+    );
 
     _fadeController.forward();
     _slideController.forward();
@@ -65,7 +65,7 @@ class _ProfileBodyState extends State<ProfileBody>
     try {
       final pickedFile = await picker.pickImage(
         source: source,
-        imageQuality: 85, // Reduce file size
+        imageQuality: 85,
         maxWidth: 1024,
         maxHeight: 1024,
       );
@@ -74,7 +74,6 @@ class _ProfileBodyState extends State<ProfileBody>
 
       final imageFile = File(pickedFile.path);
 
-      // Show loading dialog
       if (!mounted) return;
       showCupertinoDialog(
         context: context,
@@ -101,30 +100,22 @@ class _ProfileBodyState extends State<ProfileBody>
         ),
       );
 
-      // Upload the image
       await authProvider.updateProfile(profileImage: imageFile);
 
       if (mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
-
-        // Show success message
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Row(
               children: [
-                Icon(
-                  CupertinoIcons.check_mark_circled_solid,
-                  color: Colors.white,
-                ),
+                Icon(CupertinoIcons.check_mark_circled_solid, color: Colors.white),
                 SizedBox(width: 12),
                 Text('Profile image updated successfully'),
               ],
             ),
             backgroundColor: CupertinoColors.systemGreen,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -133,29 +124,22 @@ class _ProfileBodyState extends State<ProfileBody>
       debugPrint('Image upload error: $e');
 
       if (mounted) {
-        // Close loading dialog if still open
         try {
           Navigator.of(context).pop();
         } catch (_) {}
 
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
-                const Icon(
-                  CupertinoIcons.xmark_circle_fill,
-                  color: Colors.white,
-                ),
+                const Icon(CupertinoIcons.xmark_circle_fill, color: Colors.white),
                 const SizedBox(width: 12),
                 Expanded(child: Text('Upload failed: ${e.toString()}')),
               ],
             ),
             backgroundColor: CupertinoColors.destructiveRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 3),
           ),
         );
@@ -167,7 +151,6 @@ class _ProfileBodyState extends State<ProfileBody>
   Future<void> _deleteProfileImage(AuthProvider authProvider) async {
     if (!mounted) return;
 
-    // Show loading dialog
     showCupertinoDialog(
       context: context,
       barrierDismissible: false,
@@ -197,49 +180,37 @@ class _ProfileBodyState extends State<ProfileBody>
       await authProvider.deleteProfileImage();
 
       if (mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
-
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Row(
               children: [
-                Icon(
-                  CupertinoIcons.check_mark_circled_solid,
-                  color: Colors.white,
-                ),
+                Icon(CupertinoIcons.check_mark_circled_solid, color: Colors.white),
                 SizedBox(width: 12),
                 Text('Profile picture removed'),
               ],
             ),
             backgroundColor: CupertinoColors.systemGreen,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
-
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
-                const Icon(
-                  CupertinoIcons.xmark_circle_fill,
-                  color: Colors.white,
-                ),
+                const Icon(CupertinoIcons.xmark_circle_fill, color: Colors.white),
                 const SizedBox(width: 12),
                 Expanded(child: Text('Failed to remove: ${e.toString()}')),
               ],
             ),
             backgroundColor: CupertinoColors.destructiveRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -253,10 +224,7 @@ class _ProfileBodyState extends State<ProfileBody>
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: CupertinoAlertDialog(
-          title: const Text(
-            "Logout",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
+          title: const Text("Logout", style: TextStyle(fontWeight: FontWeight.w600)),
           content: const Text("Are you sure you want to logout?"),
           actions: [
             CupertinoDialogAction(
@@ -267,14 +235,12 @@ class _ProfileBodyState extends State<ProfileBody>
               isDestructiveAction: true,
               child: const Text("Logout"),
               onPressed: () async {
-                // Close confirmation dialog first
                 Navigator.of(context).pop();
 
                 final authProvider = context.read<AuthProvider>();
                 final navigator = Navigator.of(context);
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                // Show loading
                 showCupertinoDialog(
                   context: context,
                   barrierDismissible: false,
@@ -284,9 +250,7 @@ class _ProfileBodyState extends State<ProfileBody>
                       child: Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: CupertinoColors.systemBackground.resolveFrom(
-                            context,
-                          ),
+                          color: CupertinoColors.systemBackground.resolveFrom(context),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Column(
@@ -305,36 +269,24 @@ class _ProfileBodyState extends State<ProfileBody>
                 try {
                   await authProvider.logout();
 
-                  // Close loading dialog
-                  if (context.mounted) {
-                    navigator.pop();
-                  }
-
-                  // Navigate to home - use a slight delay to ensure dialog is closed
+                  if (context.mounted) navigator.pop();
                   await Future.delayed(const Duration(milliseconds: 100));
 
-                  if (context.mounted) {
-                    context.go("/home");
-                  }
+                  if (context.mounted) context.go("/home");
                 } catch (e) {
                   debugPrint('Logout error: $e');
 
-                  // Close loading dialog
                   if (context.mounted) {
                     try {
                       navigator.pop();
-                    } catch (_) {
-                      // Dialog already closed
-                    }
+                    } catch (_) {}
 
                     scaffoldMessenger.showSnackBar(
                       SnackBar(
                         content: Text('Logout failed: ${e.toString()}'),
                         backgroundColor: CupertinoColors.destructiveRed,
                         behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     );
                   }
@@ -351,104 +303,61 @@ class _ProfileBodyState extends State<ProfileBody>
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
+
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
 
     if (user == null) {
-      return Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isDark
-                      ? [
-                          Colors.white.withOpacity(0.1),
-                          Colors.white.withOpacity(0.05),
-                        ]
-                      : [
-                          Colors.white.withOpacity(0.9),
-                          Colors.white.withOpacity(0.7),
-                        ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.15)
-                      : Colors.white.withOpacity(0.5),
-                  width: 1.5,
-                ),
-              ),
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CupertinoActivityIndicator(),
-                  SizedBox(height: 16),
-                  Text('Loading profile...'),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+      return const Center(child: CupertinoActivityIndicator());
     }
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
           child: Container(
-            alignment: Alignment.topCenter,
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             child: Column(
               children: [
                 const SizedBox(height: 10),
 
-                // Profile Image with Glass Effect
+                // Profile Image
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: SlideTransition(
                     position: _slideAnimation,
-                    child: _buildProfileImage(
-                      context,
-                      user,
-                      authProvider,
-                      isDark,
-                    ),
+                    child: _buildProfileImage(context, user, authProvider, isDark),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
-                // User Info with Glass Card
+                // Name
                 FadeTransition(
                   opacity: _fadeAnimation,
-                  child: Text(user.name. toUpperCase(), style: Theme.of(context).textTheme.headlineSmall,),
+                  child: Text(
+                    (user.name ?? '').toString().toUpperCase(),
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Only ONE option: Profile
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: _buildProfileOption(context, isDark),
                 ),
 
                 const SizedBox(height: 20),
 
-                // Menu Items
-                _buildMenuItems(context, isDark),
-
-                const SizedBox(height: 20),
-
-                // Logout Button
+                // Logout
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: _buildLogoutButton(context, isDark),
                 ),
-
-                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -457,15 +366,80 @@ class _ProfileBodyState extends State<ProfileBody>
     );
   }
 
+  Widget _buildProfileOption(BuildContext context, bool isDark) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [Colors.white.withOpacity(0.1), Colors.white.withOpacity(0.05)]
+                : [Colors.white.withOpacity(0.9), Colors.white.withOpacity(0.7)],
+          ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isDark ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.5),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: CupertinoButton(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          borderRadius: BorderRadius.circular(18),
+          onPressed: () => context.push('/edit-profile'),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.bodyLine.withOpacity(0.2),
+                      AppColors.headerLine.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(CupertinoIcons.person, color: AppColors.bodyLine, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  'My orders',
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Icon(
+                CupertinoIcons.chevron_forward,
+                color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildProfileImage(
-    BuildContext context,
-    dynamic user,
-    AuthProvider authProvider,
-    bool isDark,
-  ) {
+      BuildContext context,
+      dynamic user,
+      AuthProvider authProvider,
+      bool isDark,
+      ) {
     return Stack(
       children: [
-        // Glass Container for profile image
         ClipRRect(
           borderRadius: BorderRadius.circular(70),
           child: BackdropFilter(
@@ -479,19 +453,11 @@ class _ProfileBodyState extends State<ProfileBody>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: isDark
-                      ? [
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.08),
-                        ]
-                      : [
-                          Colors.white.withOpacity(0.9),
-                          Colors.white.withOpacity(0.7),
-                        ],
+                      ? [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.08)]
+                      : [Colors.white.withOpacity(0.9), Colors.white.withOpacity(0.7)],
                 ),
                 border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.2)
-                      : Colors.white.withOpacity(0.6),
+                  color: isDark ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.6),
                   width: 3,
                 ),
                 boxShadow: [
@@ -501,9 +467,7 @@ class _ProfileBodyState extends State<ProfileBody>
                     offset: const Offset(0, 10),
                   ),
                   BoxShadow(
-                    color: isDark
-                        ? Colors.black.withOpacity(0.4)
-                        : Colors.black.withOpacity(0.1),
+                    color: isDark ? Colors.black.withOpacity(0.4) : Colors.black.withOpacity(0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -513,66 +477,36 @@ class _ProfileBodyState extends State<ProfileBody>
                 padding: const EdgeInsets.all(5),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(65),
-                  child: user.hasProfileImage
+                  child: user.hasProfileImage == true
                       ? CachedNetworkImage(
-                          imageUrl: user.profileImageUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.bodyLine.withOpacity(0.3),
-                                  AppColors.headerLine.withOpacity(0.2),
-                                ],
-                              ),
-                            ),
-                            child: const Center(
-                              child: CupertinoActivityIndicator(),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  CupertinoColors.systemGrey5,
-                                  CupertinoColors.systemGrey6,
-                                ],
-                              ),
-                            ),
-                            child: const Icon(
-                              CupertinoIcons.person_fill,
-                              size: 60,
-                              color: CupertinoColors.systemGrey,
-                            ),
-                          ),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.bodyLine.withOpacity(0.2),
-                                AppColors.headerLine.withOpacity(0.1),
-                              ],
-                            ),
-                          ),
-                          child: const Icon(
-                            CupertinoIcons.person_fill,
-                            size: 60,
-                            color: CupertinoColors.systemGrey,
-                          ),
-                        ),
+                    imageUrl: user.profileImageUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(
+                      CupertinoIcons.person_fill,
+                      size: 60,
+                      color: CupertinoColors.systemGrey,
+                    ),
+                  )
+                      : const Icon(
+                    CupertinoIcons.person_fill,
+                    size: 60,
+                    color: CupertinoColors.systemGrey,
+                  ),
                 ),
               ),
             ),
           ),
         ),
 
-        // Camera Button with Glass Effect
+        // Camera button (keep for profile)
         Positioned(
           bottom: 5,
           right: 5,
           child: GestureDetector(
-            onTap: () => _showImagePickerDialog(context, authProvider, isDark),
+            onTap: () => _showImagePickerDialog(context, authProvider),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: BackdropFilter(
@@ -580,18 +514,9 @@ class _ProfileBodyState extends State<ProfileBody>
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppColors.bodyLine, AppColors.headerLine],
-                    ),
+                    gradient: LinearGradient(colors: [AppColors.bodyLine, AppColors.headerLine]),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.bodyLine.withOpacity(0.5),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
                   ),
                   child: const Icon(
                     CupertinoIcons.camera_fill,
@@ -607,155 +532,46 @@ class _ProfileBodyState extends State<ProfileBody>
     );
   }
 
-
-
-  Widget _buildMenuItems(BuildContext context, bool isDark) {
-    final menuItems = [
-      {
-        'icon': CupertinoIcons.person,
-        'title': 'Personal Information',
-        'onTap': () => context.push('/edit-profile'),
-      },
-      {
-        'icon': CupertinoIcons.creditcard,
-        'title': 'Payment Method',
-        'onTap': () => _showComingSoon(context, 'Payment Method'),
-      },
-      {
-        'icon': CupertinoIcons.shopping_cart,
-        'title': 'Order History',
-        'onTap': () => _showComingSoon(context, 'Order History'),
-      },
-      {
-        'icon': CupertinoIcons.location,
-        'title': 'Address',
-        'onTap': () => _showComingSoon(context, 'Address'),
-      },
-      {
-        'icon': CupertinoIcons.settings,
-        'title': 'Settings',
-        'onTap': () => _showComingSoon(context, 'Settings'),
-      },
-      {
-        'icon': CupertinoIcons.headphones,
-        'title': 'Support Center',
-        'onTap': () => _showComingSoon(context, 'Support Center'),
-      },
-    ];
-
-    return Column(
-      children: menuItems.asMap().entries.map((entry) {
-        final index = entry.key;
-        final item = entry.value;
-
-        return TweenAnimationBuilder<double>(
-          duration: Duration(milliseconds: 400 + (index * 80)),
-          tween: Tween(begin: 0.0, end: 1.0),
-          curve: Curves.easeOutCubic,
-          builder: (context, value, child) {
-            return Transform.translate(
-              offset: Offset(30 * (1 - value), 0),
-              child: Opacity(
-                opacity: value,
-                child: _buildMenuItem(
-                  context,
-                  item['icon'] as IconData,
-                  item['title'] as String,
-                  item['onTap'] as VoidCallback,
-                  isDark,
-                ),
-              ),
-            );
-          },
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildMenuItem(
-    BuildContext context,
-    IconData icon,
-    String title,
-    VoidCallback onTap,
-    bool isDark,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.05),
-                      ]
-                    : [
-                        Colors.white.withOpacity(0.9),
-                        Colors.white.withOpacity(0.7),
-                      ],
-              ),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.15)
-                    : Colors.white.withOpacity(0.5),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.2)
-                      : Colors.black.withOpacity(0.05),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: CupertinoButton(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              borderRadius: BorderRadius.circular(18),
-              onPressed: onTap,
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.bodyLine.withOpacity(0.2),
-                          AppColors.headerLine.withOpacity(0.1),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      icon,
-                      color: AppColors.bodyLine,
-                      size: 22,
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: Theme.of(context).textTheme.headlineSmall!
-                          .copyWith(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                  ),
-                  Icon(
-                    CupertinoIcons.chevron_forward,
-                    color: CupertinoColors.secondaryLabel.resolveFrom(context),
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
+  void _showImagePickerDialog(BuildContext context, AuthProvider authProvider) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: CupertinoActionSheet(
+          title: const Text(
+            'Change Profile Picture',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
-
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera, authProvider);
+              },
+              child: const Text('Take Photo'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery, authProvider);
+              },
+              child: const Text('Choose from Gallery'),
+            ),
+            if (authProvider.user?.hasProfileImage == true)
+              CupertinoActionSheetAction(
+                isDestructiveAction: true,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _deleteProfileImage(authProvider);
+                },
+                child: const Text('Remove Photo'),
+              ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+        ),
       ),
     );
   }
@@ -772,10 +588,7 @@ class _ProfileBodyState extends State<ProfileBody>
               colors: [CupertinoColors.destructiveRed, Color(0xFFFF3B30)],
             ),
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.3),
-              width: 1.5,
-            ),
+            border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: CupertinoColors.destructiveRed.withOpacity(0.4),
@@ -790,13 +603,8 @@ class _ProfileBodyState extends State<ProfileBody>
             onPressed: () => _showLogoutDialog(context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  CupertinoIcons.arrow_right_square,
-                  color: Colors.white,
-                  size: 22,
-                ),
+                const Icon(CupertinoIcons.arrow_right_square, color: Colors.white, size: 22),
                 const SizedBox(width: 10),
                 Text(
                   "Logout",
@@ -812,104 +620,5 @@ class _ProfileBodyState extends State<ProfileBody>
         ),
       ),
     );
-  }
-
-  void _showImagePickerDialog(
-    BuildContext context,
-    AuthProvider authProvider,
-    bool isDark,
-  ) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: CupertinoActionSheet(
-          title: const Text(
-            'Change Profile Picture',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _pickImage(ImageSource.camera, authProvider);
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    CupertinoIcons.camera,
-                    color: CupertinoColors.activeBlue,
-                  ),
-                  SizedBox(width: 12),
-                  Text('Take Photo', style: TextStyle(fontSize: 17)),
-                ],
-              ),
-            ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _pickImage(ImageSource.gallery, authProvider);
-              },
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(CupertinoIcons.photo, color: CupertinoColors.activeBlue),
-                  SizedBox(width: 12),
-                  Text('Choose from Gallery', style: TextStyle(fontSize: 17)),
-                ],
-              ),
-            ),
-            if (authProvider.user?.hasProfileImage == true)
-              CupertinoActionSheetAction(
-                isDestructiveAction: true,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _deleteProfileImage(authProvider);
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(CupertinoIcons.delete),
-                    SizedBox(width: 12),
-                    Text('Remove Photo', style: TextStyle(fontSize: 17)),
-                  ],
-                ),
-              ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, String feature) {
-    showCupertinoDialog(
-      context: context,
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: CupertinoAlertDialog(
-          title: Text(feature),
-          content: const Text('This feature is coming soon!'),
-          actions: [
-            CupertinoDialogAction(
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _capitalizeFirst(String? text) {
-    if (text == null || text.isEmpty) return '';
-    return text[0].toUpperCase() + text.substring(1);
   }
 }

@@ -32,7 +32,7 @@ class Product {
     this.reviewCount = 0,
     this.isFeatured = false,
     this.isActive = true,
-    this.isFavorite = false
+    this.isFavorite = false,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -196,7 +196,7 @@ class Product {
     int? reviewCount,
     bool? isFeatured,
     bool? isActive,
-    bool? isFavorite, // ✅ ADD
+    bool? isFavorite,
   }) {
     return Product(
       id: id ?? this.id,

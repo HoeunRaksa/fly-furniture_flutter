@@ -25,4 +25,15 @@ class OrderRequest {
     "lat": lat,
     "long": long, // Reverted to 'long' as per your previous log
   };
+  factory OrderRequest.fromJson(Map<String, dynamic> json) {
+    final jsonItems = json["items"] as List? ?? [];
+    return OrderRequest(
+      shipping: json["shipping_address"],
+      phone: json["phone_number"],
+      payment: json["payment_method"],
+      items: jsonItems.map((e) => OrderItem.fromJson(e)).toList(),
+      lat: json["lat"],
+      long: json["long"],
+    );
+  }
 }

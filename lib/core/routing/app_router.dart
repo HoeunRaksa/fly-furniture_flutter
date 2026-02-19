@@ -4,6 +4,7 @@ import 'package:fly/features/auth/welcome/welcome_screen.dart';
 import 'package:fly/features/card/screen/cardScreen.dart';
 import 'package:fly/features/checkout/screen/checkout_screen.dart';
 import 'package:fly/features/home/widget/bottomBar.dart';
+import 'package:fly/features/my_order/screen/my_order_screen.dart';
 import 'package:fly/features/profile/screen/profile_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/login/screen/login_screen.dart';
@@ -17,7 +18,7 @@ import '../../providers/product_provider.dart';
 class AppRouter {
   static GoRouter router(AuthProvider authProvider, ProductProvider productProvider) {
     return GoRouter(
-      initialLocation: AppRoutes.welcome,
+      initialLocation: AppRoutes.myOrder,
       refreshListenable: authProvider,
       routes: [
         GoRoute(
@@ -68,6 +69,9 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.home,
           builder: (context, state) => const BottomBar(),
+        ),
+        GoRoute(path: AppRoutes.myOrder,
+          builder: (context, state) => const MyOrderScreen(),
         ),
         GoRoute(
           path: '${AppRoutes.detail}/:id',

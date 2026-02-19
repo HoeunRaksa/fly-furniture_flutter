@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:fly/config/app_config.dart';
+import 'package:fly/model/order_item.dart';
 import 'package:fly/model/order_request.dart';
+import 'package:fly/model/order_response.dard.dart';
+import 'package:fly/model/product.dart';
 import 'package:http/http.dart' as http;
 
 class OrderService {
@@ -77,4 +80,24 @@ class OrderService {
     }
     return body;
   }
+  Future<OrderResponse> myOrder(String token) async {
+    final url = Uri.parse("${AppConfig.baseUrl}/orders");
+    final response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return OrderResponse.fromJson(data);
+    } else {
+      throw Exception(
+        "Failed to load orders: ${response.statusCode} ${response.body}",
+      );
+    }
+  }
+
 }

@@ -13,4 +13,5 @@ class AppRoutes {
   static const String checkout ='/checkout';
   static const String notFound = '/404';
   static const String test ="/test";
+  static const String myOrder = "/myOrder";
 }
