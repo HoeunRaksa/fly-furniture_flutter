@@ -40,6 +40,7 @@ class CardBottom extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: 20),
         ],
       ),
     );

@@ -133,7 +133,7 @@ class _CheckoutBodyState extends State<CheckoutBody> {
             ),
             Spacer(),
             CheckoutBottom(onContinue: _onContunue),
-            SizedBox(height: 20),
+            SizedBox(height: 50),
           ],
         ),
       ),

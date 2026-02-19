@@ -33,26 +33,32 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     final productProvider = context.watch<ProductProvider>();
     final categoriesProvider = context.watch<CategoryProvider>();
-    final List<Product> favoriteProduct = productProvider.products
+    final List<ProductCategory> categories = categoriesProvider.categories;
+    final allFavorites = productProvider.products
         .where((p) => p.isFavorite == true)
         .toList();
-    final List<ProductCategory> categories = categoriesProvider.categories;
-    final allFavorites =
-    productProvider.products.where((p) => p.isFavorite == true).toList();
-    final categoryFiltered = (selectCategoryId == null || selectCategoryId == -1)
+    final categoryFiltered =
+        (selectCategoryId == null || selectCategoryId == -1)
         ? allFavorites
-        : allFavorites.where((p) => p.category?.id == selectCategoryId).toList();
+        : allFavorites
+              .where((p) => p.category?.id == selectCategoryId)
+              .toList();
     final nameFiltered = searchText.trim().isEmpty
         ? categoryFiltered
         : categoryFiltered
-        .where((p) =>
-        p.name.toLowerCase().contains(searchText.trim().toLowerCase()))
-        .toList();
-
+              .where(
+                (p) => p.name.toLowerCase().contains(
+                  searchText.trim().toLowerCase(),
+                ),
+              )
+              .toList();
     return Scaffold(
-      appBar: AppHeader(nameScreen: "Favorite", onChanged: (text) {
-        setState(() => searchText = text);
-      },),
+      appBar: AppHeader(
+        nameScreen: "Favorite",
+        onChanged: (text) {
+          setState(() => searchText = text);
+        },
+      ),
 
       body: FavoriteBody(
         favorites: nameFiltered,
@@ -75,6 +81,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         onAdd: (Product p, int qty) async {
           final qtyToAdd = qty == 0 ? 1 : qty;
           context.read<CardProvider>().add(p, qtyToAdd);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${p.name} is added to card"),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.green.shade500,
+            ),
+          );
           debugPrint("Added ${p.name} x$qtyToAdd");
         },
       ),

@@ -33,6 +33,7 @@ class FavoriteBody extends StatelessWidget {
       ProductCategory(id: -1, name: 'All'),
       ...categories,
     ];
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -91,7 +92,7 @@ class FavoriteBody extends StatelessWidget {
                       )
                     : const AssetImage('assets/images/placeholder.png')
                           as ImageProvider;
-                final cart = context.watch<CardProvider>();   // or read(), see note below
+                final cart = context.watch<CardProvider>(); // or read(), see note below
                 final qty = cart.getQty(p);                   // must exist in provider
                 final qtyToAdd = qty == 0 ? 1 : qty;
                 return Dismissible(
@@ -130,7 +131,8 @@ class FavoriteBody extends StatelessWidget {
                         image: imageProvider,
                         isFavorite: true,
                         onToggle: () => onToggle(p),
-                        onAdd: () => onAdd(p,qtyToAdd) ,
+                        onAdd: () => onAdd(p,qtyToAdd),
+                        isInCard: cart.isInCard(p),
                       ),
                     ),
                   ),

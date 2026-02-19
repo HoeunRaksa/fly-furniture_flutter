@@ -114,13 +114,26 @@ class ProductHorizontalCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          TextButton(
-                            onPressed: onAdd,
-                            child: Text(
-                              'AddToCard',
-                              style: Theme.of(context).textTheme.bodyLarge,
+                          if (!isInCard)
+                            TextButton(
+                              onPressed: onAdd,
+                              child: Text(
+                                'AddToCard',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
-                          ),
+                          if (isInCard)
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Already in Card",
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                     ],
@@ -130,19 +143,15 @@ class ProductHorizontalCard extends StatelessWidget {
             ],
           ),
         ),
-        if(isFavorite == true)
-        Positioned(
-          right: 10,
-          top: 3,
-          child: InkWell(
-            onTap: onToggle,
-            child: Icon(
-              Icons.favorite,
-              color: Colors.red,
-              size: 30,
+        if (isFavorite == true)
+          Positioned(
+            right: 10,
+            top: 3,
+            child: InkWell(
+              onTap: onToggle,
+              child: Icon(Icons.favorite, color: Colors.red, size: 30),
             ),
           ),
-        ),
       ],
     );
   }

@@ -100,7 +100,7 @@ class _ProductScreen extends State<ProductScreen> {
             ),
           ],
         ),
-        child:DetailFooter(
+        child: DetailFooter(
           product: product,
           count: count,
           amount: product.price * count,
@@ -115,9 +115,16 @@ class _ProductScreen extends State<ProductScreen> {
 
           onAddToCart: (Product p, int qty) async {
             context.read<CardProvider>().add(p, qty);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.green.shade500,
+                content: Text("${p.name} added to card successfully"),
+                duration: const Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           },
         ),
-
       ),
     );
   }

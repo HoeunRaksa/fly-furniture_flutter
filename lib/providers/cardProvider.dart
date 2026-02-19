@@ -32,4 +32,7 @@ class CardProvider extends ChangeNotifier {
     productCard.clear();
     notifyListeners();
   }
+  bool isInCard(Product product){
+    return productCard.containsKey(product);
+  }
 }
