@@ -34,22 +34,20 @@ class FavoriteBody extends StatelessWidget {
       ...categories,
     ];
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
+    return
+       Column(
         children: [
+        SizedBox(height: 10,),
           SizedBox(
             height: 45,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: display.length,
               itemBuilder: (_, index) {
-
                 final p = display[index];
-
                 final isSelect = selectCategoryId == p.id;
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: isSelect
@@ -123,7 +121,7 @@ class FavoriteBody extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 3),
+                    padding: EdgeInsets.symmetric(vertical: 3, horizontal: 15),
                     child: SizedBox(
                       child: ProductHorizontalCard(
                         onTap:() => context.push('${AppRoutes.detail}/${p.id}'),
@@ -141,7 +139,7 @@ class FavoriteBody extends StatelessWidget {
             ),
           ),
         ],
-      ),
+
     );
   }
 }

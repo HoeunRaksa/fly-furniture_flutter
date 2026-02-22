@@ -53,11 +53,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               )
               .toList();
     return Scaffold(
-      appBar: AppHeader(
-        nameScreen: "Favorite",
-        onChanged: (text) {
-          setState(() => searchText = text);
-        },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15,),
+          child: AppHeader(
+            nameScreen: "Favorite",
+            onChanged: (text) => setState(() => searchText = text),
+          ),
+        ),
       ),
 
       body: FavoriteBody(

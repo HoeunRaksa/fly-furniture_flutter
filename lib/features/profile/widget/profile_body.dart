@@ -394,7 +394,7 @@ class _ProfileBodyState extends State<ProfileBody> with TickerProviderStateMixin
         child: CupertinoButton(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           borderRadius: BorderRadius.circular(18),
-          onPressed: () => context.push('/edit-profile'),
+          onPressed: () => context.push('/myOrder'),
           child: Row(
             children: [
               Container(

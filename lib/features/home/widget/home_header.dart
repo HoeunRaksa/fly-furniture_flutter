@@ -89,11 +89,10 @@ class _HomeHeaderState extends State<HomeHeader> {
                   fit: BoxFit.scaleDown,
                   child: const Text(
                     "Butterfly",
-                    style: TextStyle(
-                      fontSize: 23,
+                    style:  TextStyle(
+                      fontSize: 25,
                       fontWeight: FontWeight.w900,
                       color: AppColors.furnitureBlue,
-                      height: 1.0,
                     ),
                   ),
                 ),

@@ -31,8 +31,7 @@ class _AppHeaderState extends State<AppHeader> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -87,7 +86,7 @@ class _AppHeaderState extends State<AppHeader> {
               const SizedBox(height: 44, width: 44),
           ],
         ),
-      ),
+
     );
   }
 }

@@ -44,15 +44,23 @@ class _CardScreenState extends State<CardScreen> {
     final filteredCardProducts = searchText.trim().isEmpty
         ? allCardProducts
         : allCardProducts
-        .where((p) => p.name
-        .toLowerCase()
-        .contains(searchText.trim().toLowerCase()))
-        .toList();
+              .where(
+                (p) => p.name.toLowerCase().contains(
+                  searchText.trim().toLowerCase(),
+                ),
+              )
+              .toList();
     return Scaffold(
-      appBar: AppHeader(
-        suffixIcon: widget.headerSearch,
-        nameScreen: "Card",
-        onChanged: (text) => setState(() => searchText = text),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: AppHeader(
+            suffixIcon: widget.headerSearch,
+            nameScreen: "Card",
+            onChanged: (text) => setState(() => searchText = text),
+          ),
+        ),
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
@@ -72,10 +80,7 @@ class _CardScreenState extends State<CardScreen> {
           onCheckout: (items, total) async {
             context.push(
               AppRoutes.checkout,
-              extra: {
-                "items": items,
-                "total": total,
-              },
+              extra: {"items": items, "total": total},
             );
           },
         ),
@@ -83,4 +88,3 @@ class _CardScreenState extends State<CardScreen> {
     );
   }
 }
-

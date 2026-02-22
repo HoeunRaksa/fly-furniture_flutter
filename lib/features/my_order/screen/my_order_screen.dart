@@ -33,7 +33,6 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
         body: Center(child: CupertinoActivityIndicator()),
       );
     }
-
     if (response == null) {
       return const Scaffold(
         body: Center(child: Text("No orders")),

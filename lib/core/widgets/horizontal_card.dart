@@ -12,6 +12,9 @@ class ProductHorizontalCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool isFavorite;
   final bool isInCard;
+  final bool isPaid;
+  final bool unPrice;
+  final int counts;
   const ProductHorizontalCard({
     super.key,
     this.width,
@@ -23,11 +26,15 @@ class ProductHorizontalCard extends StatelessWidget {
     this.isFavorite = false,
     required this.onTap,
     this.isInCard = false,
+     this.isPaid = false,
+    this.unPrice = false,
+    this.counts = 0
   });
   @override
   Widget build(BuildContext context) {
     const double cardHeight = 130.0;
     const double imageSize = 130.0;
+
 
     return Stack(
       children: [
@@ -102,6 +109,7 @@ class ProductHorizontalCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          if(unPrice == false)
                           Flexible(
                             child: Text(
                               '\$${product.price.toStringAsFixed(2)}',
@@ -114,7 +122,20 @@ class ProductHorizontalCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (!isInCard)
+                          if(unPrice == true)
+                            Flexible(
+                              child: Text(
+                                '\$${(product.price * counts).toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.furnitureBlue,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          if (!isInCard && !isPaid)
                             TextButton(
                               onPressed: onAdd,
                               child: Text(
@@ -122,13 +143,25 @@ class ProductHorizontalCard extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
-                          if (isInCard)
+                          if (isInCard && !isPaid)
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               child: Row(
                                 children: [
                                   Text(
                                     "Already in Card",
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if(isPaid)
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "checkout",
                                     style: TextStyle(color: Colors.green),
                                   ),
                                 ],
