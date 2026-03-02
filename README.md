@@ -46,5 +46,11 @@ If you want to run this locally:
 ## Note
 The backend is running on Laravel, which handles the products and user data. It needs to be online for the app to fetch items.
 
--- 
-**Author:** Hoeun Raksa
+--- 
+**Group 4 | Class A3**
+
+**Authors:**
+1. ហឿន រក្សា (ID: 39)
+2. ឫទ្ធិ សារ៉ាម៉ានិត (ID: 42)
+3. លឹម សុផាណារ៉ាត (ID: 32)
+4. ឈាន សុធា (ID: 7)
